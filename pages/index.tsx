@@ -164,7 +164,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const subdomain = process.env.NODE_ENV === 'production'? req.headers.host.split('.')[0] :'steven'
   
   const session = await getSession(ctx)
-  const userId = process.env.NODE_ENV === 'production'? session.user.id :'ckpzubjcs00122nwgk8hpra6i'
+  const userId = process.env.NODE_ENV === 'production' && session ? session.user.id :'ckpzubjcs00122nwgk8hpra6i'
   
   // Check if user is the owner of the current publication
   const authPub = await prisma.publicationUser.findMany({
