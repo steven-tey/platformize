@@ -114,6 +114,7 @@ export default function Login() {
 export async function getServerSideProps(ctx){
 
     const session = await getSession(ctx)
+    //console.log(session?.user?.email)
   
     if (session) {
       return {
