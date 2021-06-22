@@ -1,78 +1,119 @@
 import Layout from "../components/Layout"
+import AppLayout from "../components/AppLayout"
 import Link from "next/link"
 import Image from "next/image"
 import React from "react"
 import prisma from '../lib/prisma'
+import { getSession, useSession } from 'next-auth/client'
 
-export default function Index({publicationName, publicationDescription, publicationLogo, posts}) {
-  const parsedPosts = JSON.parse(posts)
-  const pinnedPost = parsedPosts.filter(post => {
-    return post.pinnedPost.length > 0
-  })[0]
+export default function Index({app, session, publications, publicationName, publicationDescription, publicationLogo, posts}) {
 
-  return (
-    <Layout
-      publicationName={publicationName}
-      pageTitle={publicationName}
-      description={publicationDescription}
-      logo={publicationLogo}
-    >
-      <main>
-      <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
-        <div className="relative w-10/12 sm:w-7/12 h-350 mx-auto lg:max-w-7xl">
-          <Link href={`/p/${pinnedPost.slug}`}><a>
-            <div className="sm:px-10 sm:flex sm:space-x-10 py-16 h-full hover:bg-gray-200">
-              <div className="relative sm:w-10/12 h-full p-10 overflow-hidden rounded-lg">
-                <Image
-                  layout="fill"
-                  objectFit="cover"
-                  src={`/blog/${pinnedPost.image}`}
-                  />
-              </div>
-
-              <div className="mt-2">
-                <p className="text-3xl font-semibold text-gray-900">{pinnedPost.title}</p>
-                <p className="mt-3 text-lg text-gray-500">{pinnedPost.description}</p>
-              </div>
-            </div>
-          </a></Link>
-        </div>
-        <div className="relative w-6/12 mx-auto">
-          <div className="mt-6 pt-10 grid gap-5">
-            {parsedPosts.map((post) => (
-              <Link href={`/p/${post.slug}`}><a>
-                <div key={post.title} className="p-5 hover:bg-gray-200">
-                  <p className="text-sm text-gray-500">
-                    <time dateTime={post.createdAt}>
-                      {`${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(post.createdAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(post.createdAt))}`}
-                    </time>
-                  </p>
-                  <div className="mt-2 block">
-                    <p className="text-2xl font-semibold text-gray-900">{post.title}</p>
-                    <p className="mt-3 text-base text-gray-500">{post.description}</p>
-                  </div>
-                  <div className="mt-3">
-                    <p className="text-base font-semibold text-indigo-600 hover:text-indigo-500">
-                      Read full story
-                    </p>
-                  </div>
+  if (app) {
+    return (
+      <>
+        <AppLayout
+          name={session.user?.name}
+          email={session.user?.email}
+        >
+        </AppLayout>
+      </>
+    )
+  } else {
+    const parsedPosts = JSON.parse(posts)
+    const pinnedPost = parsedPosts.filter(post => {
+      return post.pinnedPost.length > 0
+    })[0]
+  
+    return (
+      <Layout
+        publicationName={publicationName}
+        pageTitle={publicationName}
+        description={publicationDescription}
+        logo={publicationLogo}
+      >
+        <main>
+        <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
+          <div className="relative w-10/12 sm:w-7/12 h-350 mx-auto lg:max-w-7xl">
+            <Link href={`/p/${pinnedPost.slug}`}><a>
+              <div className="sm:px-10 sm:flex sm:space-x-10 py-16 h-full hover:bg-gray-200">
+                <div className="relative sm:w-10/12 h-full p-10 overflow-hidden rounded-lg">
+                  <Image
+                    layout="fill"
+                    objectFit="cover"
+                    src={`/blog/${pinnedPost.image}`}
+                    />
                 </div>
-              </a></Link>
-            ))}
+  
+                <div className="mt-2">
+                  <p className="text-3xl font-semibold text-gray-900">{pinnedPost.title}</p>
+                  <p className="mt-3 text-lg text-gray-500">{pinnedPost.description}</p>
+                </div>
+              </div>
+            </a></Link>
+          </div>
+          <div className="relative w-6/12 mx-auto">
+            <div className="mt-6 pt-10 grid gap-5">
+              {parsedPosts.map((post) => (
+                <Link href={`/p/${post.slug}`}><a>
+                  <div key={post.title} className="p-5 hover:bg-gray-200">
+                    <p className="text-sm text-gray-500">
+                      <time dateTime={post.createdAt}>
+                        {`${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(post.createdAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(post.createdAt))}`}
+                      </time>
+                    </p>
+                    <div className="mt-2 block">
+                      <p className="text-2xl font-semibold text-gray-900">{post.title}</p>
+                      <p className="mt-3 text-base text-gray-500">{post.description}</p>
+                    </div>
+                    <div className="mt-3">
+                      <p className="text-base font-semibold text-indigo-600 hover:text-indigo-500">
+                        Read full story
+                      </p>
+                    </div>
+                  </div>
+                </a></Link>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      </main>
-    </Layout>
-  )
+        </main>
+      </Layout>
+    )
+  }
 }
 
 export async function getServerSideProps(ctx) {
   
   const { req, res } = ctx
-  const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : 'steven'
+  const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : 'app'
   if (subdomain == process.env.APP_SLUG) {
-    
+    const session = await getSession(ctx)
+    if (session) {
+      const publications = await prisma.publication.findMany({
+          where: {
+            users: {
+              some: {
+                userId: session?.user?.id
+              }
+            }
+          }
+      })
+      console.log(session)
+      return {
+        props: {
+          app: true,
+          session: session,
+          publications: publications
+        }
+      }
+    } else {
+      return {
+        redirect: {
+            destination: '/login',
+            statusCode: 302
+        }
+      }
+    }
   } else {
     res.setHeader(
       'Cache-Control',
@@ -108,6 +149,7 @@ export async function getServerSideProps(ctx) {
     }
     return { 
       props: { 
+        app: false,
         publicationName: data.name,
         publicationDescription: data.description,
         publicationLogo: data.logo,     

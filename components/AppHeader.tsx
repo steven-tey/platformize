@@ -28,7 +28,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Header: React.FC = ({name, logo}) => {
+const AppHeader: React.FC = ({name, email, logo}) => {
 
   const [open, setOpen] = useState(false)
 
@@ -119,7 +119,7 @@ const Header: React.FC = ({name, logo}) => {
                     src={logo}
                     alt=""
                   />
-                  <span className="inline-block ml-3 text-lg text-gray-700 align-middle">{name}</span>
+                  <span className="inline-block ml-3 text-lg text-gray-700 align-middle truncate">{name}</span>
                 </a></Link>
               </div>
               <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
@@ -247,4 +247,4 @@ const Header: React.FC = ({name, logo}) => {
   )
 }
 
-export default Header
+export default AppHeader
