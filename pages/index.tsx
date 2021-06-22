@@ -13,26 +13,27 @@ export default function Index({feed}) {
 
   return (
     <Layout
-      title={parsedFeed.name}
+      blogTitle={parsedFeed.name}
+      pageTitle={parsedFeed.name}
       description={parsedFeed.description}
-      thumbnail="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+      logo="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
     >
       <main>
       <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
-        <div className="relative w-10/12 sm:w-7/12 h-300 mx-auto lg:max-w-7xl">
+        <div className="relative w-10/12 sm:w-7/12 h-350 mx-auto lg:max-w-7xl">
           <Link href={`/p/${pinnedPost.slug}`}><a>
-            <div className="sm:px-10 sm:flex sm:space-x-10 py-10 h-full hover:bg-gray-200">
+            <div className="sm:px-10 sm:flex sm:space-x-10 py-16 h-full hover:bg-gray-200">
               <div className="relative sm:w-10/12 h-full p-10">
                 <Image
                   layout="fill"
                   objectFit="cover"
-                  src="/blog/pure-ui.png"
-                />
+                  src={`/blog/${pinnedPost.image}`}
+                  />
               </div>
 
               <div className="mt-2">
                 <p className="text-3xl font-semibold text-gray-900">{pinnedPost.title}</p>
-                <p className="mt-3 text-lg text-gray-500">{pinnedPost.content}</p>
+                <p className="mt-3 text-lg text-gray-500">{pinnedPost.description}</p>
               </div>
             </div>
           </a></Link>
@@ -47,8 +48,8 @@ export default function Index({feed}) {
                     Mar 12, 2020
                   </p>
                   <div className="mt-2 block">
-                    <p className="text-xl font-semibold text-gray-900">{post.title}</p>
-                    <p className="mt-3 text-base text-gray-500">{post.content}</p>
+                    <p className="text-2xl font-semibold text-gray-900">{post.title}</p>
+                    <p className="mt-3 text-base text-gray-500">{post.description}</p>
                   </div>
                   <div className="mt-3">
                     <p className="text-base font-semibold text-indigo-600 hover:text-indigo-500">
@@ -94,8 +95,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     }
   }))
-
-  console.log(JSON.parse(feed))
 
   return { 
     props: { feed } 
