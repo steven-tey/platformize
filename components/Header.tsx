@@ -1,11 +1,12 @@
 // Header.tsx
 import Link from 'next/link'
-import React, { Fragment } from 'react'
-import { Popover, Transition } from '@headlessui/react'
+import React, { Fragment, useState } from 'react'
+import { Popover, Transition, Dialog } from '@headlessui/react'
 import {
   XIcon,
   ChevronDownIcon
 } from '@heroicons/react/outline'
+import { MailIcon } from '@heroicons/react/solid'
 
 const dropdown = [
   {
@@ -27,10 +28,84 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Header: React.FC = ({title}) => {
+const Header: React.FC = ({name}) => {
+
+  const [open, setOpen] = useState(false)
 
   return (
     <nav>
+      <Transition.Root show={open} as={Fragment}>
+        <Dialog
+          as="div"
+          static
+          className="fixed z-10 inset-0 overflow-y-auto"
+          open={open}
+          onClose={() => setOpen(false)}
+        >
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            </Transition.Child>
+
+            {/* This element is to trick the browser into centering the modal contents. */}
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+              &#8203;
+            </span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                <div>
+                  <div className="mt-3 text-center sm:mt-5">
+                    <Dialog.Title as="h3" className="text-2xl leading-6 font-semibold text-gray-900">
+                      Subscribe to {name}
+                    </Dialog.Title>
+                    <div className="my-5">
+                      <p className="text-md text-gray-500">
+                        By subscribing, you're consenting to receiving emails from {name}.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <form onSubmit={(event) => {event.preventDefault(); alert(event.target.email.value)}} className="mt-5 sm:mt-6 mx-auto pb-5">
+                  <div className="mt-1 inline-block w-full sm:w-7/12 mx-2 relative rounded-md shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <MailIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </div>
+                    <input
+                      type="text"
+                      name="email"
+                      required
+                      className="border-solid border border-gray-600 focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm rounded-md"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full sm:w-4/12 mx-2 rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
       <Popover className="relative bg-white">
       {({ open }) => (
         <>
@@ -44,15 +119,16 @@ const Header: React.FC = ({title}) => {
                     src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
                     alt=""
                   />
-                  <span className="inline-block ml-3 text-lg text-gray-700 align-middle">{title}</span>
+                  <span className="inline-block ml-3 text-lg text-gray-700 align-middle">{name}</span>
                 </a></Link>
               </div>
               <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-                <Link href="/subscribe"><a
+                <button
+                  onClick={() => setOpen(true)}
                   className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
                 >
                   Subscribe
-                </a></Link>
+                </button>
               </div>
 
               <Popover.Group as="nav" className="hidden md:flex">

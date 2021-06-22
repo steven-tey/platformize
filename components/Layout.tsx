@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Header from './Header'
 
-export default function Layout ({blogTitle, pageTitle, description, logo, children}) {
+export default function Layout ({publicationName, pageTitle, description, logo, children}) {
   return (
     <>
     <div>  
@@ -31,7 +31,10 @@ export default function Layout ({blogTitle, pageTitle, description, logo, childr
         <meta name="twitter:description" content={description}/>
         <meta name="twitter:image" content={logo}/>
       </Head>
-      <Header title={blogTitle}/>
+      <Header 
+        name={publicationName}
+        logo={logo}
+      />
       {children}
     </div>
     </>

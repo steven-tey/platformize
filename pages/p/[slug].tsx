@@ -9,14 +9,14 @@ import Layout from '../../components/Layout'
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
 
-export default function Post ({blogTitle, postTitle, description, thumbnail, content}) {
+export default function Post ({publicationName, postTitle, description, logo, thumbnail, content}) {
 
   return (
     <Layout
-      blogTitle={blogTitle}
+      publicationName={publicationName}
       pageTitle={postTitle}
       description={description}
-      logo="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+      logo={logo}
     >
       <div className="relative m-auto mt-20 sm:w-1/2 text-center bg-white overflow-hidden">
         <h1 className="mt-2 block text-4xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-6xl">
@@ -34,7 +34,7 @@ export default function Post ({blogTitle, postTitle, description, thumbnail, con
         />
       </div>
 
-      <div className="h-700 w-screen"></div>
+      <div className="h-350 w-screen"></div>
       
       {/* <div dangerouslySetInnerHTML={{ __html: content }} /> */}
 
@@ -60,15 +60,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         slug: slug,
       }
     },
-    select: {
-      title: true,
-      description: true,
-      content: true,
-      image: true,
+    include: {
       Publication: {
         select: {
           name: true,
-          description: true
+          description: true,
+          logo: true
         }
       }
     }
@@ -81,13 +78,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .use(html)
     .process(matterResult.content)
   const contentHtml = processedContent.toString()
-  console.log(contentHtml)
 
   return {
     props: {
-      blogTitle: post?.Publication.name,
+      publicationName: post?.Publication.name,
       postTitle: post?.title,
       description: post?.description,
+      logo: post?.Publication.logo,
       thumbnail: post?.image,
       content: contentHtml,
     },

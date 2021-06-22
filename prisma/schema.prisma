@@ -30,6 +30,7 @@ model Publication {
   id          String  @id @default(cuid())
   name        String
   description String  @default("The hottest gossip about armadilos")
+  logo        String  @default("https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg")
   url         String  @unique
   users       PublicationUser[]
   posts       Post[]
