@@ -49,7 +49,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       'Cache-Control',
       'public, s-maxage=1, stale-while-revalidate=59'
   );
-  const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : 'steven'
+  const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
+
+  if (subdomain == process.env.APP_SLUG) {
+    return {
+      redirect: {
+        destination: '/',
+        statusCode: 302
+      }
+    }
+  }
 
   const { slug } = ctx.query;
 

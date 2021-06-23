@@ -4,10 +4,17 @@ import Link from "next/link"
 import Image from "next/image"
 import React from "react"
 import prisma from '../lib/prisma'
-import { getSession, useSession } from 'next-auth/client'
+import withAuth from "../lib/withAuth"
+import { getSession } from 'next-auth/client'
+import {
+  ExternalLinkIcon,
+  CogIcon,
+  PlusIcon
+} from '@heroicons/react/outline'
 
-export default function Index({app, session, publications, publicationName, publicationDescription, publicationLogo, posts}) {
+const Index = ({app, rootUrl, session, publications, publicationName, publicationDescription, publicationLogo, posts}) => {
 
+  // If it's the app subdomain (e.g. app.yourdomain.com)
   if (app) {
     return (
       <>
@@ -15,9 +22,53 @@ export default function Index({app, session, publications, publicationName, publ
           name={session.user?.name}
           email={session.user?.email}
         >
+          <div className="w-7/12 mx-auto mt-16">
+            <div className="flex justify-between">
+              <h1 className="font-bold text-3xl m-5 mb-10">
+                My Publications
+              </h1>
+              <button className="bg-gray-900 px-5 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700">
+                New Publication
+                <PlusIcon
+                    className="h-5 w-5 inline-block ml-2"
+                />
+              </button>
+            </div>
+            {publications.map((publication) => (
+              <Link href={`/publication/${publication.id}`}>
+                <div className="sm:px-5 sm:flex sm:space-x-10 py-5 h-250 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300">
+                  <div className="relative sm:w-5/12 h-full p-10 overflow-hidden rounded-lg">
+                    <Image
+                      layout="fill"
+                      objectFit="cover"
+                      src={`/blog/pure-ui.webp`}
+                      />
+                  </div>
+    
+                  <div className="relative w-7/12 space-y-5">
+                    <CogIcon
+                      className="h-10 w-10 hover:bg-gray-400 p-2 rounded-full absolute right-0 top-0 mr-3 mt-3"
+                    />
+                    <p className="text-3xl font-semibold text-gray-900">{publication.name}</p>
+                    <p className="mt-3 text-lg text-gray-600">{publication.description}</p>
+                    <Link href={`https://${publication.url}.${rootUrl}`}>
+                      <a className="absolute bg-gray-900 py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700">
+                        {publication.url}.{rootUrl}
+                        <ExternalLinkIcon
+                            className="h-5 w-5 inline-block ml-2"
+                        />
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </AppLayout>
       </>
     )
+  
+  // If it's any other subdomain (e.g. john.yourdomain.com, test.yourdomain.com)
   } else {
     const parsedPosts = JSON.parse(posts)
     const pinnedPost = parsedPosts.filter(post => {
@@ -85,33 +136,24 @@ export default function Index({app, session, publications, publicationName, publ
 export async function getServerSideProps(ctx) {
   
   const { req, res } = ctx
-  const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : 'app'
+  const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
   if (subdomain == process.env.APP_SLUG) {
     const session = await getSession(ctx)
-    if (session) {
-      const publications = await prisma.publication.findMany({
-          where: {
-            users: {
-              some: {
-                userId: session?.user?.id
-              }
-            }
+    const publications = await prisma.publication.findMany({
+      where: {
+        users: {
+          some: {
+            userId: session?.user?.id
           }
-      })
-      console.log(session)
-      return {
-        props: {
-          app: true,
-          session: session,
-          publications: publications
         }
       }
-    } else {
-      return {
-        redirect: {
-            destination: '/login',
-            statusCode: 302
-        }
+    })
+    return {
+      props: {
+        app: true,
+        rootUrl: process.env.ROOT_URL,
+        session: session,
+        publications: publications
       }
     }
   } else {
@@ -158,3 +200,5 @@ export async function getServerSideProps(ctx) {
     }
   }
 }
+
+export default withAuth(Index)

@@ -113,19 +113,29 @@ export default function Login() {
 // If logged in, redirect to dashboard
 export async function getServerSideProps(ctx){
 
-    const session = await getSession(ctx)
-    //console.log(session?.user?.email)
-  
-    if (session) {
-      return {
-        redirect: {
-            destination: `/`,
-            statusCode: 302
+    const { req, res } = ctx
+    const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
+    if (subdomain == process.env.APP_SLUG) {
+      const session = await getSession(ctx)
+    
+      if (session) {
+        return {
+          redirect: {
+              destination: `/`,
+              statusCode: 302
+          }
         }
       }
-    }
-  
-    return {
-      props: {}
+    
+      return {
+        props: {}
+      }
+    } else {
+      return {
+        redirect: {
+          destination: `https://${process.env.APP_SLUG}.${process.env.ROOT_URL}/login`,
+          statusCode: 302
+        }
+      }
     }
 }
