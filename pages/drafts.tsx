@@ -3,7 +3,6 @@
 import React from 'react'
 import { GetServerSideProps } from 'next'
 import Layout from '../components/Layout'
-import Post, { PostProps } from '../components/Post'
 import { useSession, getSession } from 'next-auth/client'
 import prisma from '../lib/prisma'
 
@@ -30,11 +29,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   }
 }
 
-type Props = {
-  drafts: PostProps[]
-}
-
-const Drafts: React.FC<Props> = (props) => {
+const Drafts = (props) => {
   const [session] = useSession()
 
   if (!session) {
@@ -58,20 +53,6 @@ const Drafts: React.FC<Props> = (props) => {
           ))}
         </main>
       </div>
-      <style jsx>{`
-        .post {
-          background: white;
-          transition: box-shadow 0.1s ease-in;
-        }
-
-        .post:hover {
-          box-shadow: 1px 1px 3px #aaa;
-        }
-
-        .post + .post {
-          margin-top: 2rem;
-        }
-      `}</style>
     </Layout>
   )
 }
