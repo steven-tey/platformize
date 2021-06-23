@@ -2,19 +2,25 @@ import Layout from "../components/Layout"
 import AppLayout from "../components/AppLayout"
 import Link from "next/link"
 import Image from "next/image"
-import React from "react"
+import React, {Fragment} from "react"
 import prisma from '../lib/prisma'
 import withAuth from "../lib/withAuth"
 import { getSession } from 'next-auth/client'
+import { Menu, Transition } from '@headlessui/react'
 import {
   ExternalLinkIcon,
   CogIcon,
-  PlusIcon
+  PlusIcon,
 } from '@heroicons/react/outline'
 
 function stopPropagation(e) {
   e.stopPropagation();
 }
+
+const settings = [
+  {name: 'Drafts', slug: 'drafts'},
+  {name: 'Settings', slug: 'settings'},
+]
 
 const Index = ({app, rootUrl, session, publications, publicationName, publicationDescription, publicationLogo, posts}) => {
 
@@ -23,8 +29,8 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
     return (
       <>
         <AppLayout
-          name={session.user?.name}
-          email={session.user?.email}
+          name={session?.user?.name}
+          email={session?.user?.email}
         >
           <div className="w-7/12 mx-auto mt-16">
             <div className="flex justify-between">
@@ -40,7 +46,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
             </div>
             {publications.map((publication) => (
               <Link href={`/publication/${publication.id}`}>
-                <div className="sm:px-5 sm:flex sm:space-x-10 py-5 h-250 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300">
+                <div className="sm:px-5 sm:flex sm:space-x-10 mb-10 py-5 h-250 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300">
                   <div className="relative sm:w-5/12 h-full p-10 overflow-hidden rounded-lg">
                     <Image
                       layout="fill"
@@ -50,9 +56,62 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
                   </div>
     
                   <div className="relative w-7/12 space-y-5">
-                    <CogIcon
-                      className="h-10 w-10 hover:bg-gray-400 p-2 rounded-full absolute right-0 top-0 mr-3 mt-3"
-                    />
+                  <Menu onClick={stopPropagation} as="div" className="absolute right-0 top-0 mr-3 mt-3 z-20">
+                    <div>
+                      <Menu.Button className="p-2 text-black rounded-full hover:bg-gray-400 focus:outline-none">
+                        <CogIcon
+                          className="h-6 w-6"
+                        />
+                      </Menu.Button>
+                    </div>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-300 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="px-1 py-1 ">
+                          <Menu.Item>
+                              {({ active }) => (
+                                <Link href={`/publication/${publication.id}`}>
+                                  <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
+                                    Posts
+                                  </a>
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          {settings.map((item) => (
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link href={`/publication/${publication.id}/${item.slug}`}>
+                                  <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
+                                    {item.name}
+                                  </a>
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          ))}
+                        </div>
+                        <div className="px-1 py-1">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active ? 'bg-red-300 text-red-700' : 'text-red-700'
+                                } group flex focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}
+                              >
+                                Delete
+                              </button>
+                            )}
+                          </Menu.Item>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
                     <p className="text-3xl font-semibold text-gray-900">{publication.name}</p>
                     <p className="mt-3 text-lg text-gray-600">{publication.description}</p>
                     <a onClick={stopPropagation} href={`https://${publication.url}.${rootUrl}`} target="_blank" className="absolute bg-gray-900 py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700">
@@ -139,7 +198,8 @@ export async function getServerSideProps(ctx) {
   
   const { req, res } = ctx
   const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
-  if (subdomain == process.env.APP_SLUG) {
+
+  if (subdomain == process.env.APP_SLUG) { // If it's the app subdomain (e.g. app.yourdomain.com)
     const session = await getSession(ctx)
     const publications = await prisma.publication.findMany({
       where: {
@@ -158,7 +218,7 @@ export async function getServerSideProps(ctx) {
         publications: publications
       }
     }
-  } else {
+  } else { // If it's any other subdomain (e.g. john.yourdomain.com, test.yourdomain.com)
     res.setHeader(
       'Cache-Control',
       'public, s-maxage=1, stale-while-revalidate=59'

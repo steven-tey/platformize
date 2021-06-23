@@ -34,7 +34,7 @@ const AppHeader: React.FC = ({name, email, logo}) => {
               <div className="hidden md:flex items-center space-x-10 justify-end md:flex-1 lg:w-0">
                 <Link href="/">
                     <a className={classNames(
-                        router.pathname == '/' ? 'text-indigo-600' : '',
+                        router.pathname == '/' || router.pathname.split('/')[1] == 'publication' ? 'text-indigo-600' : '',
                         'text-base font-medium text-gray-700 hover:text-indigo-600'
                         )}>
                         Publications
