@@ -12,6 +12,10 @@ import {
   PlusIcon
 } from '@heroicons/react/outline'
 
+function stopPropagation(e) {
+  e.stopPropagation();
+}
+
 const Index = ({app, rootUrl, session, publications, publicationName, publicationDescription, publicationLogo, posts}) => {
 
   // If it's the app subdomain (e.g. app.yourdomain.com)
@@ -51,14 +55,12 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
                     />
                     <p className="text-3xl font-semibold text-gray-900">{publication.name}</p>
                     <p className="mt-3 text-lg text-gray-600">{publication.description}</p>
-                    <Link href={`https://${publication.url}.${rootUrl}`}>
-                      <a className="absolute bg-gray-900 py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700">
-                        {publication.url}.{rootUrl}
-                        <ExternalLinkIcon
-                            className="h-5 w-5 inline-block ml-2"
-                        />
-                      </a>
-                    </Link>
+                    <a onClick={stopPropagation} href={`https://${publication.url}.${rootUrl}`} target="_blank" className="absolute bg-gray-900 py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700">
+                      {publication.url}.{rootUrl}
+                      <ExternalLinkIcon
+                          className="h-5 w-5 inline-block ml-2"
+                      />
+                    </a>
                   </div>
                 </div>
               </Link>
