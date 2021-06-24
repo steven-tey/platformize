@@ -16,7 +16,7 @@ model Post {
   description   String?     
   content       String?     @db.Text
   slug          String      @default(cuid())
-  image         String?
+  image         String?      @default("vercel.png")
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   published     Boolean      @default(false)
