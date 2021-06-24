@@ -46,7 +46,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
           const data = await res.json()
           setTimeout(() => {
               router.push(`/publication/${data.publicationId}`)
-          }, 1000)
+          }, 800)
         }
     }
     async function deletePublication(publicationId) {
@@ -56,9 +56,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
           { method: 'POST' }
       )
       if (res.ok) {
-        setTimeout(() => {
-            window.location.reload()
-        }, 1000)
+        window.location.reload()
       }
     }
 
@@ -196,7 +194,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
                               <button
                               type="button"
                               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                              onClick={() => setOpen(false)}
+                              onClick={() => {setOpen(false); setCreating(false)}}
                               >
                               Cancel
                               </button>
