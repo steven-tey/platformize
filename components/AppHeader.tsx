@@ -9,7 +9,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const AppHeader: React.FC = ({name, email, logo}) => {
+const AppHeader: React.FC = ({name, email, image}) => {
 
   const router = useRouter()
 
@@ -24,8 +24,8 @@ const AppHeader: React.FC = ({name, email, logo}) => {
                 <Link href="/"><a>
                   <span className="sr-only">Workflow</span>
                   <img
-                    className="h-8 w-auto sm:h-10 inline-block"
-                    src={logo}
+                    className="h-8 w-auto sm:h-10 inline-block rounded-full"
+                    src={image}
                     alt=""
                   />
                   <span className="inline-block ml-3 text-lg text-gray-700 align-middle truncate">{name}</span>

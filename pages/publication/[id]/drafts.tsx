@@ -15,8 +15,8 @@ function stopPropagation(e) {
     e.stopPropagation();
 }
 
-const setPublishStatus = async (postId, publish) => {
-    await fetch(`/api/set-publish-status?postId=${postId}&publishStatus=${publish}`, {
+const publish = async (publicationId, postId) => {
+    await fetch(`/api/publish?publicationId=${publicationId}&postId=${postId}`, {
         method: 'POST',
     })
     window.location.reload();
@@ -29,6 +29,7 @@ const Drafts = ({session, publication, posts, rootUrl}) => {
             <AppLayout
                 name={session?.user?.name}
                 email={session?.user?.email}
+                image={session?.user?.image}
             >
                 <div className="w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen divide-x">
                     <div className="pt-10 col-span-1">
@@ -117,7 +118,7 @@ const Drafts = ({session, publication, posts, rootUrl}) => {
                                                     <Menu.Item>
                                                         {({ active }) => (
                                                             <button
-                                                                onClick={(e)=> {e.stopPropagation(); setPublishStatus(post.id, true)}}
+                                                                onClick={(e)=> {e.stopPropagation(); publish(publication.id, post.id)}}
                                                                 className={`${
                                                                 active ? 'bg-gray-300' : null
                                                                 } group flex text-gray-900 focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}

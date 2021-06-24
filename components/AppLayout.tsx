@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import AppHeader from './AppHeader'
 
-export default function AppLayout ({name, email, children}) {
+export default function AppLayout ({name, email, image, children}) {
     const title = 'Platformize App'
     const description = 'Platformize is a NextJS framework that allows you to crate Substack-like user experiences out of the box.'
     const logo = 'https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg'
@@ -37,7 +37,7 @@ export default function AppLayout ({name, email, children}) {
       <AppHeader 
         name={name}
         email={email}
-        logo={logo}
+        image={image}
       />
       {children}
     </div>

@@ -11,13 +11,23 @@ import {
   DotsHorizontalIcon,
   PlusIcon,
 } from '@heroicons/react/outline'
+import {
+    StarIcon
+  } from '@heroicons/react/solid'
 
 function stopPropagation(e) {
     e.stopPropagation();
 }
 
-const setPublishStatus = async (postId, publish) => {
-    await fetch(`/api/set-publish-status?postId=${postId}&publishStatus=${publish}`, {
+const unpublish = async (publicationId, postId, slug) => {
+    await fetch(`/api/unpublish?publicationId=${publicationId}&postId=${postId}&slug=${slug}`, {
+        method: 'POST',
+    })
+    window.location.reload();
+}
+
+const pin = async (publicationId, slug, postId, pinStatus) => {
+    await fetch(`/api/pin?publicationId=${publicationId}&slug=${slug}&postId=${postId}&pinStatus=${pinStatus}`, {
         method: 'POST',
     })
     window.location.reload();
@@ -30,6 +40,7 @@ const Publication = ({session, publication, posts, rootUrl}) => {
             <AppLayout
                 name={session?.user?.name}
                 email={session?.user?.email}
+                image={session?.user?.image}
             >
                 <div className="w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen divide-x">
                     <div className="pt-10 col-span-1">
@@ -81,7 +92,12 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                             <Link href={`/post/${post.id}`}>
                                 <div className="p-8 mb-3 pr-20 flex justify-between bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer">                    
                                     <div className="relative space-y-5">
-                                        <p className="text-2xl font-semibold text-gray-900">{post.title}</p>
+                                        <p className="text-2xl font-semibold text-gray-900">
+                                            {post.title}
+                                            {post.pinnedPost.length > 0 && <StarIcon
+                                                className="w-6 h-6 inline-block align-top ml-1"
+                                            />}
+                                        </p>
                                         <p className="mt-3 text-lg text-gray-600">
                                             <time dateTime={post.createdAt}>
                                                 {`${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(post.createdAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(post.createdAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(post.createdAt))}`}
@@ -123,7 +139,14 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                                                     <Menu.Item>
                                                         {({ active }) => (
                                                             <button
-                                                                onClick={(e)=> e.stopPropagation()}
+                                                                onClick={(e)=> {
+                                                                    e.stopPropagation();
+                                                                    if (post.pinnedPost.length > 0) {
+                                                                        pin(publication.id, publication.url, post.id, false)
+                                                                    } else {
+                                                                        pin(publication.id, publication.url, post.id, true)
+                                                                    }
+                                                                }}
                                                                 className={`${
                                                                 active ? 'bg-gray-300' : null
                                                                 } group flex text-gray-900 focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}
@@ -135,7 +158,7 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                                                     <Menu.Item>
                                                         {({ active }) => (
                                                             <button
-                                                                onClick={(e)=> {e.stopPropagation(); setPublishStatus(post.id, false)}}
+                                                                onClick={(e)=> {e.stopPropagation(); unpublish(publication.id, post.id, publication.url,false)}}
                                                                 className={`${
                                                                 active ? 'bg-gray-300' : null
                                                                 } group flex text-gray-900 focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}

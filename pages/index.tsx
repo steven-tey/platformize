@@ -31,6 +31,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
         <AppLayout
           name={session?.user?.name}
           email={session?.user?.email}
+          image={session?.user?.image}
         >
           <div className="w-7/12 mx-auto mt-16">
             <div className="flex justify-between">
