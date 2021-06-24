@@ -4,12 +4,24 @@ import { getSession } from 'next-auth/client'
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Fragment } from 'react'
+import { Menu, Transition } from '@headlessui/react'
 import {
   ExternalLinkIcon,
-  CogIcon,
+  DotsHorizontalIcon,
   PlusIcon,
-  ArrowLeftIcon
 } from '@heroicons/react/outline'
+
+function stopPropagation(e) {
+    e.stopPropagation();
+}
+
+const setPublishStatus = async (postId, publish) => {
+    await fetch(`/api/set-publish-status?postId=${postId}&publishStatus=${publish}`, {
+        method: 'POST',
+    })
+    window.location.reload();
+}
 
 const Publication = ({session, publication, posts, rootUrl}) => {
     const allPosts = JSON.parse(posts)
@@ -19,7 +31,7 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                 name={session?.user?.name}
                 email={session?.user?.email}
             >
-                <div className="w-7/12 mx-auto grid grid-cols-5 gap-10 divide-x">
+                <div className="w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen divide-x">
                     <div className="pt-10 col-span-1">
                         <Link href='/'>
                             <a className="text-left font-semibold text-lg">
@@ -53,12 +65,12 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                             </Link>
                         </div>
                     </div>
-                    <div className="pt-16 pl-10 col-span-4">
+                    <div className="pt-16 pl-10 col-span-3">
                         <div className="flex justify-between">
                         <h1 className="font-bold text-3xl m-5 mb-10">
                             My Posts
                         </h1>
-                        <button className="bg-gray-900 px-5 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700">
+                        <button className="bg-gray-900 px-5 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700 focus:outline-none">
                             New Post
                             <PlusIcon
                                 className="h-5 w-5 inline-block ml-2"
@@ -66,21 +78,100 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                         </button>
                         </div>
                         {allPosts.map((post) => (
-                            <div className="sm:px-5 sm:flex sm:space-x-10 py-5 mb-10 h-250 bg-gray-200 rounded-lg cursor-pointer">                    
-                                <div className="relative space-y-5">
-                                    <CogIcon
-                                    className="h-10 w-10 hover:bg-gray-400 p-2 rounded-full absolute right-0 top-0 mr-3 mt-3"
-                                    />
-                                    <p className="text-3xl font-semibold text-gray-900">{post.title}</p>
-                                    <p className="mt-3 text-lg text-gray-600 truncate pr-10">{post.description}</p>
-                                    <a href={`https://${post.publicationUrl}.${rootUrl}/p/${post.slug}`} target="_blank" className="absolute bg-gray-900 py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700">
-                                        {post.publicationUrl}.{rootUrl}/p/{post.slug}
-                                        <ExternalLinkIcon
-                                            className="h-5 w-5 inline-block ml-2"
-                                        />
-                                    </a>
+                            <Link href={`/post/${post.id}`}>
+                                <div className="p-8 mb-3 pr-20 flex justify-between bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer">                    
+                                    <div className="relative space-y-5">
+                                        <p className="text-2xl font-semibold text-gray-900">{post.title}</p>
+                                        <p className="mt-3 text-lg text-gray-600">
+                                            <time dateTime={post.createdAt}>
+                                                {`${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(post.createdAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(post.createdAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(post.createdAt))}`}
+                                            </time>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a onClick={stopPropagation} href={`https://${post.publicationUrl}.${rootUrl}/p/${post.slug}`} target="_blank">
+                                            <ExternalLinkIcon
+                                                className="h-10 w-10 inline-block mr-6 my-6 p-2"
+                                            />
+                                        </a>
+                                        <Menu onClick={stopPropagation} as="div" className="absolute inline-block my-6">
+                                            <div>
+                                            <Menu.Button className="focus:outline-none">
+                                                <DotsHorizontalIcon
+                                                    className="h-10 w-10 p-2"
+                                                />
+                                            </Menu.Button>
+                                            </div>
+                                            <Transition
+                                            as={Fragment}
+                                            enter="transition ease-out duration-100"
+                                            enterFrom="transform opacity-0 scale-95"
+                                            enterTo="transform opacity-100 scale-100"
+                                            leave="transition ease-in duration-75"
+                                            leaveFrom="transform opacity-100 scale-100"
+                                            leaveTo="transform opacity-0 scale-95"
+                                            >
+                                            <Menu.Items className="absolute z-20 right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-300 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                <div className="px-1 py-1 ">
+                                                    <Menu.Item>
+                                                        <Link href={`/post/${post.id}`}>
+                                                            <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
+                                                                Edit post
+                                                            </a>
+                                                        </Link>
+                                                    </Menu.Item>
+                                                    <Menu.Item>
+                                                        {({ active }) => (
+                                                            <button
+                                                                onClick={(e)=> e.stopPropagation()}
+                                                                className={`${
+                                                                active ? 'bg-gray-300' : null
+                                                                } group flex text-gray-900 focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}
+                                                            >
+                                                                {post.pinnedPost.length > 0 ? "Unpin from" : "Pin on"} homepage
+                                                            </button>  
+                                                        )}
+                                                    </Menu.Item>
+                                                    <Menu.Item>
+                                                        {({ active }) => (
+                                                            <button
+                                                                onClick={(e)=> {e.stopPropagation(); setPublishStatus(post.id, false)}}
+                                                                className={`${
+                                                                active ? 'bg-gray-300' : null
+                                                                } group flex text-gray-900 focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}
+                                                            >
+                                                                Revert to draft
+                                                            </button>  
+                                                        )}
+                                                    </Menu.Item>
+                                                    <Menu.Item>
+                                                        <Link href={`/post/${post.id}/settings`}>
+                                                            <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
+                                                                Settings
+                                                            </a>
+                                                        </Link>
+                                                    </Menu.Item>
+                                                </div>
+                                                <div className="px-1 py-1">
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                    <button
+                                                        onClick={(e)=> e.stopPropagation()}
+                                                        className={`${
+                                                        active ? 'bg-red-300 text-red-700' : 'text-red-700'
+                                                        } group flex focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                    )}
+                                                </Menu.Item>
+                                                </div>
+                                            </Menu.Items>
+                                            </Transition>
+                                        </Menu>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>
@@ -100,7 +191,14 @@ export async function getServerSideProps(ctx) {
             where: {
                 Publication: {
                     id: id
-                }
+                },
+                published: true
+            },
+            include: {
+                pinnedPost: true
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         })
         const publication = await prisma.publication.findUnique({

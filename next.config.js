@@ -15,4 +15,13 @@ module.exports = {
         },
       ]
     },
+    async redirects() {
+      return [
+        {
+          source: '/post',
+          destination: '/',
+          permanent: true,
+        },
+      ]
+    },
 }

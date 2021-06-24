@@ -56,7 +56,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
                   </div>
     
                   <div className="relative w-7/12 space-y-5">
-                  <Menu onClick={stopPropagation} as="div" className="absolute right-0 top-0 mr-3 mt-3 z-20">
+                  <Menu onClick={stopPropagation} as="div" className="absolute right-0 top-0 mr-3 mt-3">
                     <div>
                       <Menu.Button className="p-2 text-black rounded-full hover:bg-gray-400 focus:outline-none">
                         <CogIcon
@@ -73,26 +73,22 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-300 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute z-20 right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-300 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="px-1 py-1 ">
                           <Menu.Item>
-                              {({ active }) => (
-                                <Link href={`/publication/${publication.id}`}>
-                                  <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
-                                    Posts
-                                  </a>
-                                </Link>
-                              )}
-                            </Menu.Item>
+                              <Link href={`/publication/${publication.id}`}>
+                                <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
+                                  Posts
+                                </a>
+                              </Link>
+                          </Menu.Item>
                           {settings.map((item) => (
                             <Menu.Item>
-                              {({ active }) => (
-                                <Link href={`/publication/${publication.id}/${item.slug}`}>
-                                  <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
-                                    {item.name}
-                                  </a>
-                                </Link>
-                              )}
+                              <Link href={`/publication/${publication.id}/${item.slug}`}>
+                                <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
+                                  {item.name}
+                                </a>
+                              </Link>
                             </Menu.Item>
                           ))}
                         </div>
