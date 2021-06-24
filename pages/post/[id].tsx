@@ -5,9 +5,9 @@ import prisma from '../../lib/prisma'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect, useRef} from 'react'
-import { Menu, Transition, Dialog } from '@headlessui/react'
 import TextareaAutosize from 'react-textarea-autosize';
 import { AnnotationIcon, PaperClipIcon, PencilIcon, TrashIcon } from '@heroicons/react/solid'
+import {useRouter} from 'next/router'
 
 const Post = ({session, post, rootUrl}) => {
     const parsedPost = JSON.parse(post)
@@ -51,6 +51,16 @@ const Post = ({session, post, rootUrl}) => {
         })
         const data = await response.json()
         setSavedState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(data.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(data.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(data.updatedAt))}`)
+    }
+
+    const router = useRouter()
+
+    const publish = async (publicationId, postId, rootUrl) => {
+        const response = await fetch(`/api/publish?publicationId=${publicationId}&postId=${postId}`, {
+            method: 'POST',
+        })
+        const data = await response.json()
+        router.push(`https://${parsedPost.publicationUrl}.${rootUrl}/p/${data.slug}`)
     }
 
     return (
@@ -141,7 +151,7 @@ const Post = ({session, post, rootUrl}) => {
                                 </a>
                             </Link>
                             <button 
-                                onClick={()=> {}}
+                                onClick={()=> {publish(parsedPost.Publication.id, parsedPost.id, rootUrl)}}
                                 className="mx-2 rounded-md py-3 px-6 bg-blue-500 hover:bg-blue-400 active:bg-blue-300 focus:outline-none text-lg text-white"
                             >
                                 Publish →

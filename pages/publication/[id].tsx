@@ -4,6 +4,7 @@ import { getSession } from 'next-auth/client'
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
 import Link from 'next/link'
+import {useRouter} from 'next/router'
 import { Fragment, useState } from 'react'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import {
@@ -49,6 +50,19 @@ const Publication = ({session, publication, posts, rootUrl}) => {
         )
         if (res.ok) {
             window.location.reload()
+        }
+    }
+
+    const router = useRouter()
+    
+    async function createPost(publicationUrl) {
+        const res = await fetch(
+            `/api/create?publicationUrl=${publicationUrl}`, 
+            { method: 'POST' }
+        )
+        if (res.ok) {
+          const data = await res.json()
+          router.push(`/post/${data.postId}`)
         }
     }
     
@@ -198,7 +212,7 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                             My Posts
                         </h1>
                         <button 
-                            onClick={() => {setCreating(true); }}
+                            onClick={() => {setCreating(true); createPost(publication.url)}}
                             className="inline-flex justify-center bg-gray-900 px-5 py-2 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700 focus:outline-none"
                         >
                             {creating ? 

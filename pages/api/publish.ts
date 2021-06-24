@@ -2,7 +2,7 @@ import prisma from '../../lib/prisma'
 
 export default async function Publish(req, res) {
     const { publicationId, postId } = req.query
-    await prisma.post.update({
+    const post = await prisma.post.update({
         where: {
             id: postId
         },
@@ -15,7 +15,7 @@ export default async function Publish(req, res) {
             publicationId: publicationId
         }
     })
-    if (!pinnedPost) { // if it's a pinned post
+    if (!pinnedPost) { // if it's the first post
         await prisma.pinnedPost.create({
             data: {
                 publicationId: publicationId,
@@ -23,5 +23,5 @@ export default async function Publish(req, res) {
             }
         })
     }
-    res.status(200).end()
+    res.status(200).json(post)
 }
