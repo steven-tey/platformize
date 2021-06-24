@@ -163,14 +163,16 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                                 ← All Publications 
                             </a>
                         </Link>
-                        <div className="relative mx-auto mt-5 mb-3 w-16 h-auto rounded-xl overflow-hidden">
-                            <Image 
-                                width={80}
-                                height={80}
-                                src='/logo.svg'
-                            />
-                        </div>
-                        <p className="text-center font-medium">{publication.name}</p>
+                        <a href={`https://${publication.url}.${rootUrl}`} target="_blank">
+                            <div className="relative mx-auto mt-5 mb-3 w-16 h-auto rounded-xl overflow-hidden">
+                                <Image 
+                                    width={80}
+                                    height={80}
+                                    src='/logo.svg'
+                                />
+                            </div>
+                            <p className="text-center font-medium">{publication.name}</p>
+                        </a>
 
                         <div className="text-left grid grid-cols-1 gap-6 mt-10">
                             <Link href={`/publication/${publication.id}/`}>

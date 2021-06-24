@@ -34,9 +34,10 @@ export default function Post ({publicationName, postTitle, description, logo, th
         />
       </div>
 
-      <div className="h-350 w-screen"></div>
-      
-      {/* <div dangerouslySetInnerHTML={{ __html: content }} /> */}
+      <div 
+        dangerouslySetInnerHTML={{ __html: content }} 
+        className="m-auto mt-20 mb-48 sm:w-1/2 text-xl text-gray-800 leading-relaxed space-y-6"
+      />
 
     </Layout>
   )
