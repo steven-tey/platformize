@@ -55,7 +55,8 @@ const Post = ({session, post, rootUrl}) => {
 
     const router = useRouter()
 
-    const publish = async (publicationId, postId, rootUrl) => {
+    const publish = async (publicationId, postId, rootUrl, title, description, content) => {
+        saveChanges(title, description, content)
         const response = await fetch(`/api/publish?publicationId=${publicationId}&postId=${postId}`, {
             method: 'POST',
         })
@@ -80,14 +81,14 @@ const Post = ({session, post, rootUrl}) => {
                     <TextareaAutosize
                         name="title"
                         onChange={(e) => setTitle(e.target.value)}
-                        className="w-full px-2 py-2 text-gray-800 mt-6 text-4xl font-bold resize-none focus:outline-none"
+                        className="w-full px-2 py-4 border-none text-gray-800 mt-6 text-4xl font-bold resize-none focus:outline-none"
                         placeholder="Enter post title..."
                         defaultValue={parsedPost.title}
                     />
                     <TextareaAutosize
                         name="description"
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full px-2 py-3 text-gray-600 text-xl mb-3 resize-none focus:outline-none"
+                        className="w-full px-2 py-3 border-none text-gray-600 text-xl mb-3 resize-none focus:outline-none"
                         placeholder="Enter post description..."
                         defaultValue={parsedPost.description}
                     />
@@ -133,7 +134,7 @@ const Post = ({session, post, rootUrl}) => {
                     <TextareaAutosize
                         name="content"
                         onChange={(e) => setContent(e.target.value)}
-                        className="w-full px-2 py-3 text-gray-800 text-lg mb-5 resize-none focus:outline-none"
+                        className="w-full px-2 py-3 border-none text-gray-800 text-lg mb-5 resize-none focus:outline-none"
                         placeholder="Write some content here..."
                         defaultValue={parsedPost.content}
                     />
@@ -151,7 +152,7 @@ const Post = ({session, post, rootUrl}) => {
                                 </a>
                             </Link>
                             <button 
-                                onClick={()=> {publish(parsedPost.Publication.id, parsedPost.id, rootUrl)}}
+                                onClick={()=> {publish(parsedPost.Publication.id, parsedPost.id, rootUrl, title, description, content)}}
                                 className="mx-2 rounded-md py-3 px-6 bg-blue-500 hover:bg-blue-400 active:bg-blue-300 focus:outline-none text-lg text-white"
                             >
                                 Publish →
