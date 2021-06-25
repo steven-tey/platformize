@@ -145,7 +145,8 @@ const Settings = ({session, publication, rootUrl}) => {
                                 </div>
                                 </div>
                             </div>
-                            <div className="w-full flex justify-end mt-3">
+                            <div className="w-full flex justify-between mt-3">
+                                <p className="text-sm text-indigo-600 mt-5">Note: This can take anywhere between 5-10 minutes to take effect.</p>
                                 <button 
                                     onClick={() => addCustomDomain(customDomain, publication.id)}
                                     className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
