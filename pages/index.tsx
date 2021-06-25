@@ -474,7 +474,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
 export async function getServerSideProps(ctx) {
   
   const { req, res } = ctx
-  const domain = process.env.NODE_ENV === 'production'? req?.headers?.host.split('.')[0] : `${process.env.CURR_SLUG}.${process.env.ROOT_URL}`
+  const domain = process.env.NODE_ENV === 'production'? req?.headers?.host : `${process.env.CURR_SLUG}.${process.env.ROOT_URL}`
   const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
 
   if (subdomain == process.env.APP_SLUG) { // If it's the app subdomain (e.g. app.yourdomain.com)
