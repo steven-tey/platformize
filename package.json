@@ -32,7 +32,7 @@
     "@types/react-dom": "^16.9.4",
     "postcss-preset-env": "^6.7.0",
     "prisma": "^2.25.0",
-    "tailwindcss": "^1.1.4",
+    "tailwindcss": "^2.2.4",
     "typescript": "3.7.3"
   },
   "license": "ISC"
