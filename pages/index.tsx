@@ -403,7 +403,6 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
     const pinnedPost = parsedPosts.filter(post => {
       return post.pinnedPost.length > 0
     })[0]
-    console.log(parsedPosts, pinnedPost)
   
     return (
       <Layout
