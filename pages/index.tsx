@@ -474,6 +474,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
 export async function getServerSideProps(ctx) {
   
   const { req, res } = ctx
+  const domain = process.env.NODE_ENV === 'production'? req?.headers?.host.split('.')[0] : `${process.env.CURR_SLUG}.${process.env.ROOT_URL}`
   const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
 
   if (subdomain == process.env.APP_SLUG) { // If it's the app subdomain (e.g. app.yourdomain.com)
@@ -500,10 +501,16 @@ export async function getServerSideProps(ctx) {
       'Cache-Control',
       'public, s-maxage=1, stale-while-revalidate=59'
     );
-    const data = await prisma.publication.findUnique({
-      where: { 
+    let filter = { 
+      customDomain: domain
+    }
+    if (domain.substr(domain.indexOf('.')+1) == process.env.ROOT_URL) {
+      filter = {
         url: subdomain
-      },
+      }
+    }
+    const data = await prisma.publication.findUnique({
+      where: filter,
       include: {
         posts: {  
           where: {

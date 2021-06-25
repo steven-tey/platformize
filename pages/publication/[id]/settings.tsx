@@ -4,12 +4,20 @@ import { getSession } from 'next-auth/client'
 import prisma from '../../../lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
-
-function stopPropagation(e) {
-    e.stopPropagation();
-}
+import {useState} from 'react'
 
 const Settings = ({session, publication, rootUrl}) => {
+
+    const [customDomain, setCustomDomain] = useState(publication.customDomain ? publication.customDomain : null)
+    const [saveStatus, setSaveStatus] = useState('Save')
+
+    async function addCustomDomain(domain, publicationId) {
+        setSaveStatus('Saving...')
+        const res = await fetch(`/api/add-custom-domain?domain=${domain}&publicationId=${publicationId}`)
+        if (res.ok) {
+            setSaveStatus('Saved!')
+        }
+    }
 
     return (
         <>
@@ -54,82 +62,124 @@ const Settings = ({session, publication, rootUrl}) => {
                             </Link>
                         </div>
                     </div>
-                    <div className="pt-16 pl-10 col-span-3">
+                    <div className="pt-16 pb-20 pl-10 col-span-3">
                         <div className="flex justify-between">
                             <h1 className="font-bold text-3xl m-5 mb-10">
                                 Settings
                             </h1>
                         </div>
-                        <div className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5">
-                            <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                            Name
-                            </label>
-                            <div className="mt-1 sm:mt-0 sm:col-span-3">
-                                <input
-                                type="text"
-                                name="name"
-                                autoComplete="off"
-                                required
-                                defaultValue={publication.name}
-                                className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
-                                />
+                        <div className="sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5">
+                            <div className="sm:grid sm:grid-cols-4">
+                                <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                                Name
+                                </label>
+                                <div className="mt-1 sm:mt-0 sm:col-span-3">
+                                    <input
+                                    type="text"
+                                    name="name"
+                                    autoComplete="off"
+                                    required
+                                    defaultValue={publication.name}
+                                    className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
+                                    />
+                                </div>
+                            </div>
+                            <div className="w-full flex justify-end mt-3">
+                                <button 
+                                    //onClick={() => }
+                                    className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                                >
+                                    Save
+                                </button>
                             </div>
                         </div>
 
-                        <div className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5">
-                            <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                            Subdomain
-                            </label>
-                            <div className="mt-1 sm:mt-0 sm:col-span-3">
-                            <div className="max-w-lg flex rounded-md shadow-sm border border-solid border-gray-300">
-                                <input
-                                type="text"
-                                name="subdomain"
-                                autoComplete="off"
-                                required
-                                defaultValue={publication.url}
-                                className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none border rounded-l-md sm:text-sm border-gray-300"
-                                />
-                                <span className="inline-flex items-center px-3 w-1/2 rounded-r-md border-t-0 border-r-0 border-b-0 border border-l-1 border-gray-300 bg-gray-100 text-gray-600 sm:text-sm">
-                                .{rootUrl}
-                                </span>
+                        <div className="sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5">
+                            <div className="sm:grid sm:grid-cols-4">
+                                <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                                Subdomain
+                                </label>
+                                <div className="mt-1 sm:mt-0 sm:col-span-3">
+                                    <div className="max-w-lg flex rounded-md shadow-sm border border-solid border-gray-300">
+                                        <input
+                                        type="text"
+                                        name="subdomain"
+                                        autoComplete="off"
+                                        required
+                                        defaultValue={publication.url}
+                                        className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none border rounded-l-md sm:text-sm border-gray-300"
+                                        />
+                                        <span className="inline-flex items-center px-3 w-1/2 rounded-r-md border-t-0 border-r-0 border-b-0 border border-l-1 border-gray-300 bg-gray-100 text-gray-600 sm:text-sm">
+                                        .{rootUrl}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            </div>
-                        </div>
-
-                        <div className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5">
-                            <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                            Custom domain
-                            </label>
-                            <div className="mt-1 sm:mt-0 sm:col-span-3">
-                            <div className="max-w-lg flex rounded-md shadow-sm border border-solid border-gray-300">
-                                <input
-                                type="text"
-                                name="subdomain"
-                                autoComplete="off"
-                                required
-                                defaultValue={publication.customDomain ? publication.customDomain : null}
-                                placeholder="mydomain.com"
-                                className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 border rounded-md sm:text-sm border-gray-300"
-                                />
-                            </div>
+                            <div className="w-full flex justify-end mt-3">
+                                <button 
+                                    //onClick={() => }
+                                    className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                                >
+                                    Save
+                                </button>
                             </div>
                         </div>
 
-                        <div className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5">
-                            <label htmlFor="about" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                            Description
-                            </label>
-                            <div className="mt-1 sm:mt-0 sm:col-span-3">
-                            <textarea
-                                name="description"
-                                rows={3}
-                                defaultValue={publication.description}
-                                placeholder="The hottest gossip about armadilos"
-                                className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
-                            />
+                        <div className="sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5">
+                            <div className="sm:grid sm:grid-cols-4">
+                                <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                                Custom domain
+                                </label>
+                                <div className="mt-1 sm:mt-0 sm:col-span-3">
+                                <div className="max-w-lg flex rounded-md shadow-sm border border-solid border-gray-300">
+                                    <input
+                                    type="text"
+                                    name="subdomain"
+                                    autoComplete="off"
+                                    required
+                                    onChange={(e) => setCustomDomain(e.target.value)}
+                                    defaultValue={customDomain}
+                                    placeholder="mydomain.com"
+                                    className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 border rounded-md sm:text-sm border-gray-300"
+                                    />
+                                </div>
+                                </div>
+                            </div>
+                            <div className="w-full flex justify-end mt-3">
+                                <button 
+                                    onClick={() => addCustomDomain(customDomain, publication.id)}
+                                    className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                                >
+                                    {saveStatus}
+                                </button>
                             </div>
                         </div>
+
+
+                        <div className="sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5">
+                            <div className="sm:grid sm:grid-cols-4">
+                                <label htmlFor="about" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                                Description
+                                </label>
+                                <div className="mt-1 sm:mt-0 sm:col-span-3">
+                                    <textarea
+                                        name="description"
+                                        rows={3}
+                                        defaultValue={publication.description}
+                                        placeholder="The hottest gossip about armadilos"
+                                        className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                            </div>
+                            <div className="w-full flex justify-end mt-3">
+                                <button 
+                                    //onClick={}
+                                    className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                                >
+                                    Save
+                                </button>
+                            </div>    
+                        </div> 
                     </div>
                 </div>
             </AppLayout>

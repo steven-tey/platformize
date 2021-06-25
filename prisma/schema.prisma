@@ -27,14 +27,15 @@ model Post {
 }
 
 model Publication {
-  id          String  @id @default(cuid())
-  name        String  @default("Untitled Publication")
-  description String  @default("The hottest gossip about armadilos")
-  logo        String  @default("https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg")
-  url         String  @unique @default(cuid())
-  users       PublicationUser[]
-  posts       Post[]
-  pinnedPost  PinnedPost[]
+  id            String  @id @default(cuid())
+  name          String  @default("Untitled Publication")
+  description   String  @default("The hottest gossip about armadilos")
+  logo          String  @default("https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg")
+  url           String  @unique @default(cuid())
+  customDomain  String?  @unique
+  users         PublicationUser[]
+  posts         Post[]
+  pinnedPost    PinnedPost[]
 }
 
 model PinnedPost {
