@@ -50,6 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       'Cache-Control',
       'public, s-maxage=1, stale-while-revalidate=59'
   );
+  const domain = process.env.NODE_ENV === 'production'? req?.headers?.host : `${process.env.CURR_SLUG}.${process.env.ROOT_URL}`
   const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
 
   if (subdomain == process.env.APP_SLUG) {
@@ -63,12 +64,28 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const { slug } = ctx.query;
 
+  let constraint = {
+    publicationUrl: subdomain,
+    slug: slug,
+  }
+
+  if (domain.substr(domain.indexOf('.')+1) != process.env.ROOT_URL) {
+    constraint = {
+      publicationUrl: (await prisma.publication.findUnique({
+        where:{
+          customDomain: domain
+        },
+        select: {
+          url: true
+        }
+      })).url,
+      slug: slug,
+    }
+  }
+  
   const post = await prisma.post.findUnique({
     where: {
-      slug_publication_constraint: {
-        publicationUrl: subdomain,
-        slug: slug,
-      }
+      slug_publication_constraint: constraint,
     },
     include: {
       Publication: {

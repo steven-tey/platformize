@@ -501,12 +501,12 @@ export async function getServerSideProps(ctx) {
       'Cache-Control',
       'public, s-maxage=1, stale-while-revalidate=59'
     );
-    let filter = { 
-      customDomain: domain
+    let filter = {
+      url: subdomain
     }
-    if (domain.substr(domain.indexOf('.')+1) == process.env.ROOT_URL) {
-      filter = {
-        url: subdomain
+    if (domain.substr(domain.indexOf('.')+1) != process.env.ROOT_URL) {
+      filter = { 
+        customDomain: domain
       }
     }
     const data = await prisma.publication.findUnique({
