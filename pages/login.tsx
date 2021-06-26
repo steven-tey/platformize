@@ -1,8 +1,39 @@
 import { signIn, getSession } from 'next-auth/client'
+import Head from 'next/head'
+
+const pageTitle = 'Login'
+const logo = 'https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg'
+const description = 'Platformize is a NextJS solution that allows you to build your own Substack/Webflow clone with built-in multi-tenancy and custom domains. '
 
 export default function Login() {
     return (
       <div className="min-h-screen bg-gray-200 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <Head>
+        <title>{pageTitle}</title>
+        <link rel="icon" href={logo} />
+        <link rel="shortcut icon" type="image/x-icon" href={logo}/>
+        <link rel="apple-touch-icon" sizes="180x180" href={logo}/>
+        <meta name="theme-color" content="#7b46f6"/>
+
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <meta itemprop="name" content={pageTitle}/>
+        <meta itemprop="description" content={description}/>
+        <meta itemprop="image" content={logo}/>
+        <meta name="description" content={description}/>
+        <meta property="og:title" content={pageTitle}/>
+        <meta property="og:description" content={description}/>
+        <meta property="og:image" content={logo}/>
+        <meta property="og:type" content="website"/>
+
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:site" content="@Elegance" />
+        <meta name="twitter:creator" content="@StevenTey"/>
+        <meta name="twitter:title" content={pageTitle}/>
+        <meta name="twitter:description" content={description}/>
+        <meta name="twitter:image" content={logo}/>
+      </Head>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img
             className="mx-auto h-12 w-auto"
