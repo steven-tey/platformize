@@ -315,6 +315,12 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
                 />
               </button>
             </div>
+            {publications.length == 0 ?
+            <>
+              <img src="/empty-state.webp" />
+              <p className="text-center mb-48 mt-10 text-gray-800 font-semibold text-xl">No publications yet. Click the button above to create one.</p>
+            </>
+            : null}
             {publications.map((publication) => (
               <Link href={`/publication/${publication.id}`}>
                 <div className="sm:px-5 sm:flex sm:space-x-10 mb-10 py-5 h-250 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300">
@@ -530,7 +536,7 @@ export async function getServerSideProps(ctx) {
     if (!data) { // if site doesn't exist
       return {
         redirect: {
-          destination: '/claim-site',
+          destination: '/claim',
           statusCode: 302
         }
       }

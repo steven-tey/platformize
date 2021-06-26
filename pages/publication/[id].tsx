@@ -248,6 +248,12 @@ const Publication = ({session, publication, posts, rootUrl}) => {
                             </>}
                         </button>
                         </div>
+                        {allPosts.length == 0 ?
+                        <>
+                        <img className="mt-10 mb-20" src="/empty-state.webp" />
+                        <p className="text-center mb-48 mt-10 text-gray-800 font-semibold text-xl">No posts yet. Click the button above to create one.</p>
+                        </>
+                        : null}
                         {allPosts.map((post) => (
                             <Link href={`/post/${post.id}`}>
                                 <div className="p-8 mb-3 pr-20 flex justify-between bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer">                    
