@@ -418,10 +418,10 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
             <div className="relative w-10/12 sm:w-7/12 h-350 mx-auto lg:max-w-7xl">
               <Link href={`/p/${pinnedPost.slug}`}><a>
                 <div className="sm:px-10 sm:flex sm:space-x-10 py-16 h-full hover:bg-gray-200">
-                  <div className="relative sm:w-7/12 h-full p-10 overflow-hidden rounded-lg">
+                  <div className="relative sm:w-1/2 h-full p-10 overflow-hidden rounded-lg">
                     <Image
                       layout="fill"
-                      src={`/blog/${pinnedPost.image}`}
+                      src={pinnedPost.image}
                       />
                   </div>
     

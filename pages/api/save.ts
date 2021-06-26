@@ -21,6 +21,7 @@ export default async function Save(req, res) {
         data: {
             title: data.title,
             description: data.description,
+            image: `https://og-image.vercel.app/${encodeURIComponent(data.title)}.png?theme=dark&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fvercel-triangle-white.svg`,
             content: data.content,
             slug: `${data.title.replace(/[.,\/'"?'#!$%@\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g, '-').toLowerCase()}-${randomString}`
         }

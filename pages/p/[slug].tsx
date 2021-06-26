@@ -30,7 +30,7 @@ export default function Post ({publicationName, postTitle, description, logo, th
         <Image
           layout="fill"
           objectFit="cover"
-          src={`/blog/${thumbnail}`}
+          src={thumbnail}
         />
       </div>
 

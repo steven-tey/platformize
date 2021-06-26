@@ -1,4 +1,7 @@
 module.exports = {
+    images: {
+      domains: ['og-image.vercel.app']
+    },
     typescript: {
       // !! WARN !!
       // Dangerously allow production builds to successfully complete even if
