@@ -56,7 +56,7 @@ const Post = ({session, post, rootUrl}) => {
     const router = useRouter()
 
     const publish = async (publicationId, postId, rootUrl, title, description, content) => {
-        saveChanges(title, description, content)
+        await saveChanges(title, description, content)
         const response = await fetch(`/api/publish?publicationId=${publicationId}&postId=${postId}`, {
             method: 'POST',
         })
