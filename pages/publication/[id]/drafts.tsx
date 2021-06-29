@@ -11,6 +11,7 @@ import {
   PlusIcon,
   ExclamationIcon
 } from '@heroicons/react/outline'
+import Loader from '../../../components/Loader'
 
 function stopPropagation(e) {
     e.stopPropagation();
@@ -25,14 +26,14 @@ const publish = async (publicationId, postId) => {
 
 export default function Drafts ({publication, posts, rootUrl}) {
 
-    const session = useRequireAuth()
-    if (!session) return <Loader/>
-
     const allPosts = JSON.parse(posts)
     const [creating, setCreating] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
     const [draftToDelete, setDraftToDelete] = useState('')
     const [deleting, setDeleting] = useState(false)
+
+    const session = useRequireAuth()
+    if (!session) return <Loader/>
 
     async function deleteDraft(postId) {
         setDeleting(true)

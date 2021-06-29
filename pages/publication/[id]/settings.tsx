@@ -4,14 +4,15 @@ import prisma from '../../../lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
 import {useState} from 'react'
+import Loader from '../../../components/Loader'
 
 export default function Settings ({publication, rootUrl}) {
 
-    const session = useRequireAuth()
-    if (!session) return <Loader/>
-
     const [customDomain, setCustomDomain] = useState(publication.customDomain ? publication.customDomain : null)
     const [saveStatus, setSaveStatus] = useState('Save')
+
+    const session = useRequireAuth()
+    if (!session) return <Loader/>
 
     async function addCustomDomain(domain, publicationId) {
         setSaveStatus('Saving...')
