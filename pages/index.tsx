@@ -6,7 +6,7 @@ import {useRouter} from "next/router"
 import React, {Fragment, useState} from "react"
 import prisma from '../lib/prisma'
 import withAuth from "../lib/withAuth"
-import { getSession } from 'next-auth/client'
+import { useSession, getSession } from 'next-auth/client'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import {
   ExternalLinkIcon,
@@ -19,15 +19,11 @@ function stopPropagation(e) {
   e.stopPropagation();
 }
 
-const settings = [
-  {name: 'Drafts', slug: 'drafts'},
-  {name: 'Settings', slug: 'settings'},
-]
-
-const Index = ({app, rootUrl, session, publications, publicationName, publicationDescription, publicationLogo, posts}) => {
+const Index = ({app, rootUrl, publications, publicationName, publicationDescription, publicationLogo, posts}) => {
 
   // If it's the app subdomain (e.g. app.yourdomain.com)
   if (app) {
+    const [ session, loading ] = useSession()
     const [open, setOpen] = useState(false)
     const [creating, setCreating] = useState(false)
 
@@ -323,6 +319,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
             : null}
             {publications.map((publication) => (
               <Link href={`/publication/${publication.id}`}>
+                <a>
                 <div className="sm:px-5 sm:flex sm:space-x-10 mb-10 py-5 h-250 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300">
                   <div className="relative sm:w-5/12 h-full p-10 overflow-hidden rounded-lg">
                     <Image
@@ -359,15 +356,20 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
                                 </a>
                               </Link>
                           </Menu.Item>
-                          {settings.map((item) => (
-                            <Menu.Item>
-                              <Link href={`/publication/${publication.id}/${item.slug}`}>
+                          <Menu.Item>
+                            <Link href={`/publication/${publication.id}/drafts`}>
+                              <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
+                                Drafts
+                              </a>
+                            </Link>
+                          </Menu.Item>
+                          <Menu.Item>
+                              <Link href={`/publication/${publication.id}/settings`}>
                                 <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
-                                  {item.name}
+                                  Settings
                                 </a>
                               </Link>
                             </Menu.Item>
-                          ))}
                         </div>
                         <div className="px-1 py-1">
                           <Menu.Item>
@@ -396,6 +398,7 @@ const Index = ({app, rootUrl, session, publications, publicationName, publicatio
                     </a>
                   </div>
                 </div>
+                </a>
               </Link>
             ))}
           </div>
@@ -484,7 +487,7 @@ export async function getServerSideProps(ctx) {
   const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
 
   if (subdomain == process.env.APP_SLUG) { // If it's the app subdomain (e.g. app.yourdomain.com)
-    const session = await getSession(ctx)
+    const session = getSession(ctx)
     const publications = await prisma.publication.findMany({
       where: {
         users: {
@@ -498,7 +501,6 @@ export async function getServerSideProps(ctx) {
       props: {
         app: true,
         rootUrl: process.env.ROOT_URL,
-        session: session,
         publications: publications
       }
     }

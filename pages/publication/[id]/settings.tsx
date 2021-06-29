@@ -1,13 +1,14 @@
 import AppLayout from '../../../components/AppLayout'
 import withAuth from '../../../lib/withAuth'
-import { getSession } from 'next-auth/client'
+import { useSession } from 'next-auth/client'
 import prisma from '../../../lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
 import {useState} from 'react'
 
-const Settings = ({session, publication, rootUrl}) => {
+const Settings = ({publication, rootUrl}) => {
 
+    const [ session, loading ] = useSession()
     const [customDomain, setCustomDomain] = useState(publication.customDomain ? publication.customDomain : null)
     const [saveStatus, setSaveStatus] = useState('Save')
 
@@ -194,7 +195,6 @@ export async function getServerSideProps(ctx) {
     const { req, res } = ctx
     const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
     if (subdomain == process.env.APP_SLUG) {
-        const session = await getSession(ctx)
         const publication = await prisma.publication.findUnique({
             where: {
                 id: id
@@ -202,7 +202,6 @@ export async function getServerSideProps(ctx) {
         }) 
         return {
             props: {
-                session: session,
                 publication: publication,
                 rootUrl: process.env.ROOT_URL
             }

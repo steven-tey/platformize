@@ -1,6 +1,6 @@
 import AppLayout from '../../components/AppLayout'
 import withAuth from '../../lib/withAuth'
-import { getSession } from 'next-auth/client'
+import { useSession } from 'next-auth/client'
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,6 +16,7 @@ import {
 import {
     StarIcon
   } from '@heroicons/react/solid'
+import Loader from '../../components/Loader'
 
 function stopPropagation(e) {
     e.stopPropagation();
@@ -35,7 +36,10 @@ const pin = async (publicationId, slug, postId, pinStatus) => {
     window.location.reload();
 }
 
-const Publication = ({session, publication, posts, rootUrl}) => {
+const Publication = ({publication, posts, rootUrl}) => {
+    
+    const [ session, loading ] = useSession()
+
     const allPosts = JSON.parse(posts)
     const [creating, setCreating] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
@@ -375,7 +379,6 @@ export async function getServerSideProps(ctx) {
     const { req, res } = ctx
     const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
     if (subdomain == process.env.APP_SLUG) {
-        const session = await getSession(ctx)
         const posts = await prisma.post.findMany({
             where: {
                 Publication: {
@@ -397,7 +400,6 @@ export async function getServerSideProps(ctx) {
         }) 
         return {
             props: {
-                session: session,
                 publication: publication,
                 posts: JSON.stringify(posts),
                 rootUrl: process.env.ROOT_URL

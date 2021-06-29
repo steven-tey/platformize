@@ -7,11 +7,14 @@ import Loader from '../components/Loader'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
 
-  const [loading, setLoading] = useState(false);
+  /* const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const start = () => {
-      //if (Router.pathname == 'publication')
+      console.log(Router)
+      if (Router.pathname.split('/')[1] == 'p') {
+        console.log('yay')
+      }
       setLoading(true);
     };
     const end = () => {
@@ -25,13 +28,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       Router.events.off("routeChangeComplete", end);
       Router.events.off("routeChangeError", end);
     };
-  }, []);
+  }, []); */
 
   return (
     <>
-    {loading ? (
+    {/* {loading ? (
         <Loader/>
-      ) : (
+      ) : ( */}
         <Provider 
           options={{
             clientMaxAge: 3600*24*7,
@@ -41,7 +44,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         >
           <Component {...pageProps} />
         </Provider>
-      )}
+      {/* )} */}
     </>
   )
 }
