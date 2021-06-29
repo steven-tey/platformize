@@ -1,5 +1,4 @@
 import AppLayout from '../../../components/AppLayout'
-import useRequireAuth from '../../../lib/useRequireAuth'
 import prisma from '../../../lib/prisma'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,7 +10,6 @@ import {
   PlusIcon,
   ExclamationIcon
 } from '@heroicons/react/outline'
-import Loader from '../../../components/Loader'
 
 function stopPropagation(e) {
     e.stopPropagation();
@@ -31,9 +29,6 @@ export default function Drafts ({publication, posts, rootUrl}) {
     const [openDelete, setOpenDelete] = useState(false)
     const [draftToDelete, setDraftToDelete] = useState('')
     const [deleting, setDeleting] = useState(false)
-
-    const session = useRequireAuth()
-    if (!session) return <Loader/>
 
     async function deleteDraft(postId) {
         setDeleting(true)
@@ -61,11 +56,7 @@ export default function Drafts ({publication, posts, rootUrl}) {
 
     return (
         <>
-            <AppLayout
-                name={session?.user?.name}
-                email={session?.user?.email}
-                image={session?.user?.image}
-            >
+            <AppLayout>
                 {/* Delete Draft Overlay */}
                 <Transition.Root show={openDelete} as={Fragment}>
                     <Dialog

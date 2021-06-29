@@ -1,23 +1,11 @@
 import AppLayout from '../../../components/AppLayout'
-import useRequireAuth from '../../../lib/useRequireAuth'
 import { getSession } from 'next-auth/client'
-import prisma from '../../../lib/prisma'
-import Link from 'next/link'
-import Image from 'next/image'
-import Loader from '../../../components/Loader'
 
 export default function PostSettings({rootUrl}){
 
-    const session = useRequireAuth()
-    if (!session) return <Loader/>
-
     return (
         <>
-            <AppLayout
-                name={session?.user?.name}
-                email={session?.user?.email}
-                image={session?.user?.image}
-            >
+            <AppLayout>
             </AppLayout>
         </>
     )

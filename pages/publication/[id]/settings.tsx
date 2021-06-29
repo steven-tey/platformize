@@ -1,18 +1,13 @@
 import AppLayout from '../../../components/AppLayout'
-import useRequireAuth from '../../../lib/useRequireAuth'
 import prisma from '../../../lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
 import {useState} from 'react'
-import Loader from '../../../components/Loader'
 
 export default function Settings ({publication, rootUrl}) {
 
     const [customDomain, setCustomDomain] = useState(publication.customDomain ? publication.customDomain : null)
     const [saveStatus, setSaveStatus] = useState('Save')
-
-    const session = useRequireAuth()
-    if (!session) return <Loader/>
 
     async function addCustomDomain(domain, publicationId) {
         setSaveStatus('Saving...')
@@ -24,11 +19,7 @@ export default function Settings ({publication, rootUrl}) {
 
     return (
         <>
-            <AppLayout
-                name={session?.user?.name}
-                email={session?.user?.email}
-                image={session?.user?.image}
-            >
+            <AppLayout>
                 <div className="w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen divide-x">
                     <div className="pt-10 col-span-1">
                         <Link href='/'>

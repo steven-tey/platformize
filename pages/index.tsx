@@ -5,8 +5,7 @@ import Image from "next/image"
 import {useRouter} from "next/router"
 import React, {Fragment, useState} from "react"
 import prisma from '../lib/prisma'
-import useRequireAuth from '../lib/useRequireAuth'
-import { useSession, getSession } from 'next-auth/client'
+import { getSession } from 'next-auth/client'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import {
   ExternalLinkIcon,
@@ -14,7 +13,6 @@ import {
   PlusIcon,
 } from '@heroicons/react/outline'
 import { ExclamationIcon } from "@heroicons/react/solid"
-import Loader from "../components/Loader"
 
 function stopPropagation(e) {
   e.stopPropagation();
@@ -31,9 +29,6 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
     const [openDelete, setOpenDelete] = useState(false)  
     const [pubToDelete, setPubToDelete] = useState('')
     const [deleting, setDeleting] = useState(false)
-
-    const session = useRequireAuth()
-    if (!session) return <Loader/>
 
     const router = useRouter()
     
@@ -62,11 +57,7 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
 
     return (
       <>
-        <AppLayout
-          name={session?.user?.name}
-          email={session?.user?.email}
-          image={session?.user?.image}
-        >
+        <AppLayout>
           {/* Create Publication Overlay */}
           <Transition.Root show={open} as={Fragment}>
               <Dialog

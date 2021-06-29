@@ -4,16 +4,22 @@ import {useRouter} from 'next/router'
 import React from 'react'
 import { Popover } from '@headlessui/react'
 import { signOut } from 'next-auth/client'
+import Loader from './Loader'
+import useRequireAuth from '../lib/useRequireAuth'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function AppLayout ({name, email, image, children}) {
+export default function AppLayout ({children}) {
     const title = 'Platformize App'
     const description = 'Platformize is a NextJS framework that allows you to crate Substack-like user experiences out of the box.'
     const logo = 'https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg'
     const router = useRouter()
+
+    const session = useRequireAuth()
+    if (!session) return <Loader/>
+
   return (
     <>
     <div>  
@@ -53,10 +59,10 @@ export default function AppLayout ({name, email, image, children}) {
                     <span className="sr-only">Workflow</span>
                     <img
                       className="h-8 w-auto sm:h-10 inline-block rounded-full"
-                      src={image}
+                      src={session.user.image}
                       alt=""
                     />
-                    <span className="inline-block ml-3 text-lg text-gray-700 align-middle truncate">{name}</span>
+                    <span className="inline-block ml-3 text-lg text-gray-700 align-middle truncate">{session.user.name}</span>
                   </a></Link>
                 </div>
                 <div className="hidden md:flex items-center space-x-10 justify-end md:flex-1 lg:w-0">

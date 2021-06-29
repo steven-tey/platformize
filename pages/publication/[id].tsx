@@ -1,5 +1,4 @@
 import AppLayout from '../../components/AppLayout'
-import useRequireAuth from '../../lib/useRequireAuth'
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,7 +14,6 @@ import {
 import {
     StarIcon
   } from '@heroicons/react/solid'
-import Loader from '../../components/Loader'
 
 function stopPropagation(e) {
     e.stopPropagation();
@@ -36,9 +34,6 @@ const pin = async (publicationId, slug, postId, pinStatus) => {
 }
 
 export default function Publication({publication, posts, rootUrl}){
-
-    const session = useRequireAuth()
-    if (!session) return <Loader/>
 
     const allPosts = JSON.parse(posts)
     const [creating, setCreating] = useState(false)
@@ -72,11 +67,7 @@ export default function Publication({publication, posts, rootUrl}){
     
     return (
         <>
-            <AppLayout
-                name={session?.user?.name}
-                email={session?.user?.email}
-                image={session?.user?.image}
-            >
+            <AppLayout>
                 {/* Delete Post Overlay */}
                 <Transition.Root show={openDelete} as={Fragment}>
                     <Dialog

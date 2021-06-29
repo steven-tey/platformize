@@ -1,5 +1,4 @@
 import AppLayout from '../../components/AppLayout'
-import useRequireAuth from '../../lib/useRequireAuth'
 import { getSession } from 'next-auth/client'
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
@@ -8,12 +7,8 @@ import { useState, useEffect, useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import { AnnotationIcon, PaperClipIcon, PencilIcon, TrashIcon } from '@heroicons/react/solid'
 import {useRouter} from 'next/router'
-import Loader from '../../components/Loader'
 
 export default function Post ({post, rootUrl}) {
-
-    const session = useRequireAuth()
-    if (!session) return <Loader/>
 
     const parsedPost = JSON.parse(post)
     const [savedState, setSavedState] = useState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(parsedPost.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(parsedPost.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(parsedPost.updatedAt))}`)
@@ -71,11 +66,7 @@ export default function Post ({post, rootUrl}) {
 
     return (
         <>
-            <AppLayout
-                name={session?.user?.name}
-                email={session?.user?.email}
-                image={session?.user?.image}
-            >
+            <AppLayout>
                 <div className="w-6/12 mx-auto mt-10">
                     <Link href={`/publication/${parsedPost.Publication.id}`}>
                         <a className="text-left text-gray-800 font-semibold text-lg">
