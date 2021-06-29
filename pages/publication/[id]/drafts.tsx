@@ -1,6 +1,5 @@
 import AppLayout from '../../../components/AppLayout'
-import withAuth from '../../../lib/withAuth'
-import { useSession } from 'next-auth/client'
+import useRequireAuth from '../../../lib/useRequireAuth'
 import prisma from '../../../lib/prisma'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -24,8 +23,11 @@ const publish = async (publicationId, postId) => {
     window.location.reload();
 }
 
-const Drafts = ({publication, posts, rootUrl}) => {
-    const [ session, loading ] = useSession()
+export default function Drafts ({publication, posts, rootUrl}) {
+
+    const session = useRequireAuth()
+    if (!session) return <Loader/>
+
     const allPosts = JSON.parse(posts)
     const [creating, setCreating] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
@@ -365,5 +367,3 @@ export async function getServerSideProps(ctx) {
         }
     }
 }
-
-export default withAuth(Drafts)

@@ -1,11 +1,15 @@
 import AppLayout from '../../../components/AppLayout'
-import withAuth from '../../../lib/withAuth'
+import useRequireAuth from '../../../lib/useRequireAuth'
 import { getSession } from 'next-auth/client'
 import prisma from '../../../lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
+import Loader from '../../../components/Loader'
 
-const PostSettings = ({session, rootUrl}) => {
+export default function PostSettings({rootUrl}){
+
+    const session = useRequireAuth()
+    if (!session) return <Loader/>
 
     return (
         <>
@@ -41,5 +45,3 @@ export async function getServerSideProps(ctx) {
         }
     }
 }
-
-export default withAuth(PostSettings)

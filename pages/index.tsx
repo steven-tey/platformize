@@ -5,7 +5,7 @@ import Image from "next/image"
 import {useRouter} from "next/router"
 import React, {Fragment, useState} from "react"
 import prisma from '../lib/prisma'
-import withAuth from "../lib/withAuth"
+import useRequireAuth from '../lib/useRequireAuth'
 import { useSession, getSession } from 'next-auth/client'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import {
@@ -14,22 +14,26 @@ import {
   PlusIcon,
 } from '@heroicons/react/outline'
 import { ExclamationIcon } from "@heroicons/react/solid"
+import Loader from "../components/Loader"
 
 function stopPropagation(e) {
   e.stopPropagation();
 }
 
-const Index = ({app, rootUrl, publications, publicationName, publicationDescription, publicationLogo, posts}) => {
+export default function Index ({app, rootUrl, publications, publicationName, publicationDescription, publicationLogo, posts}) {
 
   // If it's the app subdomain (e.g. app.yourdomain.com)
   if (app) {
-    const [ session, loading ] = useSession()
+
     const [open, setOpen] = useState(false)
     const [creating, setCreating] = useState(false)
 
     const [openDelete, setOpenDelete] = useState(false)  
     const [pubToDelete, setPubToDelete] = useState('')
     const [deleting, setDeleting] = useState(false)
+
+    const session = useRequireAuth()
+    if (!session) return <Loader/>
 
     const router = useRouter()
     
@@ -554,5 +558,3 @@ export async function getServerSideProps(ctx) {
     }
   }
 }
-
-export default withAuth(Index)

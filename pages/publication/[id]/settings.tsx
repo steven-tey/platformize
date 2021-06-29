@@ -1,14 +1,15 @@
 import AppLayout from '../../../components/AppLayout'
-import withAuth from '../../../lib/withAuth'
-import { useSession } from 'next-auth/client'
+import useRequireAuth from '../../../lib/useRequireAuth'
 import prisma from '../../../lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
 import {useState} from 'react'
 
-const Settings = ({publication, rootUrl}) => {
+export default function Settings ({publication, rootUrl}) {
 
-    const [ session, loading ] = useSession()
+    const session = useRequireAuth()
+    if (!session) return <Loader/>
+
     const [customDomain, setCustomDomain] = useState(publication.customDomain ? publication.customDomain : null)
     const [saveStatus, setSaveStatus] = useState('Save')
 
@@ -215,5 +216,3 @@ export async function getServerSideProps(ctx) {
         }
     }
 }
-
-export default withAuth(Settings)

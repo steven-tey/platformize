@@ -19,5 +19,5 @@
     "target": "esnext"
   },
   "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", "lib/withAuth.js"]
+  "include": ["**/*.ts", "**/*.tsx", "lib/useRequireAuth.ts"]
 }

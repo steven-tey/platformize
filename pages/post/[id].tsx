@@ -1,5 +1,5 @@
 import AppLayout from '../../components/AppLayout'
-import withAuth from '../../lib/withAuth'
+import useRequireAuth from '../../lib/useRequireAuth'
 import { getSession } from 'next-auth/client'
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
@@ -8,8 +8,13 @@ import { useState, useEffect, useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import { AnnotationIcon, PaperClipIcon, PencilIcon, TrashIcon } from '@heroicons/react/solid'
 import {useRouter} from 'next/router'
+import Loader from '../../components/Loader'
 
-const Post = ({session, post, rootUrl}) => {
+export default function Post ({post, rootUrl}) {
+
+    const session = useRequireAuth()
+    if (!session) return <Loader/>
+
     const parsedPost = JSON.parse(post)
     const [savedState, setSavedState] = useState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(parsedPost.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(parsedPost.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(parsedPost.updatedAt))}`)
     const [title, setTitle] = useState(parsedPost.title)
@@ -196,5 +201,3 @@ export async function getServerSideProps(ctx) {
         }
     }
 }
-
-export default withAuth(Post)
