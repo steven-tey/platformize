@@ -8,22 +8,6 @@ import {
 } from '@heroicons/react/outline'
 import { MailIcon } from '@heroicons/react/solid'
 
-const dropdown = [
-  {
-    name: 'About',
-    href: '/about',
-  },
-  {
-    name: 'Archive',
-    href: '/archive',
-  },
-  {
-    name: 'Help',
-    href: '#',
-  },
-  { name: 'My Account', href: '#' },
-]
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -164,16 +148,30 @@ const Header: React.FC = ({name, logo, unclaimed}) => {
                             >
                               <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
                                 <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                                  {dropdown.map((item) => (
-                                    <Link
-                                      key={item.name}
-                                      href={item.href}
-                                    ><a className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
-                                      <div className="ml-4">
-                                        <p className="text-base font-medium text-gray-900">{item.name}</p>
-                                      </div>
-                                    </a></Link>
-                                  ))}
+                                  <Link
+                                    key='About'
+                                    href='/about'
+                                  ><a className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
+                                    <div className="ml-4">
+                                      <p className="text-base font-medium text-gray-900">About</p>
+                                    </div>
+                                  </a></Link>
+                                  <Link
+                                    key='Archive'
+                                    href='/archive'
+                                  ><a className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
+                                    <div className="ml-4">
+                                      <p className="text-base font-medium text-gray-900">Archive</p>
+                                    </div>
+                                  </a></Link>
+                                  <Link
+                                    key='My Account'
+                                    href='#'
+                                  ><a className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50">
+                                    <div className="ml-4">
+                                      <p className="text-base font-medium text-gray-900">My Account</p>
+                                    </div>
+                                  </a></Link>
                                 </div>
                               </div>
                             </Popover.Panel>

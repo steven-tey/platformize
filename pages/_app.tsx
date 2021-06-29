@@ -11,6 +11,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   useEffect(() => {
     const start = () => {
+      //if (Router.pathname == 'publication')
       setLoading(true);
     };
     const end = () => {
