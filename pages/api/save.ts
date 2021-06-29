@@ -2,7 +2,6 @@ import prisma from '../../lib/prisma'
 
 export default async function Save(req, res) {
     const data = JSON.parse(req.body)
-    //const randomString = makeid(5)
     const response = await prisma.post.update({
         where: {
             id: data.id

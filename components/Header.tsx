@@ -219,17 +219,6 @@ const Header: React.FC = ({name, logo, unclaimed}) => {
                   </div>
                   <div className="py-6 px-5 space-y-6">
                     <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                      {dropdown.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className="text-base font-medium text-gray-900 hover:text-gray-700"
-                        >
-                          {item.name}
-                        </a>
-                      ))}
-                    </div>
-                    <div>
                       <a
                         href="#"
                         className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
