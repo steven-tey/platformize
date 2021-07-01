@@ -482,7 +482,7 @@ export async function getServerSideProps(ctx) {
   const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
 
   if (subdomain == process.env.APP_SLUG) { // If it's the app subdomain (e.g. app.yourdomain.com)
-    const session = getSession(ctx)
+    const session = await getSession(ctx)
     const publications = await prisma.publication.findMany({
       where: {
         users: {
