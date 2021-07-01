@@ -1,6 +1,6 @@
-# Tailwind CSS + TypeScript + Next.js Starter
+# Platforms on Vercel
 
-This is a lightweight starterkit / boilerplate to get up and running with Tailwind CSS, TypeScript and Next.js. It is also production-ready with a Purge CSS setup.
+Platformize is a NextJS framework that allows you to crate Substack-like user experiences out of the box.
 
 ## Why make this boilerplate?
 
