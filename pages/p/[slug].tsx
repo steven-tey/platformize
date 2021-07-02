@@ -45,10 +45,11 @@ export default function Post ({publicationName, postTitle, description, logo, th
           {description}
         </p>
       </div>
-      <div className="relative sm:w-8/12 mx-auto mt-16 h-700 p-10 overflow-hidden rounded-lg shadow-2xl">
+      <div className="w-full sm:w-8/12 mx-auto mt-16 overflow-hidden sm:rounded-lg shadow-2xl">
         <Image
-          layout="fill"
-          objectFit="cover"
+          width={2048}
+          height={1170}
+          layout="responsive"
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
           src={thumbnail}
@@ -57,7 +58,7 @@ export default function Post ({publicationName, postTitle, description, logo, th
 
       <div 
         dangerouslySetInnerHTML={{ __html: content }} 
-        className="m-auto mt-20 mb-48 sm:w-1/2 text-2xl text-gray-800 leading-relaxed space-y-6"
+        className="m-auto mt-20 mb-48 w-10/12 text-lg sm:w-1/2 sm:text-2xl sm:leading-relaxed text-gray-800 leading-relaxed space-y-6"
       />
 
     </Layout>

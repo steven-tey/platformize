@@ -443,19 +443,21 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
         <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
           {pinnedPost ? 
           <>
-            <div className="relative w-10/12 sm:w-7/12 h-350 mx-auto lg:max-w-7xl">
+            <div className="relative w-11/12 sm:w-7/12 mx-auto lg:max-w-7xl">
               <Link href={`/p/${pinnedPost.slug}`}><a>
-                <div className="sm:px-10 sm:flex sm:space-x-10 py-16 h-full hover:bg-gray-200">
-                  <div className="relative sm:w-1/2 h-full p-10 overflow-hidden rounded-lg">
+                <div className="grid grid-cols-2 space-x-3 py-16 hover:bg-gray-100 transition-all ease-in-out duration-100">
+                  <div className="w-10/12 m-auto overflow-hidden rounded-lg">
                     <Image
-                      layout="fill"
+                      width={2048}
+                      height={1170}
+                      layout="responsive"
                       placeholder="blur"
                       blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                       src={pinnedPost.image}
                       />
                   </div>
     
-                  <div className="mt-2">
+                  <div>
                     <p className="text-3xl font-semibold text-gray-900">{pinnedPost.title}</p>
                     <p className="mt-3 text-lg text-gray-500">{pinnedPost.description}</p>
                   </div>
@@ -465,16 +467,16 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
           </>
           :
           <>
-            <div className="relative w-10/12 sm:w-7/12 h-350 mx-auto lg:max-w-7xl text-center">
+            <div className="relative w-11/12 sm:w-7/12 h-350 mx-auto lg:max-w-7xl text-center">
               <h1 className="text-4xl font-bold">No posts yet!</h1>
             </div>
           </>
           }
-          <div className="relative w-6/12 mx-auto">
+          <div className="relative mt-10 w-11/12 sm:w-6/12 mx-auto">
             <div className="mt-6 pt-10 grid gap-5">
               {parsedPosts.map((post) => (
                 <Link href={`/p/${post.slug}`}><a>
-                  <div key={post.title} className="p-5 hover:bg-gray-200">
+                  <div key={post.title} className="p-5 hover:bg-gray-100 transition-all ease-in-out duration-100">
                     <p className="text-sm text-gray-500">
                       <time dateTime={post.createdAt}>
                         {`${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(post.createdAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(post.createdAt))}`}
