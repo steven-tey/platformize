@@ -443,7 +443,7 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
         <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
           {pinnedPost ? 
           <>
-            <div className="relative w-full sm:w-7/12 mx-auto lg:max-w-7xl">
+            <div className="relative w-11/12 sm:w-7/12 mx-auto lg:max-w-7xl">
               <Link href={`/p/${pinnedPost.slug}`}><a>
                 <div className="grid grid-cols-1 sm:grid-cols-2 space-y-5 sm:space-x-3 py-16 hover:bg-gray-100 transition-all ease-in-out duration-100">
                   <div className="w-10/12 m-auto overflow-hidden rounded-lg">
