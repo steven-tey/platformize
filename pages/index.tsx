@@ -17,6 +17,28 @@ import { ExclamationIcon } from "@heroicons/react/solid"
 function stopPropagation(e) {
   e.stopPropagation();
 }
+function preventDefault(e) {
+  e.preventDefault();
+}
+
+const shimmer = (w, h) => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="g">
+      <stop stop-color="#333" offset="20%" />
+      <stop stop-color="#222" offset="50%" />
+      <stop stop-color="#333" offset="70%" />
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="#333" />
+  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
+</svg>`
+
+const toBase64 = (str) =>
+  typeof window === 'undefined'
+    ? Buffer.from(str).toString('base64')
+    : window.btoa(str)
 
 export default function Index ({app, rootUrl, publications, publicationName, publicationDescription, publicationLogo, posts}) {
 
@@ -320,12 +342,14 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
                     <Image
                       layout="fill"
                       objectFit="cover"
+                      placeholder="blur"
+                      blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                       src={`/blog/pure-ui.webp`}
                       />
                   </div>
     
                   <div className="relative w-7/12 space-y-5">
-                  <Menu onClick={stopPropagation} as="div" className="absolute right-0 top-0 mr-3 mt-3">
+                  <Menu onClick={preventDefault} as="div" className="absolute right-0 top-0 mr-3 mt-3">
                     <div>
                       <Menu.Button className="p-2 text-black rounded-full hover:bg-gray-400 focus:outline-none">
                         <CogIcon
@@ -425,6 +449,8 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
                   <div className="relative sm:w-1/2 h-full p-10 overflow-hidden rounded-lg">
                     <Image
                       layout="fill"
+                      placeholder="blur"
+                      blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
                       src={pinnedPost.image}
                       />
                   </div>

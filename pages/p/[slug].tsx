@@ -30,6 +30,8 @@ export default function Post ({publicationName, postTitle, description, logo, th
         <Image
           layout="fill"
           objectFit="cover"
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
           src={thumbnail}
         />
       </div>
