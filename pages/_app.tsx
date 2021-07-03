@@ -3,22 +3,22 @@ import { AppProps } from 'next/app'
 import '../styles/global.css';
 import Router from "next/router";
 import { Provider } from 'next-auth/client'
-import Loader from '../components/Loader'
+import LoadingBar from 'react-top-loading-bar'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
 
-  /* const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     const start = () => {
-      console.log(Router)
+      /* console.log(Router)
       if (Router.pathname.split('/')[1] == 'p') {
         console.log('yay')
-      }
-      setLoading(true);
+      } */
+      setProgress(25);
     };
     const end = () => {
-      setLoading(false);
+      setProgress(100)
     };
     Router.events.on("routeChangeStart", start);
     Router.events.on("routeChangeComplete", end);
@@ -28,23 +28,27 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       Router.events.off("routeChangeComplete", end);
       Router.events.off("routeChangeError", end);
     };
-  }, []); */
+  }, []);
 
   return (
     <>
-    {/* {loading ? (
-        <Loader/>
-      ) : ( */}
-        <Provider 
-          options={{
-            clientMaxAge: 3600*24*7,
-            keepAlive: 3600*24*7
-          }}
-          session={pageProps.session}
-        >
-          <Component {...pageProps} />
-        </Provider>
-      {/* )} */}
+      <Provider 
+        options={{
+          clientMaxAge: 3600*24*7,
+          keepAlive: 3600*24*7
+        }}
+        session={pageProps.session}
+      >
+        <LoadingBar
+          color='#5046e4'
+          height={5}
+          transitionTime={100}
+          waitingTime={500}
+          progress={progress}
+          onLoaderFinished={() => setProgress(0)}
+        />
+        <Component {...pageProps} />
+      </Provider>
     </>
   )
 }
