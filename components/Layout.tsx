@@ -1,14 +1,14 @@
 import Head from 'next/head'
 import Header from './Header'
 import useSWR from 'swr'
-import Loader from './Loader'
+import PageLoader from './PageLoader'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function Layout ({subdomain, customDomain, children, unclaimed}) {
 
   const {data, error} = useSWR(`/api/fetch-publication-details?subdomain=${encodeURIComponent(subdomain)}&customDomain=${encodeURIComponent(customDomain)}`, fetcher)
-  if (!data) return <Loader/>
+  if (!data) return <PageLoader/>
     
   return (
     <>
