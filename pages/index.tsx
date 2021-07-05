@@ -18,9 +18,10 @@ import { getPlaiceholder } from "plaiceholder";
 const plaiceholder = async (path) => {
     try {
       const base64 = await getPlaiceholder(path)
+      console.log(base64)
       return base64
     } catch (err) {
-      err;
+      console.log(err);
     }
 }  
 
@@ -425,7 +426,6 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
     
     const parsedPosts = JSON.parse(posts)
     const pinnedPost = JSON.parse(pinPost)
-    console.log(pinnedPost)
     const [sort, setSort] = useState("date")
 
     return (
@@ -592,6 +592,7 @@ export async function getServerSideProps(ctx) {
       return post.pinnedPost.length > 0
     })[0]
     pinPost.placeholder = await plaiceholder(pinPost?.image)
+    
     return { 
       props: { 
         app: false,
