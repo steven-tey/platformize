@@ -13,6 +13,16 @@ import {
   PlusIcon,
 } from '@heroicons/react/outline'
 import { ExclamationIcon } from "@heroicons/react/solid"
+import { getPlaiceholder } from "plaiceholder";
+
+const plaiceholder = async (path) => {
+    try {
+      const base64 = await getPlaiceholder(path)
+      return base64
+    } catch (err) {
+      err;
+    }
+}  
 
 function stopPropagation(e) {
   e.stopPropagation();
@@ -25,26 +35,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const shimmer = (w, h) => `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="g">
-      <stop stop-color="#333" offset="20%" />
-      <stop stop-color="#222" offset="50%" />
-      <stop stop-color="#333" offset="70%" />
-    </linearGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#333" />
-  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
-</svg>`
-
-const toBase64 = (str) =>
-  typeof window === 'undefined'
-    ? Buffer.from(str).toString('base64')
-    : window.btoa(str)
-
-export default function Index ({app, rootUrl, publications, publicationName, subdomain, customDomain, posts}) {
+export default function Index ({app, rootUrl, publications, publicationName, publicationDescription, publicationLogo, posts, pinPost}) {
 
   // If it's the app subdomain (e.g. app.yourdomain.com)
   if (app) {
@@ -433,15 +424,15 @@ export default function Index ({app, rootUrl, publications, publicationName, sub
   } else {
     
     const parsedPosts = JSON.parse(posts)
-    const pinnedPost = parsedPosts.filter(post => {
-      return post.pinnedPost.length > 0
-    })[0]
+    const pinnedPost = JSON.parse(pinPost)
     const [sort, setSort] = useState("date")
 
     return (
       <Layout
-        subdomain={subdomain}
-        customDomain={customDomain}
+        publicationName={publicationName}
+        pageTitle={publicationName}
+        description={publicationDescription}
+        logo={publicationLogo}
       >
         <main>
         <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
@@ -456,7 +447,7 @@ export default function Index ({app, rootUrl, publications, publicationName, sub
                       height={1170}
                       layout="responsive"
                       placeholder="blur"
-                      blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                      blurDataURL={pinnedPost.placeholder.base64}
                       src={pinnedPost.image}
                       />
                   </div>
@@ -565,12 +556,10 @@ export async function getServerSideProps(ctx) {
     let filter = {
       url: subdomain
     }
-    let customDomain = 'no custom domain'
     if (domain.substr(domain.indexOf('.')+1) != process.env.ROOT_URL) {
       filter = { 
         customDomain: domain
       }
-      customDomain = domain
     }
     const data = await prisma.publication.findUnique({
       where: filter,
@@ -598,15 +587,18 @@ export async function getServerSideProps(ctx) {
         }
       }
     }
+    const pinPost = data.posts.filter(post => {
+      return post.pinnedPost.length > 0
+    })[0]
+    pinPost.placeholder = await plaiceholder(pinPost?.image)
     return { 
       props: { 
         app: false,
-        subdomain: subdomain,
-        customDomain: customDomain,
         publicationName: data.name,
         publicationDescription: data.description,
         publicationLogo: data.logo,     
-        posts: JSON.stringify(data.posts)
+        posts: JSON.stringify(data.posts),
+        pinPost: JSON.stringify(pinPost)
       } 
     }
   }

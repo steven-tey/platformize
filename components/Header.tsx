@@ -11,8 +11,6 @@ function classNames(...classes) {
 
 const Header: React.FC = ({name, logo, unclaimed}) => {
 
-  console.log(name, logo)
-
   const [open, setOpen] = useState(false)
   const [dropdown, setDropdown] = useState(false)
 
