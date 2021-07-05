@@ -15,6 +15,7 @@
     "isomorphic-unfetch": "3.0.0",
     "next": "latest",
     "next-auth": "^3.27.0",
+    "plaiceholder": "^2.0.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-markdown": "^6.0.2",
@@ -22,6 +23,7 @@
     "react-top-loading-bar": "^2.0.1",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1",
+    "sharp": "^0.28.3",
     "swr": "^0.5.6"
   },
   "devDependencies": {

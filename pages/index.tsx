@@ -21,6 +21,10 @@ function preventDefault(e) {
   e.preventDefault();
 }
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
 const shimmer = (w, h) => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
@@ -40,7 +44,7 @@ const toBase64 = (str) =>
     ? Buffer.from(str).toString('base64')
     : window.btoa(str)
 
-export default function Index ({app, rootUrl, publications, publicationName, publicationDescription, publicationLogo, posts}) {
+export default function Index ({app, rootUrl, publications, publicationName, subdomain, customDomain, posts}) {
 
   // If it's the app subdomain (e.g. app.yourdomain.com)
   if (app) {
@@ -427,17 +431,17 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
   
   // If it's any other subdomain (e.g. john.yourdomain.com, test.yourdomain.com)
   } else {
+    
     const parsedPosts = JSON.parse(posts)
     const pinnedPost = parsedPosts.filter(post => {
       return post.pinnedPost.length > 0
     })[0]
-  
+    const [sort, setSort] = useState("date")
+
     return (
       <Layout
-        publicationName={publicationName}
-        pageTitle={publicationName}
-        description={publicationDescription}
-        logo={publicationLogo}
+        subdomain={subdomain}
+        customDomain={customDomain}
       >
         <main>
         <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
@@ -472,8 +476,34 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
             </div>
           </>
           }
-          <div className="relative w-full sm:w-6/12 mx-auto">
-            <div className="mt-6 pt-10 grid gap-5">
+          {}
+          <div className="relative w-full sm:w-6/12 mt-6 mx-auto">
+            <div className="flex justify-start px-3 sm:px-0 text-sm sm:text-base space-x-3 sm:space-x-8 border-b border-gray-200">
+              <button
+                onClick={() => setSort("date")}
+                className={classNames(
+                  sort == "date" ? 'text-indigo-600 border-indigo-600 font-semibold' : 'border-white',
+                  'py-2 border-b-2'
+                )}
+              >
+                New
+              </button>
+              <button
+                onClick={() => setSort("likes")}
+                className={classNames(
+                  sort == "likes" ? 'text-indigo-600 border-indigo-600 font-semibold' : 'border-white',
+                  'py-2 border-b-2'
+                )}
+              >
+                Top
+              </button>
+              <Link href="/about">
+                <a className="py-2 border-b-2 border-white w-1/2 truncate">
+                  What is {publicationName}?
+                </a>
+              </Link>
+            </div>
+            <div className="py-5 grid gap-5">
               {parsedPosts.map((post) => (
                 <Link href={`/p/${post.slug}`}><a>
                   <div key={post.title} className="p-8 sm:p-5 hover:bg-gray-100 transition-all ease-in-out duration-100">
@@ -535,10 +565,12 @@ export async function getServerSideProps(ctx) {
     let filter = {
       url: subdomain
     }
+    let customDomain = 'no custom domain'
     if (domain.substr(domain.indexOf('.')+1) != process.env.ROOT_URL) {
       filter = { 
         customDomain: domain
       }
+      customDomain = domain
     }
     const data = await prisma.publication.findUnique({
       where: filter,
@@ -569,6 +601,8 @@ export async function getServerSideProps(ctx) {
     return { 
       props: { 
         app: false,
+        subdomain: subdomain,
+        customDomain: customDomain,
         publicationName: data.name,
         publicationDescription: data.description,
         publicationLogo: data.logo,     

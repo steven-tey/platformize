@@ -1,71 +1,27 @@
 // pages/p/[id].tsx
 
 import React from 'react'
-import { GetServerSideProps } from 'next'
-import matter from 'gray-matter'
-import remark from 'remark'
-import html from 'remark-html'
 import Layout from '../../components/Layout'
-import prisma from '../../lib/prisma'
-import Image from 'next/image'
+import Post from '../../components/Post'
 
-const shimmer = (w, h) => `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="g">
-      <stop stop-color="#333" offset="20%" />
-      <stop stop-color="#222" offset="50%" />
-      <stop stop-color="#333" offset="70%" />
-    </linearGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#333" />
-  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
-</svg>`
-
-const toBase64 = (str) =>
-  typeof window === 'undefined'
-    ? Buffer.from(str).toString('base64')
-    : window.btoa(str)
-
-export default function Post ({publicationName, postTitle, description, logo, thumbnail, content}) {
+export default function PostPage (props) {
 
   return (
     <Layout
-      publicationName={publicationName}
-      pageTitle={postTitle}
-      description={description}
-      logo={logo}
+      subdomain={props.subdomain}
+      customDomain={props.customDomain}
     >
-      <div className="relative m-auto mt-20 sm:w-1/2 text-center bg-white overflow-hidden">
-        <h1 className="mt-2 block text-4xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-            {postTitle}
-        </h1>
-        <p className="mt-16 text-2xl text-gray-500 leading-8">
-          {description}
-        </p>
-      </div>
-      <div className="w-full sm:w-8/12 mx-auto mt-16 overflow-hidden sm:rounded-lg shadow-2xl">
-        <Image
-          width={2048}
-          height={1170}
-          layout="responsive"
-          placeholder="blur"
-          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-          src={thumbnail}
-        />
-      </div>
-
-      <div 
-        dangerouslySetInnerHTML={{ __html: content }} 
-        className="m-auto mt-20 mb-48 w-10/12 text-lg sm:w-1/2 sm:text-2xl sm:leading-relaxed text-gray-800 leading-relaxed space-y-6"
+      <Post 
+        subdomain={props.subdomain}
+        customDomain={props.customDomain}
+        slug={props.slug}
       />
 
     </Layout>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export async function getServerSideProps(ctx) {
 
   const { req, res } = ctx
   res.setHeader(
@@ -86,56 +42,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const { slug } = ctx.query;
 
-  let constraint = {
-    publicationUrl: subdomain,
-    slug: slug,
+  let customDomain = domain
+  if (domain.substr(domain.indexOf('.')+1) == process.env.ROOT_URL) {
+    customDomain = 'no custom domain'
   }
-
-  if (domain.substr(domain.indexOf('.')+1) != process.env.ROOT_URL) {
-    constraint = {
-      publicationUrl: (await prisma.publication.findUnique({
-        where:{
-          customDomain: domain
-        },
-        select: {
-          url: true
-        }
-      })).url,
-      slug: slug,
-    }
-  }
-  
-  const post = await prisma.post.findUnique({
-    where: {
-      slug_publication_constraint: constraint,
-    },
-    include: {
-      Publication: {
-        select: {
-          name: true,
-          description: true,
-          logo: true
-        }
-      }
-    }
-  })
-
-  const matterResult = matter(post?.content)
-
-  // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content)
-  const contentHtml = processedContent.toString()
 
   return {
     props: {
-      publicationName: post?.Publication.name,
-      postTitle: post?.title,
-      description: post?.description,
-      logo: post?.Publication.logo,
-      thumbnail: post?.image,
-      content: contentHtml,
+      subdomain: subdomain,
+      customDomain: customDomain,
+      slug: slug
     },
   }
 }
