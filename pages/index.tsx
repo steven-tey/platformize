@@ -425,6 +425,7 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
     
     const parsedPosts = JSON.parse(posts)
     const pinnedPost = JSON.parse(pinPost)
+    console.log(pinnedPost)
     const [sort, setSort] = useState("date")
 
     return (

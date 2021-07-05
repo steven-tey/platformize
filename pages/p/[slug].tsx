@@ -6,6 +6,7 @@ import Image from 'next/image'
 import matter from 'gray-matter'
 import remark from 'remark'
 import html from 'remark-html'
+import prisma from '../../lib/prisma'
 import { getPlaiceholder } from "plaiceholder";
 
 const plaiceholder = async (path) => {
