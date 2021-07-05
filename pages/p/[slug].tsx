@@ -50,7 +50,7 @@ export async function getServerSideProps(ctx) {
     customDomain = 'no custom domain'
   }
 
-  const baseURL =  process.env.NODE_ENV != 'production' ? 'http://localhost:3000' : customDomain == 'no custom domain' ? `${subdomain}.${process.env.ROOT_URL}` : customDomain
+  const baseURL =  process.env.NODE_ENV != 'production' ? 'http://localhost:3000' : customDomain == 'no custom domain' ? `https://${subdomain}.${process.env.ROOT_URL}` : `https://${customDomain}`
 
   const postData = await fetcher(`${baseURL}/api/fetch-post?subdomain=${encodeURIComponent(subdomain)}&customDomain=${encodeURIComponent(customDomain)}&slug=${encodeURIComponent(slug)}`)
 
