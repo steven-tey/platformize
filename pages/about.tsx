@@ -14,7 +14,7 @@ export default function About ({about}) {
       description={about.description}
       logo={about.logo}
     >
-      <div className="relative m-auto mt-20 sm:w-1/2 text-center bg-white overflow-hidden">
+      <div className="relative m-auto mt-20 sm:w-1/2 bg-white overflow-hidden">
         <h1 className="mt-2 block text-4xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-6xl">
             {about.name}
         </h1>

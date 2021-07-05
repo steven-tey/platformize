@@ -31,6 +31,7 @@ model Publication {
   name          String  @default("Untitled Publication")
   description   String  @default("The hottest gossip about armadilos")
   logo          String  @default("https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg")
+  image         String @default("/blog/pure-ui.webp")
   url           String  @unique @default(cuid())
   customDomain  String? @unique
   users         PublicationUser[]

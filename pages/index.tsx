@@ -18,7 +18,6 @@ import { getPlaiceholder } from "plaiceholder";
 const plaiceholder = async (path) => {
     try {
       const base64 = await getPlaiceholder(path)
-      console.log(base64)
       return base64
     } catch (err) {
       console.log(err);
@@ -339,8 +338,8 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
                       layout="fill"
                       objectFit="cover"
                       placeholder="blur"
-                      blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                      src={`/blog/pure-ui.webp`}
+                      blurDataURL={publication.placeholder}
+                      src={publication.image}
                       />
                   </div>
     
@@ -453,7 +452,7 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
                       />
                   </div>
     
-                  <div className="text-center sm:text-left">
+                  <div className="text-center sm:text-left sm:w-10/12">
                     <p className="text-3xl font-semibold text-gray-900">{pinnedPost.title}</p>
                     <p className="mt-3 text-lg text-gray-500">{pinnedPost.description}</p>
                   </div>
@@ -533,7 +532,7 @@ export async function getServerSideProps(ctx) {
 
   if (subdomain == process.env.APP_SLUG) { // If it's the app subdomain (e.g. app.yourdomain.com)
     const session = await getSession(ctx)
-    const publications = await prisma.publication.findMany({
+    const publicationsRaw = await prisma.publication.findMany({
       where: {
         users: {
           some: {
@@ -542,6 +541,11 @@ export async function getServerSideProps(ctx) {
         }
       }
     })
+    const publications = await Promise.all(
+      publicationsRaw.map(async (publication) => (
+        {... publication, placeholder: await plaiceholder(publication.image)}
+      ))
+    )
     return {
       props: {
         app: true,
