@@ -15,11 +15,14 @@ export default function PostPage (props) {
         subdomain={props.subdomain}
         customDomain={props.customDomain}
         slug={props.slug}
+        postData={props.postData}
       />
 
     </Layout>
   )
 }
+
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export async function getServerSideProps(ctx) {
 
@@ -47,11 +50,16 @@ export async function getServerSideProps(ctx) {
     customDomain = 'no custom domain'
   }
 
+  const baseURL =  process.env.NODE_ENV != 'production' ? 'http://localhost:3000' : customDomain == 'no custom domain' ? `${subdomain}.${process.env.ROOT_URL}` : customDomain
+
+  const postData = await fetcher(`${baseURL}/api/fetch-post?subdomain=${encodeURIComponent(subdomain)}&customDomain=${encodeURIComponent(customDomain)}&slug=${encodeURIComponent(slug)}`)
+
   return {
     props: {
       subdomain: subdomain,
       customDomain: customDomain,
-      slug: slug
+      slug: slug,
+      postData: postData
     },
   }
 }

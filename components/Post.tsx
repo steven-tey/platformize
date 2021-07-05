@@ -6,7 +6,7 @@ const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function Post (props) {
 
-    const { data, error } = useSWR(`/api/fetch-post?subdomain=${encodeURIComponent(props.subdomain)}&customDomain=${encodeURIComponent(props.customDomain)}&slug=${encodeURIComponent(props.slug)}`, fetcher)
+    const { data, error } = useSWR(`/api/fetch-post?subdomain=${encodeURIComponent(props.subdomain)}&customDomain=${encodeURIComponent(props.customDomain)}&slug=${encodeURIComponent(props.slug)}`, fetcher, {initialData: props.postData})
 
     if (error) return <div>failed to load</div>
     if (!data) return <PageLoader/>
