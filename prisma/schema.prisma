@@ -32,7 +32,7 @@ model Publication {
   description   String  @default("The hottest gossip about armadilos")
   logo          String  @default("https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg")
   url           String  @unique @default(cuid())
-  customDomain  String?  @unique
+  customDomain  String? @unique
   users         PublicationUser[]
   posts         Post[]
   pinnedPost    PinnedPost[]

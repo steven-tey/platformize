@@ -2,6 +2,7 @@ import prisma from '../../lib/prisma'
 
 export default async function SaveCustomDomain(req, res) {
     const { domain, oldDomain, publicationId } = req.query
+    console.log(domain, oldDomain)
     if (domain != oldDomain ) {
         if (oldDomain.length > 0) {
             await fetch(`https://api.vercel.com/v8/projects/${process.env.VERCEL_PROJECT_ID}/domains/${oldDomain}?teamId=team_nO2mCG4W8IxPIeKoSsqwAxxB`, {
@@ -21,14 +22,14 @@ export default async function SaveCustomDomain(req, res) {
                 method: "POST"
             })
         }
-        await prisma.publication.update({
-            where: {
-                id: publicationId
-            },
-            data: {
-                customDomain: domain
-            }
-        })
     }
+    await prisma.publication.update({
+        where: {
+            id: publicationId
+        },
+        data: {
+            customDomain: domain.length > 0 ? domain : null
+        }
+    })
     res.status(200).end()
 }

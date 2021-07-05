@@ -9,6 +9,9 @@ module.exports = {
         '350': '350px',
         '700': '700px',
       },
+      transitionProperty: {
+        height: 'height'
+      }
     }
   },
   variants: {

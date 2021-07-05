@@ -36,7 +36,9 @@ export default function Layout ({publicationName, pageTitle, description, logo, 
         logo={logo}
         unclaimed={unclaimed}
       />
-      {children}
+      <div className="pt-20">
+        {children}
+      </div>
     </div>
     </>
   )
