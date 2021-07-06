@@ -311,12 +311,12 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
             </Dialog>
           </Transition.Root>
 
-          <div className="w-7/12 mx-auto mt-16">
+          <div className="w-11/12 sm:w-7/12 mx-auto mt-16">
             <div className="flex justify-between">
-              <h1 className="font-bold text-3xl m-5 mb-10">
+              <h1 className="font-bold text-2xl sm:text-3xl m-5 mb-10">
                 My Publications
               </h1>
-              <button onClick={()=>setOpen(true)} className="bg-gray-900 px-5 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700 focus:outline-none">
+              <button onClick={()=>setOpen(true)} className="bg-gray-900 px-5 h-12 mt-3 sm:mt-5 rounded-3xl text-base sm:text-lg text-white hover:bg-gray-700 focus:outline-none">
                 New Publication
                 <PlusIcon
                     className="h-5 w-5 inline-block ml-2"
@@ -332,23 +332,30 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
             {publications.map((publication) => (
               <Link href={`/publication/${publication.id}`}>
                 <a>
-                <div className="sm:px-5 sm:flex sm:space-x-10 mb-10 py-5 h-250 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300">
-                  <div className="relative sm:w-5/12 h-full p-10 overflow-hidden rounded-lg">
+                <div className="sm:px-5 sm:flex space-y-5 sm:space-y-0 sm:space-x-10 mb-10 py-5 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300">
+                  <div className="w-10/12 mx-auto sm:w-5/12 overflow-hidden rounded-lg">
                     <Image
-                      layout="fill"
-                      objectFit="cover"
+                      width={2048}
+                      height={1170}
+                      layout="responsive"
                       placeholder="blur"
                       blurDataURL={publication.placeholder}
                       src={publication.image}
                       />
                   </div>
     
-                  <div className="relative w-7/12 space-y-5">
+                  <div className="relative w-10/12 mx-auto sm:w-7/12 space-y-2 sm:space-y-5">
                   <Menu onClick={preventDefault} as="div" className="absolute right-0 top-0 mr-3 mt-3">
                     <div>
+                      <a onClick={stopPropagation} href={`https://${publication.url}.${rootUrl}`} target="_blank" 
+                      >
+                        <ExternalLinkIcon
+                            className="h-6 w-6 inline-block sm:hidden"
+                        />
+                      </a>
                       <Menu.Button className="p-2 text-black rounded-full hover:bg-gray-400 focus:outline-none">
                         <CogIcon
-                          className="h-6 w-6"
+                          className="h-6 w-6 inline-block"
                         />
                       </Menu.Button>
                     </div>
@@ -402,9 +409,11 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
                       </Menu.Items>
                     </Transition>
                   </Menu>
-                    <p className="text-3xl font-semibold text-gray-900">{publication.name}</p>
-                    <p className="mt-3 text-lg text-gray-600">{publication.description}</p>
-                    <a onClick={stopPropagation} href={`https://${publication.url}.${rootUrl}`} target="_blank" className="absolute bg-gray-900 py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700">
+                    <p className="text-xl sm:text-3xl font-semibold text-gray-900">{publication.name}</p>
+                    <p className="mt-3 text-base sm:text-lg text-gray-600 truncate w-9/12 sm:w-10/12">{publication.description}</p>
+                    <a onClick={stopPropagation} href={`https://${publication.url}.${rootUrl}`} target="_blank" 
+                      className="absolute bg-gray-900 hidden sm:block py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700"
+                    >
                       {publication.url}.{rootUrl}
                       <ExternalLinkIcon
                           className="h-5 w-5 inline-block ml-2"

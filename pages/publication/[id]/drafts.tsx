@@ -154,8 +154,49 @@ export default function Drafts ({publication, posts, rootUrl}) {
                     </div>
                     </Dialog>
                 </Transition.Root>
-                <div className="w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen divide-x">
-                    <div className="pt-10 col-span-1">
+
+                {/* Mobile Navigation Menu */}
+                <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 text-center">
+                    <Link href='/'>
+                        <a className="mx-8 font-semibold text-2xl">
+                            ←
+                        </a>
+                    </Link>
+                    <a href={`https://${publication.url}.${rootUrl}`} target="_blank"
+                        className="flex align-middle"
+                    >
+                        <div className="inline-block mx-auto w-10 h-auto rounded-xl overflow-hidden">
+                            <Image 
+                                width={80}
+                                height={80}
+                                src='/logo.svg'
+                            />
+                        </div>
+                        <p className="inline-block font-medium text-lg mt-2 mx-3">{publication.name}</p>
+                    </a>
+                </div>
+                <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 space-x-2 text-center pb-5">
+                    <Link href={`/publication/${publication.id}/`}>
+                        <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
+                            Posts
+                        </a>
+                    </Link>
+                    <Link href={`/publication/${publication.id}/drafts`}>
+                        <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
+                            Drafts
+                        </a>
+                    </Link>
+                    <Link href={`/publication/${publication.id}/settings`}>
+                        <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
+                            Settings
+                        </a>
+                    </Link>
+                </div>
+                <div className="sm:hidden w-full border-t mt-3 -mb-5 border-gray-800" />
+
+                {/* Desktop Navigation Menu */}
+                <div className="w-11/12 sm:w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen sm:divide-x">
+                    <div className="pt-10 hidden sm:block sm:col-span-1">
                         <Link href='/'>
                             <a className="text-left font-semibold text-lg">
                                 ← All Publications 
@@ -190,9 +231,9 @@ export default function Drafts ({publication, posts, rootUrl}) {
                             </Link>
                         </div>
                     </div>
-                    <div className="pt-16 pl-10 col-span-3">
+                    <div className="pt-16 sm:pl-10 col-span-4 sm:col-span-3">
                         <div className="flex justify-between">
-                        <h1 className="font-bold text-3xl m-5 mb-10">
+                        <h1 className="font-bold text-2xl sm:text-3xl m-5 mb-10">
                             My Drafts
                         </h1>
                         <button 

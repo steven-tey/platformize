@@ -31,7 +31,7 @@ export default function About ({about}) {
       description={about.description}
       logo={about.logo}
     >
-      <div className="relative w-full sm:w-6/12 mt-6 mx-auto">
+      <div className="relative w-11/12 sm:w-6/12 mt-6 mx-auto">
         <div className="flex justify-start px-3 sm:px-0 text-sm sm:text-base space-x-3 sm:space-x-8">
           <button
             onClick={() => setTab("about")}

@@ -16,8 +16,49 @@ export default function Settings ({publicationId, rootUrl}) {
     return (
         <>
             <AppLayout>
-                <div className="w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen divide-x">
-                    <div className="pt-10 col-span-1">
+
+                {/* Mobile Navigation Menu */}
+                <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 text-center">
+                    <Link href='/'>
+                        <a className="mx-8 font-semibold text-2xl">
+                            ←
+                        </a>
+                    </Link>
+                    <a href={`https://${data.url}.${rootUrl}`} target="_blank"
+                        className="flex align-middle"
+                    >
+                        <div className="inline-block mx-auto w-10 h-auto rounded-xl overflow-hidden">
+                            <Image 
+                                width={80}
+                                height={80}
+                                src='/logo.svg'
+                            />
+                        </div>
+                        <p className="inline-block font-medium text-lg mt-2 mx-3">{data.name}</p>
+                    </a>
+                </div>
+                <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 space-x-2 text-center pb-5">
+                    <Link href={`/publication/${publicationId}/`}>
+                        <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
+                            Posts
+                        </a>
+                    </Link>
+                    <Link href={`/publication/${publicationId}/drafts`}>
+                        <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
+                            Drafts
+                        </a>
+                    </Link>
+                    <Link href={`/publication/${publicationId}/settings`}>
+                        <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
+                            Settings
+                        </a>
+                    </Link>
+                </div>
+                <div className="sm:hidden w-full border-t mt-3 -mb-5 border-gray-800" />
+
+                {/* Desktop Navigation Menu */}
+                <div className="w-11/12 sm:w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen sm:divide-x">
+                    <div className="pt-10 hidden sm:block sm:col-span-1">
                         <Link href='/'>
                             <a className="text-left font-semibold text-lg">
                                 ← All Publications 
@@ -52,9 +93,9 @@ export default function Settings ({publicationId, rootUrl}) {
                             </Link>
                         </div>
                     </div>
-                    <div className="pt-16 pb-20 pl-10 col-span-3">
+                    <div className="pt-16 sm:pl-10 col-span-4 sm:col-span-3">
                         <div className="flex justify-between">
-                            <h1 className="font-bold text-3xl m-5 mb-10">
+                            <h1 className="font-bold text-2xl sm:text-3xl sm:m-5 mb-10">
                                 Settings
                             </h1>
                         </div>
@@ -68,7 +109,7 @@ export default function Settings ({publicationId, rootUrl}) {
                                 mutate(`/api/get-publication-data?publicationId=${publicationId}`)
                                 e.target.submit.innerHTML = 'Save';
                             }}
-                            className="sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5"
+                            className="sm:gap-4 sm:items-start sm:border-b sm:border-gray-200 py-5 mb-5"
                         >
                             <div className="sm:grid sm:grid-cols-4">
                                 <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -106,7 +147,7 @@ export default function Settings ({publicationId, rootUrl}) {
                                 mutate(`/api/get-publication-data?publicationId=${publicationId}`)
                                 e.target.submit.innerHTML = 'Save';
                             }}
-                            className="sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5"
+                            className="sm:gap-4 sm:items-start sm:border-b sm:border-gray-200 py-5 mb-5"
                         >
                             <div className="sm:grid sm:grid-cols-4">
                                 <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -150,7 +191,7 @@ export default function Settings ({publicationId, rootUrl}) {
                                 mutate(`/api/get-publication-data?publicationId=${publicationId}`)
                                 e.target.submit.innerHTML = 'Save'
                             }}
-                            className="sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5"
+                            className="sm:gap-4 sm:items-start sm:border-b sm:border-gray-200 py-5 mb-5"
                         >
                             <div className="sm:grid sm:grid-cols-4">
                                 <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -192,7 +233,7 @@ export default function Settings ({publicationId, rootUrl}) {
                                 mutate(`/api/get-publication-data?publicationId=${publicationId}`, { ...data, description: e.target.description.value }, false)
                                 e.target.submit.innerHTML = 'Save'
                             }}
-                            className="sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:py-5"
+                            className="sm:gap-4 sm:items-start sm:border-gray-200 py-5 mb-5"
                         >
                             <div className="sm:grid sm:grid-cols-4">
                                 <label htmlFor="about" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
