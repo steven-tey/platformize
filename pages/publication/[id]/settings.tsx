@@ -54,7 +54,7 @@ export default function Settings ({publicationId, rootUrl}) {
                         </a>
                     </Link>
                 </div>
-                <div className="sm:hidden w-full border-t mt-3 -mb-5 border-gray-800" />
+                <div className="sm:hidden w-full border-t mt-3 -mb-5 border-gray-200" />
 
                 {/* Desktop Navigation Menu */}
                 <div className="w-11/12 sm:w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen sm:divide-x">
