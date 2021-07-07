@@ -5,16 +5,6 @@ import { GetServerSideProps } from 'next'
 import Layout from '../components/Layout'
 import prisma from '../lib/prisma'
 import Image from 'next/image'
-import { getPlaiceholder } from "plaiceholder";
-
-const plaiceholder = async (path) => {
-    try {
-      const base64 = await getPlaiceholder(path)
-      return base64
-    } catch (err) {
-      err;
-    }
-}  
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -65,7 +55,7 @@ export default function About ({about}) {
                   height={1170}
                   layout="responsive"
                   placeholder="blur"
-                  blurDataURL={about.placeholder.base64}
+                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2PYsGHDfwAHNAMQumvbogAAAABJRU5ErkJggg=="
                   src={about.image}
                   />
               </div>
@@ -138,7 +128,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       }
     }
   })
-  about.placeholder = await plaiceholder(about.image)
 
   return {
     props: {

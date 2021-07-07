@@ -27,4 +27,16 @@ module.exports = {
         },
       ]
     },
+    /* async rewrites() {
+        return [
+            {
+                source: '/(.*)',
+                has: [{
+                    type: 'host',
+                    value: '(?<slug>.*)\\.platformize\\.co'
+                }],
+                destination: '/:slug/$1',
+            },
+        ]
+    }, */
 }

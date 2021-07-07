@@ -13,16 +13,6 @@ import {
   PlusIcon,
 } from '@heroicons/react/outline'
 import { ExclamationIcon } from "@heroicons/react/solid"
-import { getPlaiceholder } from "plaiceholder";
-
-const plaiceholder = async (path) => {
-    try {
-      const base64 = await getPlaiceholder(path)
-      return base64
-    } catch (err) {
-      console.log(err);
-    }
-}  
 
 function stopPropagation(e) {
   e.stopPropagation();
@@ -339,7 +329,7 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
                       height={1170}
                       layout="responsive"
                       placeholder="blur"
-                      blurDataURL={publication.placeholder}
+                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2PYsGHDfwAHNAMQumvbogAAAABJRU5ErkJggg=="
                       src={publication.image}
                       />
                   </div>
@@ -456,7 +446,7 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
                       height={1170}
                       layout="responsive"
                       placeholder="blur"
-                      blurDataURL={pinnedPost.placeholder.base64}
+                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2PYsGHDfwAHNAMQumvbogAAAABJRU5ErkJggg=="
                       src={pinnedPost.image}
                       />
                   </div>
@@ -541,7 +531,7 @@ export async function getServerSideProps(ctx) {
 
   if (subdomain == process.env.APP_SLUG) { // If it's the app subdomain (e.g. app.yourdomain.com)
     const session = await getSession(ctx)
-    const publicationsRaw = await prisma.publication.findMany({
+    const publications = await prisma.publication.findMany({
       where: {
         users: {
           some: {
@@ -550,11 +540,6 @@ export async function getServerSideProps(ctx) {
         }
       }
     })
-    const publications = await Promise.all(
-      publicationsRaw.map(async (publication) => (
-        {... publication, placeholder: await plaiceholder(publication.image)}
-      ))
-    )
     return {
       props: {
         app: true,
@@ -604,8 +589,6 @@ export async function getServerSideProps(ctx) {
     const pinPost = data.posts.filter(post => {
       return post.pinnedPost.length > 0
     })[0]
-    pinPost.placeholder = await plaiceholder(pinPost?.image)
-    
     return { 
       props: { 
         app: false,
