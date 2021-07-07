@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Header from './Header'
 
-export default function Layout ({publicationName, pageTitle, description, logo, children, unclaimed}) {
+export default function Layout ({publicationUrl, publicationName, pageTitle, description, logo, children, unclaimed}) {
   return (
     <>
     <div>  
@@ -33,6 +33,7 @@ export default function Layout ({publicationName, pageTitle, description, logo, 
       </Head>
       <Header 
         name={publicationName}
+        url={publicationUrl}
         logo={logo}
         unclaimed={unclaimed}
       />

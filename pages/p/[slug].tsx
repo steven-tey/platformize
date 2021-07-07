@@ -7,16 +7,6 @@ import matter from 'gray-matter'
 import remark from 'remark'
 import html from 'remark-html'
 import prisma from '../../lib/prisma'
-import { getPlaiceholder } from "plaiceholder";
-
-const plaiceholder = async (path) => {
-    try {
-      const base64 = await getPlaiceholder(path)
-      return base64
-    } catch (err) {
-      err;
-    }
-}  
 
 export default function PostPage (props) {
 
@@ -41,7 +31,7 @@ export default function PostPage (props) {
           height={1170}
           layout="responsive"
           placeholder="blur"
-          blurDataURL={props.placeholder.base64}
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2PYsGHDfwAHNAMQumvbogAAAABJRU5ErkJggg=="
           src={props.thumbnail}
           />
       </div>
@@ -110,8 +100,6 @@ export async function getServerSideProps(ctx) {
       }
   })
 
-  post.placeholder = await plaiceholder(post?.image)
-
   const matterResult = matter(post?.content)
 
   // Use remark to convert markdown into HTML string
@@ -127,7 +115,6 @@ export async function getServerSideProps(ctx) {
       description: post?.description,
       logo: post?.Publication.logo,
       thumbnail: post?.image,
-      placeholder: post.placeholder,
       content: contentHtml,
     },
   }

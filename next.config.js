@@ -27,7 +27,7 @@ module.exports = {
         },
       ]
     },
-    /* async rewrites() {
+    async rewrites() {
         return [
             {
                 source: '/(.*)',
@@ -35,8 +35,8 @@ module.exports = {
                     type: 'host',
                     value: '(?<slug>.*)\\.platformize\\.co'
                 }],
-                destination: '/:slug/$1',
+                destination: '/user/:slug/$1',
             },
         ]
-    }, */
+    },
 }
