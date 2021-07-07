@@ -59,7 +59,7 @@ module.exports = {
                     type: 'host',
                     value: '(?<url>.*)\\.platformize\\.co'
                 }],
-                destination: '/:path',
+                destination: '/:url/:path',
             },
         ]
     },
