@@ -29,13 +29,29 @@ module.exports = {
     },
     async rewrites() {
         return [
-            {
+            /* {
                 source: '/(.*)',
                 has: [{
                     type: 'host',
-                    value: '(?<slug>.*)\\.platformize\\.co'
+                    value: 'app.platformize.co'
                 }],
-                destination: '/:slug*',
+                destination: '/app*',
+            }, */
+            {
+                source: '/',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)\\.platformize\\.co'
+                }],
+                destination: '/:url',
+            },
+            {
+                source: '/p/:slug',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)\\.platformize\\.co'
+                }],
+                destination: '/:url/p/:slug',
             },
         ]
     },
