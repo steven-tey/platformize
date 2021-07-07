@@ -27,7 +27,7 @@ export default function Index({publicationUrl, posts, pinPost, publicationName, 
           {pinnedPost ? 
           <>
             <div className="relative w-11/12 sm:w-7/12 mx-auto lg:max-w-7xl">
-              <Link href={`${publicationUrl}/p/${pinnedPost.slug}`}><a>
+              <Link href={`/p/${pinnedPost.slug}`}><a>
                 <div className="grid grid-cols-1 sm:grid-cols-2 space-y-5 sm:space-x-3 py-16 hover:bg-gray-100 transition-all ease-in-out duration-100">
                   <div className="w-10/12 m-auto overflow-hidden rounded-lg">
                     <Image
@@ -84,7 +84,7 @@ export default function Index({publicationUrl, posts, pinPost, publicationName, 
             </div>
             <div className="py-5 grid gap-5">
               {parsedPosts.map((post) => (
-                <Link href={`${publicationUrl}/p/${post.slug}`}><a>
+                <Link href={`/p/${post.slug}`}><a>
                   <div key={post.title} className="p-8 sm:p-5 hover:bg-gray-100 transition-all ease-in-out duration-100">
                     <p className="text-sm text-gray-500">
                       <time dateTime={post.createdAt}>
