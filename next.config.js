@@ -53,6 +53,14 @@ module.exports = {
                 }],
                 destination: '/:url/p/:slug',
             },
+            {
+                source: '/:path',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)\\.platformize\\.co'
+                }],
+                destination: '/:path',
+            },
         ]
     },
 }
