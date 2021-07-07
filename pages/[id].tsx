@@ -76,7 +76,7 @@ export default function Index({publicationUrl, posts, pinPost, publicationName, 
               >
                 Top
               </button>
-              <Link href={`${publicationUrl}/about`}>
+              <Link href={`/about`}>
                 <a className="py-2 border-b-2 border-white w-1/2 truncate">
                   What is {publicationName}?
                 </a>
