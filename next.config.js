@@ -41,6 +41,14 @@ module.exports = {
                 source: '/',
                 has: [{
                     type: 'host',
+                    value: 'stey.me'
+                }],
+                destination: '/steven',
+            },
+            {
+                source: '/',
+                has: [{
+                    type: 'host',
                     value: '(?<url>.*)\\.platformize\\.co'
                 }],
                 destination: '/:url',
