@@ -322,7 +322,7 @@ export default function Index ({app, rootUrl, publications, publicationName, pub
             {publications.map((publication) => (
               <Link href={`/publication/${publication.id}`}>
                 <a>
-                <div className="sm:px-5 sm:flex space-y-5 sm:space-y-0 sm:space-x-10 mb-10 py-5 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300">
+                <div className="sm:px-5 sm:flex space-y-5 sm:space-y-0 sm:space-x-10 mb-10 py-5 rounded-lg cursor-pointer hover:bg-gray-100">
                   <div className="w-10/12 mx-auto sm:w-5/12 overflow-hidden rounded-lg">
                     <Image
                       width={2048}
