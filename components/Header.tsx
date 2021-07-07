@@ -11,7 +11,6 @@ function classNames(...classes) {
 
 const Header: React.FC = ({name, url, logo, unclaimed}) => {
 
-  const [open, setOpen] = useState(false)
   const [dropdown, setDropdown] = useState(false)
 
   return (
