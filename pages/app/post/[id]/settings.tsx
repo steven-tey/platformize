@@ -1,4 +1,4 @@
-import AppLayout from '../../../components/AppLayout'
+import AppLayout from '../../../../components/AppLayout'
 import { getSession } from 'next-auth/client'
 
 export default function PostSettings({rootUrl}){

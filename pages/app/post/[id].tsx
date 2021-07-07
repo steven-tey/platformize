@@ -1,7 +1,6 @@
-import AppLayout from '../../components/AppLayout'
+import AppLayout from '../../../components/AppLayout'
 import { getSession } from 'next-auth/client'
-import prisma from '../../lib/prisma'
-import Image from 'next/image'
+import prisma from '../../../lib/prisma'
 import Link from 'next/link'
 import { useState, useEffect, useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';

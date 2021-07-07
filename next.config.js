@@ -35,7 +35,7 @@ module.exports = {
                     type: 'host',
                     value: '(?<slug>.*)\\.platformize\\.co'
                 }],
-                destination: '/user/:slug/$1',
+                destination: '/:slug/(.*)',
             },
         ]
     },

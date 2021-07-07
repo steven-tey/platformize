@@ -24,7 +24,7 @@ const Header: React.FC = ({name, url, logo, unclaimed}) => {
       >
         <div className="absolute mx-auto left-0 right-0 flex justify-between items-center bg-white z-10 w-10/12 lg:w-1/2 py-5 md:space-x-5">
           <div className="flex justify-start w-0 flex-1">
-            <Link href={`/user/${url}`}><a>
+            <Link href={`/${url}`}><a>
               <img
                 className="h-8 w-auto sm:h-10 inline-block"
                 src={logo}
@@ -37,7 +37,7 @@ const Header: React.FC = ({name, url, logo, unclaimed}) => {
             !unclaimed 
             ? <>
               <div className="flex items-center justify-end space-x-3">
-                <Link href={`/user/${url}/subscribe`}>
+                <Link href={`/${url}/subscribe`}>
                 <a
                   className="whitespace-nowrap inline-flex px-2 lg:px-4 py-2 border border-transparent rounded-md shadow-sm text-sm lg:text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
                 >
@@ -64,12 +64,12 @@ const Header: React.FC = ({name, url, logo, unclaimed}) => {
             'flex flex-col items-end space-y-5 text-lg text-gray-800 absolute mx-auto left-0 right-0 top-24 w-10/12 sm:w-1/2 transform transition-all ease-in-out duration-300'
           )}
         >
-          <Link href={`/user/${url}/about`}>
+          <Link href={`/${url}/about`}>
             <a>
               About
             </a>
           </Link>
-          <Link href={`/user/${url}/about`}>
+          <Link href={`/${url}/about`}>
             <a>
               Archive
             </a>

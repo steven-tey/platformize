@@ -1,9 +1,8 @@
 // pages/drafts.tsx
 
 import React, {useState} from 'react'
-import { GetServerSideProps } from 'next'
-import Layout from '../components/Layout'
-import prisma from '../lib/prisma'
+import Layout from '../../components/Layout'
+import prisma from '../../lib/prisma'
 import { MailIcon } from '@heroicons/react/solid'
 
 export default function Subscribe (props) {
@@ -12,10 +11,11 @@ export default function Subscribe (props) {
 
     return (
         <Layout
-        publicationName={props.name}
-        pageTitle={props.name}
-        description={props.description}
-        logo={props.logo}
+            publicationUrl={props.publicationUrl}
+            publicationName={props.name}
+            pageTitle={props.name}
+            description={props.description}
+            logo={props.logo}
         >
         <div className="relative m-auto mt-48 sm:w-1/2 bg-white overflow-hidden">
             <h1 className="block text-2xl text-center leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -81,34 +81,32 @@ export default function Subscribe (props) {
   )
 }
 
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-
-  const { req, res } = ctx
-  res.setHeader(
-      'Cache-Control',
-      'public, s-maxage=1, stale-while-revalidate=59'
-  );
-  const domain = process.env.NODE_ENV === 'production'? req?.headers?.host : `${process.env.CURR_SLUG}.${process.env.ROOT_URL}`
-  const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
-
-  let filter = {
-    url: subdomain
-  }
-
-  if (domain.substr(domain.indexOf('.')+1) != process.env.ROOT_URL) {
-    filter = {
-      customDomain: domain
+export async function getStaticPaths() {
+    const publications = await prisma.publication.findMany({
+        select: {
+            url: true
+        }
+    })
+    return {
+        paths: publications.map((publication) => {
+            return  { params: { id: publication.url } }
+        }),
+        fallback: false
     }
-  }
+}
 
-  const data = await prisma.publication.findUnique({
-    where: filter
-  })
+export async function getStaticProps({params: { id }}) {
 
-  return {
-    props: {
-      ...data
-    },
-  }
+    const data = await prisma.publication.findUnique({
+        where: {
+            url: id,
+        }
+    })
+
+    return {
+        props: {
+            publicationUrl: id,
+            ...data
+        },
+    }
 }

@@ -1,8 +1,8 @@
-import Layout from "../../components/Layout"
+import Layout from "../components/Layout"
 import Link from "next/link"
 import Image from "next/image"
 import React, {useState} from "react"
-import prisma from '../../lib/prisma'
+import prisma from '../lib/prisma'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')

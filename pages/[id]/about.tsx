@@ -1,8 +1,8 @@
 // pages/drafts.tsx
 
 import React, {useState} from 'react'
-import Layout from '../../../components/Layout'
-import prisma from '../../../lib/prisma'
+import Layout from '../../components/Layout'
+import prisma from '../../lib/prisma'
 import Image from 'next/image'
 
 function classNames(...classes) {
