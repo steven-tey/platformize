@@ -1,10 +1,8 @@
-import AppLayout from '../../../components/AppLayout'
-import prisma from '../../../lib/prisma'
+import AppLayout from '../../../../components/AppLayout'
 import Link from 'next/link'
 import Image from 'next/image'
-import {useState, useEffect} from 'react'
 import useSWR, {mutate} from 'swr'
-import Loader from '../../../components/Loader'
+import Loader from '../../../../components/Loader'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 

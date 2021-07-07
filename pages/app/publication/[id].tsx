@@ -1,5 +1,5 @@
-import AppLayout from '../../components/AppLayout'
-import prisma from '../../lib/prisma'
+import AppLayout from '../../../components/AppLayout'
+import prisma from '../../../lib/prisma'
 import Image from 'next/image'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
