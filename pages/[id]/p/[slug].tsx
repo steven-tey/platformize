@@ -101,6 +101,6 @@ export async function getStaticProps({params: {id, slug}}) {
             thumbnail: post?.image,
             content: contentHtml,
         }, 
-        revalidate: 10
+        revalidate: 8
     }
 }

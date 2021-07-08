@@ -161,6 +161,6 @@ export async function getStaticProps({ params: {id} }) {
             posts: JSON.stringify(data.posts),
             pinPost: JSON.stringify(pinPost)
         }, 
-        revalidate: 10
+        revalidate: 8
     }
 }
