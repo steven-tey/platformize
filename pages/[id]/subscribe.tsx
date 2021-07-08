@@ -91,7 +91,7 @@ export async function getStaticPaths() {
         paths: publications.map((publication) => {
             return  { params: { id: publication.url } }
         }),
-        fallback: true
+        fallback: false //ISR
     }
 }
 
@@ -108,6 +108,5 @@ export async function getStaticProps({params: { id }}) {
             publicationUrl: id,
             ...data
         },
-        revalidate: 10
     }
 }
