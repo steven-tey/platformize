@@ -85,7 +85,7 @@ export default function AppLayout ({children}) {
             <div
               className={classNames(
                 dropdown ? 'translate-y-0' : '-translate-y-48',
-                'sm:hidden flex flex-col items-end space-y-5 text-lg text-gray-800 absolute mx-auto left-0 right-0 top-24 w-10/12 sm:w-1/2 transform transition-all ease-in-out duration-300'
+                'flex flex-col items-end space-y-5 text-lg text-gray-800 absolute mx-auto left-0 right-0 top-24 w-10/12 sm:w-1/2 transform transition-all ease-in-out duration-300'
               )}
             >
               <Link href="/">

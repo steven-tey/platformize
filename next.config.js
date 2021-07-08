@@ -1,6 +1,7 @@
 module.exports = {
     publicRuntimeConfig: {
-      NODE_ENV: process.env.NODE_ENV
+      NODE_ENV: process.env.NODE_ENV, 
+      APP_SLUG: process.env.APP_SLUG
     },
     images: {
       domains: ['og-image.vercel.app']
@@ -31,16 +32,28 @@ module.exports = {
       ]
     },
     async rewrites() {
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'production') { // production mode
           return [
-              /* {
-                  source: '/(.*)',
+
+              // rewrites for app
+              {
+                  source: '/',
                   has: [{
                       type: 'host',
                       value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
                   }],
-                  destination: `/${process.env.APP_SLUG}*`,
-              }, */
+                  destination: `/${process.env.APP_SLUG}`,
+              },
+              {
+                  source: '/:path*',
+                  has: [{
+                      type: 'host',
+                      value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
+                  }],
+                  destination: `/${process.env.APP_SLUG}/:path*`,
+              },
+              
+              // rewrites for subdomains
               {
                   source: '/',
                   has: [{
@@ -57,6 +70,8 @@ module.exports = {
                   }],
                   destination: '/:url/:path*',
               },
+
+              // rewrites for custom domains
               {
                   source: '/',
                   has: [{
@@ -74,7 +89,7 @@ module.exports = {
                   destination: '/:url/:path*',
               }
           ]
-        } else {
+        } else { // development mode
         return [
               {
                   source: '/',

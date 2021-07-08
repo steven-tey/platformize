@@ -29,8 +29,8 @@ export default NextAuth({
   database: process.env.DATABASE_URL,
   secret: process.env.SECRET,
   pages: {
-    signIn: '/login',
-    verifyRequest: '/login'
+    signIn: `/${process.env.APP_SLUG}/login`,
+    verifyRequest: `/${process.env.APP_SLUG}/login`
   },
   adapter: PrismaAdapter(prisma),
   callbacks: {
