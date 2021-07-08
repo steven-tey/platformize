@@ -112,25 +112,43 @@ export default function Index({publicationUrl, posts, pinPost, publicationName, 
 }
 
 export async function getStaticPaths() {
-    const publications = await prisma.publication.findMany({
+    const subdomains = await prisma.publication.findMany({
         select: {
-            url: true
+            url: true,
         }
     })
+    const customDomains = await prisma.publication.findMany({
+        where: {
+          NOT: {
+            customDomain: null
+          }
+        },
+        select: {
+            customDomain: true,
+        }
+    })
+    const allPaths = [...subdomains.map((subdomain) => {return subdomain.url}), ...customDomains.map((customDomain) => {return customDomain.customDomain})]
     return {
-        paths: publications.map((publication) => {
-            return  { params: { id: publication.url } }
+        paths: allPaths.map((path) => {
+            return  { params: { id: path } }
         }),
         fallback: false
     }
 }
 
 export async function getStaticProps({ params: {id} }) {
+
+    let filter = {
+      url: id
+    }
+    if (id.includes('.')) {
+      filter = {
+        customDomain: id
+      }
+    }
   
     const data = await prisma.publication.findUnique({
-        where: {
-            url: id
-        },
+        where: filter,
         include: {
             posts: {  
             where: {

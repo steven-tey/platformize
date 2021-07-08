@@ -1,4 +1,4 @@
-var PrismaClient = require('@prisma/client')
+/* var PrismaClient = require('@prisma/client')
 let prisma = new PrismaClient.PrismaClient()
 
 const customDomainsFunction = async () => {
@@ -14,7 +14,7 @@ const customDomainsFunction = async () => {
     }
   })
   return data
-}
+} */
 
 module.exports = {
     images: {
@@ -46,7 +46,7 @@ module.exports = {
       ]
     },
     async rewrites() {
-        const customDomains = await customDomainsFunction()
+        //const customDomains = await customDomainsFunction()
         return [
             /* {
                 source: '/(.*)',
@@ -80,7 +80,31 @@ module.exports = {
                 }],
                 destination: '/:url/:path',
             },
-            ...customDomains.map((customDomain) => ({
+            {
+                source: '/',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)'
+                }],
+                destination: '/:url',
+            },
+            {
+                source: '/p/:slug',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)'
+                }],
+                destination: '/:url/p/:slug',
+            },
+            {
+                source: '/:path',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)'
+                }],
+                destination: '/:url/:path',
+            },
+            /* ...customDomains.map((customDomain) => ({
               source: '/',
               has: [{
                   type: 'host',
@@ -103,7 +127,7 @@ module.exports = {
                   value: `${customDomain.customDomain}`
               }],
               destination: `/${customDomain.url}/:path`,
-            }))
+            })) */
         ]
     },
 }

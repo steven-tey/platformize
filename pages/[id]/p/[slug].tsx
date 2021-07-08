@@ -54,24 +54,49 @@ export async function getStaticPaths() {
         select: {
             publicationUrl: true,
             slug: true,
+            Publication: {
+                select: {
+                    customDomain: true
+                }
+            }
         }
     })
     return {
-        paths: posts.map((post) => {
-            return  { params: { id: post.publicationUrl, slug: post.slug } }
+        paths: posts.flatMap((post) => {
+            if (post.Publication?.customDomain) {
+                return  [{ params: { id: post.Publication.customDomain, slug: post.slug } }, {params: { id: post.publicationUrl, slug: post.slug }}]
+            } else {
+                return  { params: { id: post.publicationUrl, slug: post.slug } }
+            }
         }),
-        fallback: false
+        fallback: true
     }
 }
 
 export async function getStaticProps({params: {id, slug}}) {
 
+    let constraint = {
+        publicationUrl: id,
+        slug: slug,
+    }
+    if (id.includes('.')) {
+        const correspondingUrl = await prisma.publication.findUnique({
+            where: {
+                customDomain: id
+            },
+            select: {
+                url: true
+            }
+        })
+        constraint = {
+            publicationUrl: correspondingUrl?.url,
+            slug: slug,
+        }
+    }
+
     const post = await prisma.post.findUnique({
             where: {
-                slug_publication_constraint: {
-                    publicationUrl: id,
-                    slug: slug,
-                }
+                slug_publication_constraint: constraint
             },
             include: {
                 Publication: {
@@ -101,5 +126,6 @@ export async function getStaticProps({params: {id, slug}}) {
             thumbnail: post?.image,
             content: contentHtml,
         },
+        revalidate: 10
     }
 }
