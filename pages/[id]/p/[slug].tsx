@@ -60,7 +60,7 @@ export async function getStaticPaths() {
         paths: posts.map((post) => {
             return  { params: { id: post.publicationUrl, slug: post.slug } }
         }),
-        fallback: false
+        fallback: true
     }
 }
 
@@ -101,5 +101,6 @@ export async function getStaticProps({params: {id, slug}}) {
             thumbnail: post?.image,
             content: contentHtml,
         },
+        revalidate: 10
     }
 }
