@@ -1,3 +1,18 @@
+var PrismaClient = require('@prisma/client')
+let prisma = new PrismaClient.PrismaClient()
+
+const customDomainToSubdomain = async (customDomain) => {
+  const subdomain = await prisma.publication.findUnique({
+    where: {
+      customDomain: customDomain
+    },
+    select: {
+      url: true
+    }
+  })
+  return subdomain.url
+}
+
 module.exports = {
     images: {
       domains: ['og-image.vercel.app']
@@ -41,14 +56,6 @@ module.exports = {
                 source: '/',
                 has: [{
                     type: 'host',
-                    value: 'stey.me'
-                }],
-                destination: '/steven',
-            },
-            {
-                source: '/',
-                has: [{
-                    type: 'host',
                     value: '(?<url>.*)\\.platformize\\.co'
                 }],
                 destination: '/:url',
@@ -68,6 +75,14 @@ module.exports = {
                     value: '(?<url>.*)\\.platformize\\.co'
                 }],
                 destination: '/:url/:path',
+            },
+            {
+                source: '/',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)'
+                }],
+                destination: `/${customDomainToSubdomain(`<url>`)}`,
             },
         ]
     },
