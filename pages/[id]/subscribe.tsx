@@ -2,10 +2,18 @@
 
 import React, {useState} from 'react'
 import Layout from '../../components/Layout'
+import PageLoader from "../../components/PageLoader"
+import { useRouter } from "next/router"
 import prisma from '../../lib/prisma'
 import { MailIcon } from '@heroicons/react/solid'
 
 export default function Subscribe (props) {
+
+    const { isFallback } = useRouter();
+      
+    if (isFallback) {
+      return <PageLoader/>
+    }
 
     const [subscribing, setSubscribing] = useState(false)
 

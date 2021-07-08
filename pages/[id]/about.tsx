@@ -2,6 +2,8 @@
 
 import React, {useState} from 'react'
 import Layout from '../../components/Layout'
+import PageLoader from "../../components/PageLoader"
+import { useRouter } from "next/router"
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
 
@@ -10,6 +12,12 @@ function classNames(...classes) {
 }
 
 export default function About (props) {
+
+  const { isFallback } = useRouter();
+    
+  if (isFallback) {
+    return <PageLoader/>
+  }
 
   const [tab, setTab] = useState("about")
 

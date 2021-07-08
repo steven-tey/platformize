@@ -1,4 +1,6 @@
 import Layout from "../components/Layout"
+import PageLoader from "../components/PageLoader"
+import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
 import React, {useState} from "react"
@@ -9,6 +11,12 @@ function classNames(...classes) {
   }
   
 export default function Index({publicationUrl, posts, pinPost, publicationName, publicationDescription, publicationLogo}){
+
+    const { isFallback } = useRouter();
+    
+    if (isFallback) {
+      return <PageLoader/>
+    }
 
     const parsedPosts = JSON.parse(posts)
     const pinnedPost = JSON.parse(pinPost)
@@ -132,7 +140,7 @@ export async function getStaticPaths() {
         paths: allPaths.map((path) => {
             return  { params: { id: path } }
         }),
-        fallback: false
+        fallback: true // need to render loading state!!!
     }
 }
 
@@ -179,5 +187,6 @@ export async function getStaticProps({ params: {id} }) {
             posts: JSON.stringify(data.posts),
             pinPost: JSON.stringify(pinPost)
         },
+        revalidate: 10
     }
 }
