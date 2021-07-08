@@ -31,59 +31,56 @@ module.exports = {
       ]
     },
     async rewrites() {
+        if (process.env.NODE_ENV === 'production') {
+          return [
+              /* {
+                  source: '/(.*)',
+                  has: [{
+                      type: 'host',
+                      value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
+                  }],
+                  destination: `/${process.env.APP_SLUG}*`,
+              }, */
+              {
+                  source: '/',
+                  has: [{
+                      type: 'host',
+                      value: '(?<url>.*)\\.platformize\\.co'
+                  }],
+                  destination: '/:url',
+              },
+              {
+                  source: '/:path*',
+                  has: [{
+                      type: 'host',
+                      value: '(?<url>.*)\\.platformize\\.co'
+                  }],
+                  destination: '/:url/:path*',
+              },
+              {
+                  source: '/',
+                  has: [{
+                      type: 'host',
+                      value: '(?<url>.*)'
+                  }],
+                  destination: '/:url',
+              },
+              {
+                  source: '/:path*',
+                  has: [{
+                      type: 'host',
+                      value: '(?<url>.*)'
+                  }],
+                  destination: '/:url/:path*',
+              }
+          ]
+        } else {
         return [
-            /* {
-                source: '/(.*)',
-                has: [{
-                    type: 'host',
-                    value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
-                }],
-                destination: `/${process.env.APP_SLUG}*`,
-            }, */
-            {
-                source: '/',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)\\.platformize\\.co'
-                }],
-                destination: '/:url',
-            },
-            {
-                source: '/:path*',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)\\.platformize\\.co'
-                }],
-                destination: '/:url/:path*',
-            },
-            process.env.NODE_ENV === 'production' ?
-            {
-                source: '/',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)'
-                }],
-                destination: '/:url',
-            }
-            :
-            {
-                source: '/',
-                destination: `/${process.env.CURR_SLUG}`,
-            },
-            process.env.NODE_ENV === 'production' ?
-            {
-                source: '/:path*',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)'
-                }],
-                destination: '/:url/:path*',
-            }
-            :
-            {
-                source: '/',
-                destination: `/${process.env.CURR_SLUG}`,
-            },
-        ]
+              {
+                  source: '/',
+                  destination: `/${process.env.CURR_SLUG}`,
+              }
+          ]
+        }
     },
 }
