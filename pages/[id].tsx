@@ -126,7 +126,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: {id} }) {
-  
+    
     const data = await prisma.publication.findUnique({
         where: {
             url: id
