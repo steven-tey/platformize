@@ -30,6 +30,7 @@ export default function PostPage (props) {
 
     return (
         <Layout
+            subdomain={props.subdomain}
             publicationName={props.publication.name}
             pageTitle={post.title}
             description={post.description}
@@ -141,6 +142,7 @@ export async function getStaticProps({params: {id, slug}}) {
 
     return {
         props: {
+            subdomain: id,
             publication: publication,
             post: JSON.stringify(post),
             content: contentHtml,

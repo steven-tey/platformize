@@ -23,6 +23,7 @@ export default function Subscribe (props) {
 
     return (
         <Layout
+            subdomain={props.subdomain}
             publicationName={props.name}
             pageTitle={props.name}
             description={props.description}

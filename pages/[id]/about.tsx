@@ -26,6 +26,7 @@ export default function About (props) {
 
   return (
     <Layout
+        subdomain={props.subdomain}
         publicationName={props.name}
         pageTitle={props.name}
         description={props.description}

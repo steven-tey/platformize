@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Header from './Header'
 
-export default function Layout ({publicationName, pageTitle, description, logo, children}) {
+export default function Layout ({subdomain, publicationName, pageTitle, description, logo, children}) {
   return (
     <>
     <div>  
@@ -32,6 +32,7 @@ export default function Layout ({publicationName, pageTitle, description, logo, 
         <meta name="twitter:image" content={logo}/>
       </Head>
       <Header 
+        subdomain={subdomain}
         name={publicationName}
         logo={logo}
       />

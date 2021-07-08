@@ -1,4 +1,7 @@
 module.exports = {
+    publicRuntimeConfig: {
+      NODE_ENV: process.env.NODE_ENV
+    },
     images: {
       domains: ['og-image.vercel.app']
     },
@@ -62,7 +65,7 @@ module.exports = {
                 }],
                 destination: '/:url/:path',
             },
-            {
+            /* {
                 source: '/',
                 has: [{
                     type: 'host',
@@ -85,7 +88,7 @@ module.exports = {
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url/:path',
-            },
+            }, */
         ]
     },
 }

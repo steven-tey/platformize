@@ -4,6 +4,7 @@ import Claim from "../components/Claim"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
+import getConfig from 'next/config'
 import React, {useState} from "react"
 import prisma from '../lib/prisma'
 
@@ -14,10 +15,12 @@ function classNames(...classes) {
 export default function Index(props){
 
     const { isFallback } = useRouter();
-    
     if (isFallback) {
       return <PageLoader/>
     }
+
+    const {publicRuntimeConfig} = getConfig()
+    const {NODE_ENV} = publicRuntimeConfig
 
     const publication = JSON.parse(props.publication)
     if (!publication) {
@@ -28,6 +31,7 @@ export default function Index(props){
 
     return (
       <Layout
+        subdomain={props.subdomain}
         publicationName={publication.name}
         pageTitle={publication.name}
         description={publication.description}
@@ -38,7 +42,7 @@ export default function Index(props){
           {pinnedPost != 'no pinned post' ? 
           <>
             <div className="relative w-11/12 sm:w-7/12 mx-auto lg:max-w-7xl">
-              <Link href={`/p/${pinnedPost.slug}`}><a>
+              <Link href={NODE_ENV === 'production' ? `/p/${pinnedPost.slug}` : `/${props.subdomain}/p/${pinnedPost.slug}`}><a>
                 <div className="grid grid-cols-1 sm:grid-cols-2 space-y-5 sm:space-x-3 py-16 hover:bg-gray-100 transition-all ease-in-out duration-100">
                   <div className="w-10/12 m-auto overflow-hidden rounded-lg">
                     <Image
@@ -88,7 +92,7 @@ export default function Index(props){
               >
                 Top
               </button>
-              <Link href={`/about`}>
+              <Link href={NODE_ENV === 'production' ? `/about` : `/${props.subdomain}/about`}>
                 <a className="py-2 border-b-2 border-white w-1/2 truncate">
                   What is {publication.name}?
                 </a>
@@ -96,7 +100,7 @@ export default function Index(props){
             </div>
             <div className="py-5 grid gap-5">
               {publication.posts.map((post) => (
-                <Link href={`/p/${post.slug}`}><a>
+                <Link href={NODE_ENV === 'production' ? `/p/${post.slug}` : `/${props.subdomain}/p/${post.slug}`}><a>
                   <div key={post.title} className="p-8 sm:p-5 hover:bg-gray-100 transition-all ease-in-out duration-100">
                     <p className="text-sm text-gray-500">
                       <time dateTime={post.createdAt}>
