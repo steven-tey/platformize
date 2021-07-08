@@ -82,7 +82,7 @@ module.exports = {
                     type: 'host',
                     value: '(?<url>.*)'
                 }],
-                destination: `/${customDomainToSubdomain(`<url>`)}`,
+                destination: `/:${customDomainToSubdomain(`:url`)}`,
             },
         ]
     },
