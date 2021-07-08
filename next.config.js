@@ -67,9 +67,23 @@ module.exports = {
             }
             :
             {
-              source: '/',
-              destination: `/${process.env.CURR_SLUG}`,
+                source: '/',
+                destination: `/${process.env.CURR_SLUG}`,
+            },
+            process.env.NODE_ENV === 'production' ?
+            {
+                source: '/:path*',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)'
+                }],
+                destination: '/:url/:path*',
             }
+            :
+            {
+                source: '/',
+                destination: `/${process.env.CURR_SLUG}`,
+            },
         ]
     },
 }
