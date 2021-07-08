@@ -48,14 +48,14 @@ module.exports = {
     async rewrites() {
         const customDomains = await customDomainsFunction()
         return [
-            {
+            /* {
                 source: '/(.*)',
                 has: [{
                     type: 'host',
                     value: 'app.platformize.co'
                 }],
                 destination: '/app*',
-            },
+            }, */
             {
                 source: '/',
                 has: [{
