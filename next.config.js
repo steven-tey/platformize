@@ -31,7 +31,6 @@ module.exports = {
       ]
     },
     async rewrites() {
-        //const customDomains = await customDomainsFunction()
         return [
             /* {
                 source: '/(.*)',
@@ -57,36 +56,20 @@ module.exports = {
                 }],
                 destination: '/:url/:path*',
             },
-            process.env.NODE_ENV == 'production' ?
-            ({
+            process.env.NODE_ENV === 'production' ?
+            {
                 source: '/',
                 has: [{
                     type: 'host',
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url',
-            },
-            {
-                source: '/:path',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)'
-                }],
-                destination: '/:url/:path',
-            },
-            {
-                source: '/p/:slug',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)'
-                }],
-                destination: '/:url/p/:slug',
-            })
+            }
             :
-            ({
+            {
               source: '/',
               destination: `/${process.env.CURR_SLUG}`,
-            })
+            }
         ]
     },
 }
