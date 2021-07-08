@@ -9,7 +9,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Header: React.FC = ({name, url, logo, unclaimed}) => {
+const Header: React.FC = ({name, logo}) => {
 
   const [dropdown, setDropdown] = useState(false)
 
@@ -32,30 +32,25 @@ const Header: React.FC = ({name, url, logo, unclaimed}) => {
               <span className="inline-block ml-3 text-md overflow-wrap w-7/12 lg:w-auto lg:text-lg text-gray-700 align-middle">{name}</span>
             </a></Link>
           </div>
-          {
-            !unclaimed 
-            ? <>
-              <div className="flex items-center justify-end space-x-3">
-                <Link href={`/subscribe`}>
-                <a
-                  className="whitespace-nowrap inline-flex px-2 lg:px-4 py-2 border border-transparent rounded-md shadow-sm text-sm lg:text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                >
-                  Subscribe
-                </a></Link>
-                <button
-                  onClick={() => setDropdown(!dropdown)}
-                >
-                  <ChevronDownIcon
-                    className={classNames(
-                      dropdown ? 'text-gray-600 transform rotate-180' : 'text-gray-400',
-                      'h-8 w-8 group-hover:text-gray-500 transition-all ease duration-200 inline-block align-middle'
-                    )}
-                    aria-hidden="true"
-                  />
-                </button>
-              </div>
-            </> : null
-          }
+          <div className="flex items-center justify-end space-x-3">
+            <Link href={`/subscribe`}>
+            <a
+              className="whitespace-nowrap inline-flex px-2 lg:px-4 py-2 border border-transparent rounded-md shadow-sm text-sm lg:text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+            >
+              Subscribe
+            </a></Link>
+            <button
+              onClick={() => setDropdown(!dropdown)}
+            >
+              <ChevronDownIcon
+                className={classNames(
+                  dropdown ? 'text-gray-600 transform rotate-180' : 'text-gray-400',
+                  'h-8 w-8 group-hover:text-gray-500 transition-all ease duration-200 inline-block align-middle'
+                )}
+                aria-hidden="true"
+              />
+            </button>
+          </div>
         </div>
         <div
           className={classNames(

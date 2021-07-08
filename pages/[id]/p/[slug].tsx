@@ -18,20 +18,29 @@ export default function PostPage (props) {
         return <PageLoader/>
     }
 
+    let post = JSON.parse(props.post)
+    if (!post) {
+        post = {}
+        post.title = "Post Not Found"
+        post.description = "Check the URL, there's something fishy going on there..."
+        post.logo = "https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+        post.content = ''
+        post.image = '/empty-state.webp'
+    }
+
     return (
         <Layout
-            publicationUrl={props.publicationUrl}
-            publicationName={props.publicationName}
-            pageTitle={props.postTitle}
-            description={props.description}
-            logo={props.logo}
+            publicationName={props.publication.name}
+            pageTitle={post.title}
+            description={post.description}
+            logo={props.publication.logo}
         >
         <div className="relative m-auto mt-20 sm:w-1/2 text-center bg-white overflow-hidden">
             <h1 className="mt-2 block text-4xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-                {props.postTitle}
+                {post.title}
             </h1>
             <p className="mt-16 text-2xl text-gray-500 leading-8">
-            {props.description}
+            {post.description}
             </p>
         </div>
         <div className="w-full sm:w-8/12 mx-auto mt-16 overflow-hidden sm:rounded-lg shadow-2xl">
@@ -41,12 +50,12 @@ export default function PostPage (props) {
             layout="responsive"
             placeholder="blur"
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2PYsGHDfwAHNAMQumvbogAAAABJRU5ErkJggg=="
-            src={props.thumbnail}
+            src={post.image}
             />
         </div>
 
         <div 
-            dangerouslySetInnerHTML={{ __html: props.content }} 
+            dangerouslySetInnerHTML={{ __html: post.content }} 
             className="m-auto mt-20 mb-48 w-10/12 text-lg sm:w-1/2 sm:text-2xl sm:leading-relaxed text-gray-800 leading-relaxed space-y-6"
         />
 
@@ -83,11 +92,17 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({params: {id, slug}}) {
 
+    let filter = {
+        url: id
+    }
     let constraint = {
         publicationUrl: id,
         slug: slug,
     }
     if (id.includes('.')) {
+        filter = {
+            customDomain: id
+        }
         const correspondingUrl = await prisma.publication.findUnique({
             where: {
                 customDomain: id
@@ -101,22 +116,22 @@ export async function getStaticProps({params: {id, slug}}) {
             slug: slug,
         }
     }
-
-    const post = await prisma.post.findUnique({
-            where: {
-                slug_publication_constraint: constraint
-            },
-            include: {
-                Publication: {
-                select: {
-                    name: true,
-                    description: true,
-                    logo: true
-                }
-            }
+    
+    const publication = await prisma.publication.findUnique({
+        where: filter,
+        select: {
+            name: true,
+            description: true,
+            logo: true,
+            url: true
         }
     })
-    const matterResult = matter(post?.content)
+    const post = await prisma.post.findUnique({
+        where: {
+            slug_publication_constraint: constraint
+        }
+    })
+    const matterResult = post ? matter(post?.content) : ''
 
     // Use remark to convert markdown into HTML string
     const processedContent = await remark()
@@ -126,12 +141,8 @@ export async function getStaticProps({params: {id, slug}}) {
 
     return {
         props: {
-            publicationUrl: id,
-            publicationName: post?.Publication.name,
-            postTitle: post?.title,
-            description: post?.description,
-            logo: post?.Publication.logo,
-            thumbnail: post?.image,
+            publication: publication,
+            post: JSON.stringify(post),
             content: contentHtml,
         },
         revalidate: 10

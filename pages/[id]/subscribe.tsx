@@ -3,6 +3,7 @@
 import React, {useState} from 'react'
 import Layout from '../../components/Layout'
 import PageLoader from "../../components/PageLoader"
+import Claim from "../../components/claim"
 import { useRouter } from "next/router"
 import prisma from '../../lib/prisma'
 import { MailIcon } from '@heroicons/react/solid'
@@ -14,12 +15,14 @@ export default function Subscribe (props) {
     if (isFallback) {
       return <PageLoader/>
     }
+    if (!props.name) {
+      return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
+    }
 
     const [subscribing, setSubscribing] = useState(false)
 
     return (
         <Layout
-            publicationUrl={props.publicationUrl}
             publicationName={props.name}
             pageTitle={props.name}
             description={props.description}
@@ -110,7 +113,7 @@ export async function getStaticPaths() {
         paths: allPaths.map((path) => {
             return  { params: { id: path } }
         }),
-        fallback: false
+        fallback: true
     }
 }
 
@@ -130,7 +133,8 @@ export async function getStaticProps({params: { id }}) {
 
     return {
         props: {
-            publicationUrl: id,
+            subdomain: id,
+            rootUrl: process.env.ROOT_URL,
             ...data
         },
         revalidate: 10

@@ -1,21 +1,3 @@
-/* var PrismaClient = require('@prisma/client')
-let prisma = new PrismaClient.PrismaClient()
-
-const customDomainsFunction = async () => {
-  const data = await prisma.publication.findMany({
-    where: {
-      NOT: {
-        customDomain: null
-      }
-    },
-    select: {
-      customDomain: true,
-      url: true
-    }
-  })
-  return data
-} */
-
 module.exports = {
     images: {
       domains: ['og-image.vercel.app']
@@ -80,7 +62,8 @@ module.exports = {
                 }],
                 destination: '/:url/:path',
             },
-            {
+            // these two can be combined, parse everything in getStaticProps
+            /* {
                 source: '/',
                 has: [{
                     type: 'host',
@@ -103,31 +86,7 @@ module.exports = {
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url/:path',
-            },
-            /* ...customDomains.map((customDomain) => ({
-              source: '/',
-              has: [{
-                  type: 'host',
-                  value: `${customDomain.customDomain}`
-              }],
-              destination: `/${customDomain.url}`,
-            })),
-            ...customDomains.map((customDomain) => ({
-              source: '/p/:slug',
-              has: [{
-                  type: 'host',
-                  value: `${customDomain.customDomain}`
-              }],
-              destination: `/${customDomain.url}/p/:slug`,
-            })),
-            ...customDomains.map((customDomain) => ({
-              source: '/:path',
-              has: [{
-                  type: 'host',
-                  value: `${customDomain.customDomain}`
-              }],
-              destination: `/${customDomain.url}/:path`,
-            })) */
+            }, */
         ]
     },
 }

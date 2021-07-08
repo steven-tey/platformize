@@ -1,5 +1,6 @@
 import Layout from "../components/Layout"
 import PageLoader from "../components/PageLoader"
+import Claim from "../components/claim"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import Image from "next/image"
@@ -10,7 +11,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
   
-export default function Index({publicationUrl, posts, pinPost, publicationName, publicationDescription, publicationLogo}){
+export default function Index(props){
 
     const { isFallback } = useRouter();
     
@@ -18,21 +19,23 @@ export default function Index({publicationUrl, posts, pinPost, publicationName, 
       return <PageLoader/>
     }
 
-    const parsedPosts = JSON.parse(posts)
-    const pinnedPost = JSON.parse(pinPost)
+    const publication = JSON.parse(props.publication)
+    if (!publication) {
+      return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
+    }
+    const pinnedPost = JSON.parse(props.pinPost)
     const [sort, setSort] = useState("date")
 
     return (
       <Layout
-        publicationUrl={publicationUrl}
-        publicationName={publicationName}
-        pageTitle={publicationName}
-        description={publicationDescription}
-        logo={publicationLogo}
+        publicationName={publication.name}
+        pageTitle={publication.name}
+        description={publication.description}
+        logo={publication.logo}
       >
         <main>
         <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
-          {pinnedPost ? 
+          {pinnedPost != 'no pinned post' ? 
           <>
             <div className="relative w-11/12 sm:w-7/12 mx-auto lg:max-w-7xl">
               <Link href={`/p/${pinnedPost.slug}`}><a>
@@ -58,8 +61,9 @@ export default function Index({publicationUrl, posts, pinPost, publicationName, 
           </>
           :
           <>
-            <div className="relative w-11/12 sm:w-7/12 h-350 mx-auto lg:max-w-7xl text-center">
-              <h1 className="text-4xl font-bold">No posts yet!</h1>
+            <div className="w-11/12 sm:w-7/12 mx-auto py-20 lg:max-w-7xl text-center">
+              <h1 className="text-4xl font-bold mb-10">No posts yet!</h1>
+              <img src="/empty-state.webp" />
             </div>
           </>
           }
@@ -86,12 +90,12 @@ export default function Index({publicationUrl, posts, pinPost, publicationName, 
               </button>
               <Link href={`/about`}>
                 <a className="py-2 border-b-2 border-white w-1/2 truncate">
-                  What is {publicationName}?
+                  What is {publication.name}?
                 </a>
               </Link>
             </div>
             <div className="py-5 grid gap-5">
-              {parsedPosts.map((post) => (
+              {publication.posts.map((post) => (
                 <Link href={`/p/${post.slug}`}><a>
                   <div key={post.title} className="p-8 sm:p-5 hover:bg-gray-100 transition-all ease-in-out duration-100">
                     <p className="text-sm text-gray-500">
@@ -140,7 +144,7 @@ export async function getStaticPaths() {
         paths: allPaths.map((path) => {
             return  { params: { id: path } }
         }),
-        fallback: true // need to render loading state!!!
+        fallback: true
     }
 }
 
@@ -174,17 +178,15 @@ export async function getStaticProps({ params: {id} }) {
         }
     })
 
-    const pinPost = data.posts.filter(post => {
+    const pinPost = data && data.posts.length > 0 ? data.posts.filter(post => {
         return post.pinnedPost.length > 0
-    })[0]
+    })[0] : 'no pinned post'
 
     return { 
-        props: { 
-            publicationUrl: id,
-            publicationName: data.name,
-            publicationDescription: data.description,
-            publicationLogo: data.logo,     
-            posts: JSON.stringify(data.posts),
+        props: {
+            subdomain: id,
+            rootUrl: process.env.ROOT_URL,
+            publication: JSON.stringify(data),
             pinPost: JSON.stringify(pinPost)
         },
         revalidate: 10
