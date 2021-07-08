@@ -37,10 +37,18 @@ module.exports = {
                 source: '/(.*)',
                 has: [{
                     type: 'host',
-                    value: 'app.platformize.co'
+                    value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
                 }],
-                destination: '/app*',
+                destination: `/${process.env.APP_SLUG}*`,
             }, */
+            {
+                source: '/',
+                has: [{
+                    type: 'host',
+                    value: '(?<url>.*)\\.platformize\\.co'
+                }],
+                destination: '/:url',
+            },
             {
                 source: '/:path*',
                 has: [{
