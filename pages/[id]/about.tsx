@@ -130,6 +130,7 @@ export async function getStaticProps({params: { id }}) {
         props: {
             publicationUrl: id,
             ...data
-        },
+        }, 
+        revalidate: 10
     }
 }
