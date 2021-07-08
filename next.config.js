@@ -1,16 +1,19 @@
 var PrismaClient = require('@prisma/client')
 let prisma = new PrismaClient.PrismaClient()
 
-const customDomainToSubdomain = async (customDomain) => {
-  const subdomain = await prisma.publication.findUnique({
+const customDomainsFunction = async () => {
+  const data = await prisma.publication.findMany({
     where: {
-      customDomain: customDomain
+      NOT: {
+        customDomain: null
+      }
     },
     select: {
+      customDomain: true,
       url: true
     }
   })
-  return subdomain.url
+  return data
 }
 
 module.exports = {
@@ -43,6 +46,7 @@ module.exports = {
       ]
     },
     async rewrites() {
+        const customDomains = await customDomainsFunction()
         return [
             /* {
                 source: '/(.*)',
@@ -76,14 +80,30 @@ module.exports = {
                 }],
                 destination: '/:url/:path',
             },
-            {
-                source: '/',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)'
-                }],
-                destination: `/:${customDomainToSubdomain(`:url`)}`,
-            },
+            ...customDomains.map((customDomain) => ({
+              source: '/',
+              has: [{
+                  type: 'host',
+                  value: `${customDomain.customDomain}`
+              }],
+              destination: `/${customDomain.url}`,
+            })),
+            ...customDomains.map((customDomain) => ({
+              source: '/p/:slug',
+              has: [{
+                  type: 'host',
+                  value: `${customDomain.customDomain}`
+              }],
+              destination: `/${customDomain.url}/p/:slug`,
+            })),
+            ...customDomains.map((customDomain) => ({
+              source: '/:path',
+              has: [{
+                  type: 'host',
+                  value: `${customDomain.customDomain}`
+              }],
+              destination: `/${customDomain.url}/:path`,
+            }))
         ]
     },
 }
