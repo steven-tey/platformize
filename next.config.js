@@ -65,30 +65,31 @@ module.exports = {
                 }],
                 destination: '/:url/:path',
             },
-            /* {
+            process.env.NODE_ENV === 'production' ?
+            {
                 source: '/',
                 has: [{
                     type: 'host',
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url',
-            },
-            {
+            } : null,
+            process.env.NODE_ENV === 'production' ? {
                 source: '/p/:slug',
                 has: [{
                     type: 'host',
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url/p/:slug',
-            },
-            {
+            } : null,
+            process.env.NODE_ENV === 'production' ? {
                 source: '/:path',
                 has: [{
                     type: 'host',
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url/:path',
-            }, */
+            } : null,
         ]
     },
 }
