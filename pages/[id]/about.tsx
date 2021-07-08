@@ -3,7 +3,7 @@
 import React, {useState} from 'react'
 import Layout from '../../components/Layout'
 import PageLoader from "../../components/PageLoader"
-import Claim from "../../components/claim"
+import Claim from "../../components/Claim"
 import { useRouter } from "next/router"
 import prisma from '../../lib/prisma'
 import Image from 'next/image'

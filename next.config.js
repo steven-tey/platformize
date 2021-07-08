@@ -62,8 +62,7 @@ module.exports = {
                 }],
                 destination: '/:url/:path',
             },
-            // these two can be combined, parse everything in getStaticProps
-            /* {
+            {
                 source: '/',
                 has: [{
                     type: 'host',
@@ -86,7 +85,7 @@ module.exports = {
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url/:path',
-            }, */
+            },
         ]
     },
 }
