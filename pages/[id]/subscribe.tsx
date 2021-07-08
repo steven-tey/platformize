@@ -91,7 +91,7 @@ export async function getStaticPaths() {
         paths: publications.map((publication) => {
             return  { params: { id: publication.url } }
         }),
-        fallback: false
+        fallback: false //ISR
     }
 }
 
