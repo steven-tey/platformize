@@ -42,54 +42,35 @@ module.exports = {
                 destination: '/app*',
             }, */
             {
-                source: '/',
+                source: '/:path*',
                 has: [{
                     type: 'host',
                     value: '(?<url>.*)\\.platformize\\.co'
                 }],
-                destination: '/:url',
-            },
-            {
-                source: '/p/:slug',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)\\.platformize\\.co'
-                }],
-                destination: '/:url/p/:slug',
-            },
-            {
-                source: '/:path',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)\\.platformize\\.co'
-                }],
-                destination: '/:url/:path',
+                destination: '/:url/:path*',
             },
             process.env.NODE_ENV === 'production' ?
-            {
+            ({
                 source: '/',
                 has: [{
                     type: 'host',
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url',
-            } : null,
-            process.env.NODE_ENV === 'production' ? {
+            },
+            {
                 source: '/p/:slug',
                 has: [{
                     type: 'host',
                     value: '(?<url>.*)'
                 }],
                 destination: '/:url/p/:slug',
-            } : null,
-            process.env.NODE_ENV === 'production' ? {
-                source: '/:path',
-                has: [{
-                    type: 'host',
-                    value: '(?<url>.*)'
-                }],
-                destination: '/:url/:path',
-            } : null,
+            })
+            :
+            ({
+              source: '/',
+              destination: `/${process.env.CURR_SLUG}`,
+            })
         ]
     },
 }
