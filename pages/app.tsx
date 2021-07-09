@@ -12,6 +12,7 @@ import {
   PlusIcon,
 } from '@heroicons/react/outline'
 import { ExclamationIcon } from "@heroicons/react/solid"
+import getConfig from 'next/config'
 
 function stopPropagation(e) {
   e.stopPropagation();
@@ -25,6 +26,9 @@ function classNames(...classes) {
 }
 
 export default function Index ({rootUrl, publications}) {
+
+    const {publicRuntimeConfig} = getConfig()
+    const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
     const [open, setOpen] = useState(false)
     const [creating, setCreating] = useState(false)
@@ -316,7 +320,7 @@ export default function Index ({rootUrl, publications}) {
             </>
             : null}
             {publications.map((publication) => (
-              <Link href={`/publication/${publication.id}`}>
+              <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                 <a>
                 <div className="sm:px-5 sm:flex space-y-5 sm:space-y-0 sm:space-x-10 mb-10 py-5 rounded-lg cursor-pointer hover:bg-gray-100">
                   <div className="w-10/12 mx-auto sm:w-5/12 overflow-hidden rounded-lg">
@@ -357,21 +361,21 @@ export default function Index ({rootUrl, publications}) {
                       <Menu.Items className="absolute z-20 right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-300 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="px-1 py-1 ">
                           <Menu.Item>
-                              <Link href={`/publication/${publication.id}`}>
+                              <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                                 <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
                                   Posts
                                 </a>
                               </Link>
                           </Menu.Item>
                           <Menu.Item>
-                            <Link href={`/publication/${publication.id}/drafts`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/drafts` : `/${APP_SLUG}/publication/${publication.id}/drafts`}>
                               <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
                                 Drafts
                               </a>
                             </Link>
                           </Menu.Item>
                           <Menu.Item>
-                              <Link href={`/publication/${publication.id}/settings`}>
+                              <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/settings` : `/${APP_SLUG}/publication/${publication.id}/settings`}>
                                 <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
                                   Settings
                                 </a>

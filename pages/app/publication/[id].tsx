@@ -13,7 +13,8 @@ import {
 } from '@heroicons/react/outline'
 import {
     StarIcon
-  } from '@heroicons/react/solid'
+} from '@heroicons/react/solid'
+import getConfig from 'next/config'
 
 function stopPropagation(e) {
     e.stopPropagation();
@@ -34,6 +35,9 @@ const pin = async (publicationId, slug, postId, pinStatus) => {
 }
 
 export default function Publication({publication, posts, rootUrl}){
+
+    const {publicRuntimeConfig} = getConfig()
+    const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
     const allPosts = JSON.parse(posts)
     const [creating, setCreating] = useState(false)
@@ -61,7 +65,7 @@ export default function Publication({publication, posts, rootUrl}){
         )
         if (res.ok) {
           const data = await res.json()
-          router.push(`/post/${data.postId}`)
+          router.push(NODE_ENV === 'production' ? `/post/${data.postId}` : `/${APP_SLUG}/post/${data.postId}`)
         }
     }
     
@@ -168,7 +172,7 @@ export default function Publication({publication, posts, rootUrl}){
 
                 {/* Mobile Navigation Menu */}
                 <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 text-center">
-                    <Link href='/'>
+                    <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}>
                         <a className="mx-8 font-semibold text-2xl">
                             ←
                         </a>
@@ -187,17 +191,17 @@ export default function Publication({publication, posts, rootUrl}){
                     </a>
                 </div>
                 <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 space-x-2 text-center pb-5">
-                    <Link href={`/publication/${publication.id}/`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                         <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Posts
                         </a>
                     </Link>
-                    <Link href={`/publication/${publication.id}/drafts`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/drafts` : `/${APP_SLUG}/publication/${publication.id}/drafts`}>
                         <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Drafts
                         </a>
                     </Link>
-                    <Link href={`/publication/${publication.id}/settings`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/settings` : `/${APP_SLUG}/publication/${publication.id}/settings`}>
                         <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Settings
                         </a>
@@ -208,7 +212,7 @@ export default function Publication({publication, posts, rootUrl}){
                 {/* Desktop Navigation Menu */}
                 <div className="w-11/12 sm:w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen sm:divide-x">
                     <div className="pt-10 hidden sm:block sm:col-span-1">
-                        <Link href='/'>
+                        <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}>
                             <a className="text-left font-semibold text-lg">
                                 ← All Publications 
                             </a>
@@ -225,17 +229,17 @@ export default function Publication({publication, posts, rootUrl}){
                         </a>
 
                         <div className="text-left grid grid-cols-1 gap-6 mt-10">
-                            <Link href={`/publication/${publication.id}/`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                                 <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Posts
                                 </a>
                             </Link>
-                            <Link href={`/publication/${publication.id}/drafts`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/drafts` : `/${APP_SLUG}/publication/${publication.id}/drafts`}>
                                 <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Drafts
                                 </a>
                             </Link>
-                            <Link href={`/publication/${publication.id}/settings`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/settings` : `/${APP_SLUG}/publication/${publication.id}/settings`}>
                                 <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Settings
                                 </a>
@@ -291,7 +295,7 @@ export default function Publication({publication, posts, rootUrl}){
                         </>
                         : null}
                         {allPosts.map((post) => (
-                            <Link href={`/post/${post.id}`}>
+                            <Link href={NODE_ENV === 'production' ? `/post/${post.id}` : `/${APP_SLUG}/post/${post.id}`}>
                                 <div className="p-8 mb-3 pr-20 flex justify-between bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer">                    
                                     <div className="relative space-y-5">
                                         <p className="text-2xl font-semibold text-gray-900">
@@ -332,7 +336,7 @@ export default function Publication({publication, posts, rootUrl}){
                                             <Menu.Items className="absolute z-20 right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-300 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <div className="px-1 py-1 ">
                                                     <Menu.Item>
-                                                        <Link href={`/post/${post.id}`}>
+                                                        <Link href={NODE_ENV === 'production' ? `/post/${post.id}` : `/${APP_SLUG}/post/${post.id}`}>
                                                             <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
                                                                 Edit post
                                                             </a>
@@ -370,7 +374,7 @@ export default function Publication({publication, posts, rootUrl}){
                                                         )}
                                                     </Menu.Item>
                                                     <Menu.Item>
-                                                        <Link href={`/post/${post.id}/settings`}>
+                                                        <Link href={NODE_ENV === 'production' ? `/post/${post.id}/settings` : `/${APP_SLUG}/post/${post.id}/settings`}>
                                                             <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
                                                                 Settings
                                                             </a>

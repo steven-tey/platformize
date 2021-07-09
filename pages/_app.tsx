@@ -7,7 +7,7 @@ import LoadingBar from 'react-top-loading-bar'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
 
-  /* const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     const start = () => {
@@ -24,7 +24,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       Router.events.off("routeChangeComplete", end);
       Router.events.off("routeChangeError", end);
     };
-  }, []); */
+  }, []);
 
   return (
     <>
@@ -35,14 +35,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         }}
         session={pageProps.session}
       >
-        {/* <LoadingBar
+        <LoadingBar
           color='#5046e4'
           height={5}
           transitionTime={100}
           waitingTime={500}
           progress={progress}
           onLoaderFinished={() => setProgress(0)}
-        /> */}
+        />
         <Component {...pageProps} />
       </Provider>
     </>

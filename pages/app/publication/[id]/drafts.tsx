@@ -10,6 +10,7 @@ import {
   PlusIcon,
   ExclamationIcon
 } from '@heroicons/react/outline'
+import getConfig from 'next/config'
 
 function stopPropagation(e) {
     e.stopPropagation();
@@ -23,6 +24,9 @@ const publish = async (publicationId, postId) => {
 }
 
 export default function Drafts ({publication, posts, rootUrl}) {
+
+    const {publicRuntimeConfig} = getConfig()
+    const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
     const allPosts = JSON.parse(posts)
     const [creating, setCreating] = useState(false)
@@ -157,7 +161,7 @@ export default function Drafts ({publication, posts, rootUrl}) {
 
                 {/* Mobile Navigation Menu */}
                 <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 text-center">
-                    <Link href='/'>
+                    <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}>
                         <a className="mx-8 font-semibold text-2xl">
                             ←
                         </a>
@@ -176,17 +180,17 @@ export default function Drafts ({publication, posts, rootUrl}) {
                     </a>
                 </div>
                 <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 space-x-2 text-center pb-5">
-                    <Link href={`/publication/${publication.id}/`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                         <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Posts
                         </a>
                     </Link>
-                    <Link href={`/publication/${publication.id}/drafts`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/drafts` : `/${APP_SLUG}/publication/${publication.id}/drafts`}>
                         <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Drafts
                         </a>
                     </Link>
-                    <Link href={`/publication/${publication.id}/settings`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/settings` : `/${APP_SLUG}/publication/${publication.id}/settings`}>
                         <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Settings
                         </a>
@@ -197,7 +201,7 @@ export default function Drafts ({publication, posts, rootUrl}) {
                 {/* Desktop Navigation Menu */}
                 <div className="w-11/12 sm:w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen sm:divide-x">
                     <div className="pt-10 hidden sm:block sm:col-span-1">
-                        <Link href='/'>
+                        <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}>
                             <a className="text-left font-semibold text-lg">
                                 ← All Publications 
                             </a>
@@ -214,17 +218,17 @@ export default function Drafts ({publication, posts, rootUrl}) {
                         </a>
 
                         <div className="text-left grid grid-cols-1 gap-6 mt-10">
-                            <Link href={`/publication/${publication.id}/`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                                 <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Posts
                                 </a>
                             </Link>
-                            <Link href={`/publication/${publication.id}/drafts`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/drafts` : `/${APP_SLUG}/publication/${publication.id}/drafts`}>
                                 <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Drafts
                                 </a>
                             </Link>
-                            <Link href={`/publication/${publication.id}/settings`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/settings` : `/${APP_SLUG}/publication/${publication.id}/settings`}>
                                 <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Settings
                                 </a>
@@ -274,7 +278,7 @@ export default function Drafts ({publication, posts, rootUrl}) {
                         </button>
                         </div>
                         {allPosts.map((post) => (
-                            <Link href={`/post/${post.id}`}>
+                            <Link href={NODE_ENV === 'production' ? `/post/${post.id}` : `/${APP_SLUG}/post/${post.id}`}>
                                 <div className="p-8 mb-3 pr-20 flex justify-between bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer">                    
                                     <div className="relative space-y-5">
                                         <p className="text-2xl font-semibold text-gray-900">{post.title}</p>
@@ -305,7 +309,7 @@ export default function Drafts ({publication, posts, rootUrl}) {
                                             <Menu.Items className="absolute z-20 right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-300 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                 <div className="px-1 py-1 ">
                                                     <Menu.Item>
-                                                        <Link href={`/post/${post.id}`}>
+                                                        <Link href={NODE_ENV === 'production' ? `/post/${post.id}` : `/${APP_SLUG}/post/${post.id}`}>
                                                             <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
                                                                 Edit draft
                                                             </a>
@@ -324,7 +328,7 @@ export default function Drafts ({publication, posts, rootUrl}) {
                                                         )}
                                                     </Menu.Item>
                                                     <Menu.Item>
-                                                        <Link href={`/post/${post.id}/settings`}>
+                                                        <Link href={NODE_ENV === 'production' ? `/post/${post.id}/settings` : `/${APP_SLUG}/post/${post.id}/settings`}>
                                                             <a className='text-gray-900 hover:bg-gray-300 group flex rounded-md items-center w-full px-2 py-2 text-sm'>
                                                                 Settings
                                                             </a>
@@ -362,41 +366,30 @@ export default function Drafts ({publication, posts, rootUrl}) {
 export async function getServerSideProps(ctx) {
 
     const { id } = ctx.query;  
-    const { req, res } = ctx
-    const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
-    if (subdomain == process.env.APP_SLUG) {
-        const posts = await prisma.post.findMany({
-            where: {
-                Publication: {
-                    id: id
-                },
-                published: false
-            },
-            include: {
-                pinnedPost: true
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        })
-        const publication = await prisma.publication.findUnique({
-            where: {
+    const posts = await prisma.post.findMany({
+        where: {
+            Publication: {
                 id: id
-            }
-        }) 
-        return {
-            props: {
-                publication: publication,
-                posts: JSON.stringify(posts),
-                rootUrl: process.env.ROOT_URL
-            }
+            },
+            published: false
+        },
+        include: {
+            pinnedPost: true
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
-    } else {
-        return {
-            redirect: {
-                destination: '/',
-                statusCode: 302
-            }
+    })
+    const publication = await prisma.publication.findUnique({
+        where: {
+            id: id
+        }
+    }) 
+    return {
+        props: {
+            publication: publication,
+            posts: JSON.stringify(posts),
+            rootUrl: process.env.ROOT_URL
         }
     }
 }
