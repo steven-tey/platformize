@@ -52,6 +52,14 @@ module.exports = {
                   }],
                   destination: `/${process.env.APP_SLUG}/:path*`,
               },
+              {
+                  source: '/api/:path*',
+                  has: [{
+                      type: 'host',
+                      value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
+                  }],
+                  destination: `/api/:path*`,
+              },
               
               // rewrites for subdomains
               {
