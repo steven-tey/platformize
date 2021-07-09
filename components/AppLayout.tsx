@@ -6,6 +6,8 @@ import { signOut } from 'next-auth/client'
 import Loader from './Loader'
 import useRequireAuth from '../lib/useRequireAuth'
 import { ChevronDownIcon } from '@heroicons/react/outline'
+import Router from "next/router";
+import LoadingBar from 'react-top-loading-bar'
 import getConfig from 'next/config'
 
 function classNames(...classes) {
@@ -16,6 +18,25 @@ export default function AppLayout ({children}) {
 
     const {publicRuntimeConfig} = getConfig()
     const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
+
+    const [progress, setProgress] = useState(0)
+
+    useEffect(() => {
+      const start = () => {
+        setProgress(25);
+      };
+      const end = () => {
+        setProgress(100)
+      };
+      Router.events.on("routeChangeStart", start);
+      Router.events.on("routeChangeComplete", end);
+      Router.events.on("routeChangeError", end);
+      return () => {
+        Router.events.off("routeChangeStart", start);
+        Router.events.off("routeChangeComplete", end);
+        Router.events.off("routeChangeError", end);
+      };
+    }, []);
 
     const title = 'Platformize App'
     const description = 'Platformize is a NextJS framework that allows you to crate Substack-like user experiences out of the box.'
@@ -28,6 +49,14 @@ export default function AppLayout ({children}) {
 
   return (
     <>
+    <LoadingBar
+      color='#5046e4'
+      height={5}
+      transitionTime={100}
+      waitingTime={500}
+      progress={progress}
+      onLoaderFinished={() => setProgress(0)}
+    />
     <div>  
       <Head>
         <title>{title}</title>
