@@ -25,7 +25,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Index ({rootUrl, publications}) {
+export default function Index (props) {
 
     const {publicRuntimeConfig} = getConfig()
     const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
@@ -47,7 +47,7 @@ export default function Index ({rootUrl, publications}) {
         if (res.ok) {
           const data = await res.json()
           setTimeout(() => {
-              router.push(`/publication/${data.publicationId}`)
+              router.push(NODE_ENV === 'production' ? `/publication/${data.publicationId}` : `/${APP_SLUG}/publication/${data.publicationId}`)
           }, 800)
         }
     }
@@ -100,7 +100,7 @@ export default function Index ({rootUrl, publications}) {
                       leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                       leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                   >
-                      <form onSubmit={(event) => {event.preventDefault(); setCreating(true); createPublication(event, session?.user?.id)}} className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                      <form onSubmit={(event) => {event.preventDefault(); setCreating(true); createPublication(event, props.session?.user?.id)}} className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                           <div className="bg-white px-4 pt-5 sm:p-6 sm:pb-4">
                               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                   <Dialog.Title as="h3" className="text-2xl text-center mt-3 leading-6 font-semibold text-gray-900">
@@ -136,7 +136,7 @@ export default function Index ({rootUrl, publications}) {
                                             className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-l-md sm:text-sm border-gray-300"
                                           />
                                           <span className="inline-flex items-center px-3 w-1/2 rounded-r-md border-t-0 border-r-0 border-b-0 border border-l-1 border-gray-300 bg-gray-100 text-gray-600 sm:text-sm">
-                                            .{rootUrl}
+                                            .{props.rootUrl}
                                           </span>
                                         </div>
                                       </div>
@@ -313,13 +313,13 @@ export default function Index ({rootUrl, publications}) {
                 />
               </button>
             </div>
-            {publications.length == 0 ?
+            {props.publications.length == 0 ?
             <>
               <img src="/empty-state.webp" />
               <p className="text-center mb-48 mt-10 text-gray-800 font-semibold text-xl">No publications yet. Click the button above to create one.</p>
             </>
             : null}
-            {publications.map((publication) => (
+            {props.publications.map((publication) => (
               <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                 <a>
                 <div className="sm:px-5 sm:flex space-y-5 sm:space-y-0 sm:space-x-10 mb-10 py-5 rounded-lg cursor-pointer hover:bg-gray-100">
@@ -337,7 +337,7 @@ export default function Index ({rootUrl, publications}) {
                   <div className="relative w-10/12 mx-auto sm:w-7/12 space-y-2 sm:space-y-5">
                   <Menu onClick={preventDefault} as="div" className="absolute right-0 top-0 mr-3 mt-3">
                     <div>
-                      <a onClick={stopPropagation} href={`https://${publication.url}.${rootUrl}`} target="_blank" 
+                      <a onClick={stopPropagation} href={`https://${publication.url}.${props.rootUrl}`} target="_blank" 
                       >
                         <ExternalLinkIcon
                             className="h-6 w-6 inline-block sm:hidden"
@@ -401,10 +401,10 @@ export default function Index ({rootUrl, publications}) {
                   </Menu>
                     <p className="text-xl sm:text-3xl font-semibold text-gray-900">{publication.name}</p>
                     <p className="mt-3 text-base sm:text-lg text-gray-600 truncate w-9/12 sm:w-10/12">{publication.description}</p>
-                    <a onClick={stopPropagation} href={`https://${publication.url}.${rootUrl}`} target="_blank" 
+                    <a onClick={stopPropagation} href={`https://${publication.url}.${props.rootUrl}`} target="_blank" 
                       className="absolute bg-gray-900 hidden sm:block py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700"
                     >
-                      {publication.url}.{rootUrl}
+                      {publication.url}.{props.rootUrl}
                       <ExternalLinkIcon
                           className="h-5 w-5 inline-block ml-2"
                       />
@@ -434,6 +434,7 @@ export async function getServerSideProps(ctx) {
     })
     return {
         props: {
+        session: session,
         rootUrl: process.env.ROOT_URL,
         publications: publications
         }

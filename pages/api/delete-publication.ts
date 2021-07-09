@@ -7,18 +7,26 @@ export default async function DeletePublication(req, res) {
             publicationId: publicationId
         }
     })
-    await prisma.pinnedPost.delete({
-        where: {
-            publicationId: publicationId
-        }
-    })
-    await prisma.post.deleteMany({
-        where: {
-            Publication: {
-                id: publicationId
+    try {
+        await prisma.pinnedPost.delete({
+            where: {
+                publicationId: publicationId
             }
-        }
-    })
+        })
+    } catch {
+        console.log('no pinned post to delete!')
+    }
+    try {
+        await prisma.post.deleteMany({
+            where: {
+                Publication: {
+                    id: publicationId
+                }
+            }
+        })
+    } catch {
+        console.log('no posts to delete!')
+    }
     await prisma.publication.delete({
         where: {
             id: publicationId

@@ -6,8 +6,12 @@ import { useState, useEffect, useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import { AnnotationIcon, PaperClipIcon, PencilIcon, TrashIcon } from '@heroicons/react/solid'
 import {useRouter} from 'next/router'
+import getConfig from 'next/config'
 
 export default function Post ({post, rootUrl}) {
+
+    const {publicRuntimeConfig} = getConfig()
+    const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
     const parsedPost = JSON.parse(post)
     const [savedState, setSavedState] = useState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(parsedPost.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(parsedPost.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(parsedPost.updatedAt))}`)
@@ -67,7 +71,7 @@ export default function Post ({post, rootUrl}) {
         <>
             <AppLayout>
                 <div className="w-6/12 mx-auto mt-10">
-                    <Link href={`/publication/${parsedPost.Publication.id}`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${parsedPost.Publication.id}` : `/${APP_SLUG}/publication/${parsedPost.Publication.id}`}>
                         <a className="text-left text-gray-800 font-semibold text-lg">
                             ← Back to All Posts
                         </a>
@@ -141,7 +145,7 @@ export default function Post ({post, rootUrl}) {
                             <p>{savedState}</p>
                         </div>
                         <div>
-                            <Link href={`/post/${parsedPost.id}/settings`}>
+                            <Link href={NODE_ENV === 'production' ? `/post/${parsedPost.id}/settings` : `/${APP_SLUG}/post/${parsedPost.id}/settings`}>
                                 <a className="text-lg mx-2">
                                     Settings
                                 </a>
