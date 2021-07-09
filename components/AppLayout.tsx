@@ -143,8 +143,8 @@ export default function AppLayout ({children}) {
         <div 
           onClick={() => setDropdown(false)}
           className={classNames(
-            dropdown ? 'bg-black bg-opacity-40' : 'z-0',
-            'absolute w-screen h-screen transition-all ease-in-out duration-300 z-10'
+            dropdown ? 'bg-black bg-opacity-40 z-10' : '-z-1',
+            'absolute w-screen h-screen transition-all ease-in-out duration-300'
           )}
         />  
         <div className="pt-20">

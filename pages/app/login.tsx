@@ -149,7 +149,7 @@ export async function getServerSideProps(ctx){
     if (session) {
       return {
         redirect: {
-            destination: `/`,
+            destination: process.env.NODE_ENV === 'production' ? `/` : `/${process.env.APP_SLUG}`,
             statusCode: 302
         }
       }

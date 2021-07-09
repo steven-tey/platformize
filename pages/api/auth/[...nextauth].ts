@@ -28,10 +28,10 @@ export default NextAuth({
   // A database is optional, but required to persist accounts in a database
   database: process.env.DATABASE_URL,
   secret: process.env.SECRET,
-  /* pages: {
-    signIn: `/${process.env.APP_SLUG}/login`,
-    verifyRequest: `/${process.env.APP_SLUG}/login`
-  }, */
+  pages: {
+    signIn: process.env.NODE_ENV === 'production' ? `/login` : `/${process.env.APP_SLUG}/login`,
+    verifyRequest: process.env.NODE_ENV === 'production' ? `/login` : `/${process.env.APP_SLUG}/login`,
+  },
   adapter: PrismaAdapter(prisma),
   callbacks: {
     session: async (session, user) => {

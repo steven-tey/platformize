@@ -406,43 +406,33 @@ export default function Publication({publication, posts, rootUrl}){
 }
 
 export async function getServerSideProps(ctx) {
-
+    
     const { id } = ctx.query;  
-    const { req, res } = ctx
-    const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
-    if (subdomain == process.env.APP_SLUG) {
-        const posts = await prisma.post.findMany({
-            where: {
-                Publication: {
-                    id: id
-                },
-                published: true
-            },
-            include: {
-                pinnedPost: true
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        })
-        const publication = await prisma.publication.findUnique({
-            where: {
+
+    const posts = await prisma.post.findMany({
+        where: {
+            Publication: {
                 id: id
-            }
-        }) 
-        return {
-            props: {
-                publication: publication,
-                posts: JSON.stringify(posts),
-                rootUrl: process.env.ROOT_URL
-            }
+            },
+            published: true
+        },
+        include: {
+            pinnedPost: true
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
-    } else {
-        return {
-            redirect: {
-                destination: '/',
-                statusCode: 302
-            }
+    })
+    const publication = await prisma.publication.findUnique({
+        where: {
+            id: id
+        }
+    }) 
+    return {
+        props: {
+            publication: publication,
+            posts: JSON.stringify(posts),
+            rootUrl: process.env.ROOT_URL
         }
     }
 }

@@ -11,6 +11,9 @@ module.exports = {
       },
       transitionProperty: {
         height: 'height'
+      },
+      zIndex: {
+        '-1': '-1',
       }
     }
   },
