@@ -2,9 +2,7 @@
 
 import React, {useState} from 'react'
 import Layout from '../../components/Layout'
-import PageLoader from "../../components/PageLoader"
 import Claim from "../../components/Claim"
-import { useRouter } from "next/router"
 import prisma from '../../lib/prisma'
 import Image from 'next/image'
 
@@ -14,11 +12,6 @@ function classNames(...classes) {
 
 export default function About (props) {
 
-  const { isFallback } = useRouter();
-    
-  if (isFallback) {
-    return <PageLoader/>
-  }
   if (!props.name) {
     return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
   }
@@ -123,7 +116,7 @@ export async function getStaticPaths() {
         paths: allPaths.map((path) => {
             return  { params: { id: path } }
         }),
-        fallback: true
+        fallback: "blocking"
     }
 }
 

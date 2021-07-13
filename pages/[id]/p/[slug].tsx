@@ -2,8 +2,6 @@
 
 import React from 'react'
 import Layout from '../../../components/Layout'
-import PageLoader from "../../../components/PageLoader"
-import { useRouter } from "next/router"
 import Image from 'next/image'
 import matter from 'gray-matter'
 import remark from 'remark'
@@ -11,12 +9,6 @@ import html from 'remark-html'
 import prisma from '../../../lib/prisma'
 
 export default function PostPage (props) {
-
-    const { isFallback } = useRouter();
-        
-    if (isFallback) {
-        return <PageLoader/>
-    }
 
     let post = JSON.parse(props.post)
     if (!post) {
@@ -87,7 +79,7 @@ export async function getStaticPaths() {
                 return  { params: { id: post.publicationUrl, slug: post.slug } }
             }
         }),
-        fallback: true
+        fallback: "blocking"
     }
 }
 

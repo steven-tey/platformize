@@ -2,19 +2,12 @@
 
 import React, {useState} from 'react'
 import Layout from '../../components/Layout'
-import PageLoader from "../../components/PageLoader"
 import Claim from "../../components/Claim"
-import { useRouter } from "next/router"
 import prisma from '../../lib/prisma'
 import { MailIcon } from '@heroicons/react/solid'
 
 export default function Subscribe (props) {
 
-    const { isFallback } = useRouter();
-      
-    if (isFallback) {
-      return <PageLoader/>
-    }
     if (!props.name) {
       return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
     }
@@ -114,7 +107,7 @@ export async function getStaticPaths() {
         paths: allPaths.map((path) => {
             return  { params: { id: path } }
         }),
-        fallback: true
+        fallback: "blocking"
     }
 }
 
