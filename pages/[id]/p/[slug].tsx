@@ -155,11 +155,14 @@ export async function getStaticProps({params: {id, slug}}) {
     const processedContent = await remark()
         .use(html)
         .process(matterResult.content)
+
     // Convert converted html to string format
     const contentHtml = processedContent.toString()
     
+    // Replace all Twitter URLs with their MDX counterparts
     const finalContentHtml = await replaceAsync(contentHtml, /<p>(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)[?&]s=(\d+)<\/p>)/g, getTweetMetadata)
     
+    // serialize the content string into MDX
     const mdxSource = await serialize(finalContentHtml);
 
     return {
