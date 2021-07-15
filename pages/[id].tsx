@@ -5,37 +5,30 @@ import Image from "next/image"
 import getConfig from 'next/config'
 import React, {useState} from "react"
 import prisma from '../lib/prisma'
-import useSWR from "swr"
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
-}
+  }
   
-const fetcher = (...args) => fetch(...args).then(res => res.json())
-
 export default function Index(props){
 
     const {publicRuntimeConfig} = getConfig()
     const {NODE_ENV} = publicRuntimeConfig
-    
-    const { data } = useSWR(`/api/get-publication-data-swr?subdomain=${props.subdomain}`, fetcher, { initialData: JSON.parse(props.publication) })
-    
-    const pinnedPost = data && data.posts.length > 0 ? data.posts.filter(post => {
-        return post.pinnedPost.length > 0
-    })[0] : 'no pinned post'
 
-    if (!data) {
+    const publication = JSON.parse(props.publication)
+    if (!publication) {
       return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
     }
+    const pinnedPost = JSON.parse(props.pinPost)
     const [sort, setSort] = useState("date")
 
     return (
       <Layout
         subdomain={props.subdomain}
-        publicationName={data.name}
-        pageTitle={data.name}
-        description={data.description}
-        logo={data.logo}
+        publicationName={publication.name}
+        pageTitle={publication.name}
+        description={publication.description}
+        logo={publication.logo}
       >
         <main>
         <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">
@@ -94,12 +87,12 @@ export default function Index(props){
               </button>
               <Link href={NODE_ENV === 'production' ? `/about` : `/${props.subdomain}/about`}>
                 <a className="py-2 border-b-2 border-white w-1/2 truncate">
-                  What is {data.name}?
+                  What is {publication.name}?
                 </a>
               </Link>
             </div>
             <div className="py-5 grid gap-5">
-              {data.posts.map((post) => (
+              {publication.posts.map((post) => (
                 <Link href={NODE_ENV === 'production' ? `/p/${post.slug}` : `/${props.subdomain}/p/${post.slug}`}><a>
                   <div key={post.title} className="p-8 sm:p-5 hover:bg-gray-100 transition-all ease-in-out duration-100">
                     <p className="text-sm text-gray-500">
@@ -182,11 +175,16 @@ export async function getStaticProps({ params: {id} }) {
         }
     })
 
+    const pinPost = data && data.posts.length > 0 ? data.posts.filter(post => {
+        return post.pinnedPost.length > 0
+    })[0] : 'no pinned post'
+
     return { 
         props: {
             subdomain: id,
             rootUrl: process.env.ROOT_URL,
             publication: JSON.stringify(data),
+            pinPost: JSON.stringify(pinPost)
         },
         revalidate: 10
     }

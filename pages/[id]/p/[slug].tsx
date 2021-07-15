@@ -7,6 +7,14 @@ import matter from 'gray-matter'
 import remark from 'remark'
 import html from 'remark-html'
 import prisma from '../../../lib/prisma'
+import { serialize } from 'next-mdx-remote/serialize';
+import { MDXRemote } from 'next-mdx-remote';
+import Tweet from '../../../components/Tweet'
+import { getTweets } from '../../../lib/twitter';
+
+const components = {
+    Tweet
+};
 
 export default function PostPage (props) {
 
@@ -47,10 +55,9 @@ export default function PostPage (props) {
             />
         </div>
 
-        <div 
-            dangerouslySetInnerHTML={{ __html: post.content }} 
-            className="m-auto mt-20 mb-48 w-10/12 text-lg sm:w-1/2 sm:text-2xl sm:leading-relaxed text-gray-800 leading-relaxed space-y-6"
-        />
+        <article className="prose lg:prose-xl m-auto mt-20 mb-48">
+            <MDXRemote {...props.content} components={components} />
+        </article>
 
         </Layout>
     )
@@ -81,6 +88,24 @@ export async function getStaticPaths() {
         }),
         fallback: "blocking"
     }
+}
+
+const replaceAsync = async (str, regex, asyncFn) => {
+    const promises = [];
+    str.replace(regex, (match, ...args) => {
+        const promise = asyncFn(match, ...args);
+        promises.push(promise);
+    });
+    const data = await Promise.all(promises);
+    return str.replace(regex, () => data.shift());
+}
+
+const getTweetMetadata = async (tweetUrl) => {
+    const regex = /\/status\/(\d+)/gm;
+    const id = regex.exec(tweetUrl)[1]
+    const tweetData = await getTweets(id)
+    const tweetMDX = "<Tweet id='"+id+"' metadata={`"+JSON.stringify(tweetData)+"`}/>"
+    return tweetMDX
 }
 
 export async function getStaticProps({params: {id, slug}}) {
@@ -130,14 +155,19 @@ export async function getStaticProps({params: {id, slug}}) {
     const processedContent = await remark()
         .use(html)
         .process(matterResult.content)
+    // Convert converted html to string format
     const contentHtml = processedContent.toString()
+    
+    const finalContentHtml = await replaceAsync(contentHtml, /<p>(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)[?&]s=(\d+)<\/p>)/g, getTweetMetadata)
+    
+    const mdxSource = await serialize(finalContentHtml);
 
     return {
         props: {
             subdomain: id,
             publication: publication,
             post: JSON.stringify(post),
-            content: contentHtml,
+            content: mdxSource,
         },
         revalidate: 10
     }

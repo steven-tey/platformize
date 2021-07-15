@@ -4,7 +4,7 @@ module.exports = {
       APP_SLUG: process.env.APP_SLUG
     },
     images: {
-      domains: ['og-image.vercel.app']
+      domains: ['og-image.vercel.app', 'pbs.twimg.com']
     },
     typescript: {
       // !! WARN !!

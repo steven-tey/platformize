@@ -128,8 +128,7 @@ export default function Post ({post, rootUrl}) {
                             </button>
                             </span>
                         </div>
-                        </div>
-
+                    </div>
                     <TextareaAutosize
                         name="content"
                         onChange={(e) => setContent(e.target.value)}
