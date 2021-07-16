@@ -18,6 +18,7 @@ export default function Post ({post, rootUrl}) {
     const [title, setTitle] = useState(parsedPost.title)
     const [description, setDescription] = useState(parsedPost.description)
     const [content, setContent] = useState(parsedPost.content)
+    const [publishing, setPublishing] = useState(false)
     const firstRender = useRef(false);
 
     useEffect(() => {
@@ -70,7 +71,7 @@ export default function Post ({post, rootUrl}) {
     return (
         <>
             <AppLayout>
-                <div className="w-6/12 mx-auto mt-10">
+                <div className="w-6/12 mx-auto mt-10 mb-16">
                     <Link href={NODE_ENV === 'production' ? `/publication/${parsedPost.Publication.id}` : `/${APP_SLUG}/publication/${parsedPost.Publication.id}`}>
                         <a className="text-left text-gray-800 font-semibold text-lg">
                             ← Back to All Posts
@@ -150,10 +151,32 @@ export default function Post ({post, rootUrl}) {
                                 </a>
                             </Link>
                             <button 
-                                onClick={()=> {publish(parsedPost.Publication.id, parsedPost.id, rootUrl, title, description, content)}}
+                                onClick={()=> {publish(parsedPost.Publication.id, parsedPost.id, rootUrl, title, description, content); setPublishing(true)}}
                                 className="mx-2 rounded-md py-3 px-6 bg-blue-500 hover:bg-blue-400 active:bg-blue-300 focus:outline-none text-lg text-white"
                             >
-                                Publish →
+                                Publish
+                                { publishing ? 
+                                <svg
+                                className="animate-spin ml-2 h-4 w-4 text-white inline-block"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                >
+                                <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    stroke-width="4"
+                                />
+                                <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                                </svg>
+                                : "  →"}
                             </button>
                         </div>
                     </div>

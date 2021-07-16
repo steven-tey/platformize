@@ -100,6 +100,19 @@ export default function Tweet({id, metadata}) {
             }
             >
             {media.map((m) => (
+                m.type == 'animated_gif' ?
+                <div className="w-full">
+                    <Image
+                    key={m.media_key}
+                    alt={text}
+                    width={2048}
+                    height={1170}
+                    layout="responsive"
+                    src={m.preview_image_url}
+                    className="rounded-2xl"
+                    />
+                </div>
+                :
                 <Image
                 key={m.media_key}
                 alt={text}
@@ -108,7 +121,8 @@ export default function Tweet({id, metadata}) {
                 src={m.type == 'video' || m.type == 'animated_gif' ? m.preview_image_url : m.url}
                 className="rounded-2xl"
                 />
-            ))}
+            ))
+            }
             </div>
         ) : null}
         {quoteTweet ? <Tweet id={quoteTweet.id} metadata={JSON.stringify(quoteTweet)} /> : null}
