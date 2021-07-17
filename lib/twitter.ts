@@ -6,7 +6,7 @@ export const getTweets = async (id) => {
     expansions:
       'author_id,attachments.media_keys,referenced_tweets.id,referenced_tweets.id.author_id',
     'tweet.fields':
-      'attachments,author_id,public_metrics,created_at,id,in_reply_to_user_id,referenced_tweets,text',
+      'attachments,author_id,public_metrics,created_at,id,in_reply_to_user_id,referenced_tweets,text,entities',
     'user.fields': 'id,name,profile_image_url,protected,url,username,verified',
     'media.fields':
       'duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics'
@@ -44,6 +44,26 @@ export const getTweets = async (id) => {
       }) || []
     );
   };
+
+  const getExternalUrls = (tweet) => {
+    const externalURLs = tweet.entities?.urls
+    const mappings = {}
+    if (externalURLs) {
+        externalURLs.map((url) => {
+            mappings[`${url.url}`] = !url.display_url.startsWith("pic.twitter.com") && !url.display_url.startsWith("twitter.com") ? url.expanded_url : ""
+        })
+    }
+    var processedText = tweet.text
+    Object.entries(mappings).map(([k, v], i) => {
+        processedText = processedText.replace(k, v)
+    })
+    return processedText
+  }
+
+  tweet.data.text = getExternalUrls(tweet.data)
+  tweet?.includes?.tweets?.map((twt) => {
+    twt.text = getExternalUrls(twt)
+  })
 
   return {
     ...tweet.data,

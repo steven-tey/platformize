@@ -21,8 +21,9 @@ export default function Tweet({id, metadata}) {
     const tweetUrl = `https://twitter.com/${author.username}/status/${id}`;
     const createdAt = new Date(created_at);
 
-    const formattedText = text.replace(/https:\/\/[\n\S]+/g, (match) => { // format all hyperlinks
-        return `<a style="color: rgb(29,161,242); font-weight:normal; text-decoration: none" href="${match}" target="_blank">${match}</a>`
+    const regexToMatchURL = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
+    const formattedText = text.replace(regexToMatchURL, (match) => { // format all hyperlinks
+        return `<a style="color: rgb(29,161,242); font-weight:normal; text-decoration: none" href="${match}" target="_blank">${match.replace(/^http(s?):\/\//i, "")}</a>`
     }).replace(/\B\@([\w\-]+)/gim, (match) => { // format all @ mentions
         return `<a style="color: rgb(29,161,242); font-weight:normal; text-decoration: none" href="https://twitter.com/${match.replace("@", "")}" target="_blank">${match}</a>`
     }).replace(/(#+[a-zA-Z0-9(_)]{1,})/g, (match) => { // format all # hashtags
