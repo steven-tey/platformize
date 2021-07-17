@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 // url.split("/").pop().split('?')[0]
 
 export default function Tweet({id, metadata}) {
-
+    
     const parsedMetadata = JSON.parse(metadata.replace(/\n/g, "\\n"))
 
     const text = parsedMetadata.text
@@ -21,7 +21,14 @@ export default function Tweet({id, metadata}) {
     const tweetUrl = `https://twitter.com/${author.username}/status/${id}`;
     const createdAt = new Date(created_at);
 
-    const formattedText = text.replace(/https:\/\/[\n\S]+/g, '');
+    const formattedText = text.replace(/https:\/\/[\n\S]+/g, (match) => { // format all hyperlinks
+        return `<a style="color: rgb(29,161,242); font-weight:normal; text-decoration: none" href="${match}" target="_blank">${match}</a>`
+    }).replace(/\B\@([\w\-]+)/gim, (match) => { // format all @ mentions
+        return `<a style="color: rgb(29,161,242); font-weight:normal; text-decoration: none" href="https://twitter.com/${match.replace("@", "")}" target="_blank">${match}</a>`
+    }).replace(/(#+[a-zA-Z0-9(_)]{1,})/g, (match) => { // format all # hashtags
+        return `<a style="color: rgb(29,161,242); font-weight:normal; text-decoration: none" href="https://twitter.com/hashtag/${match.replace("#", "")}" target="_blank">${match}</a>`
+    });
+    
     const quoteTweet =
         referenced_tweets && referenced_tweets.find((t) => t.type === 'quoted');
 
@@ -88,9 +95,10 @@ export default function Tweet({id, metadata}) {
             </svg>
             </a>
         </div>
-        <div className="mt-4 mb-1 leading-normal whitespace-pre-wrap text-xl !text-gray-700 dark:!text-gray-300">
-            {formattedText}
-        </div>
+        <div 
+            className="mt-4 mb-1 leading-normal whitespace-pre-wrap text-xl !text-gray-700 dark:!text-gray-300"
+            dangerouslySetInnerHTML={{__html: formattedText}}
+        />
         {media && media.length ? (
             <div
             className={
@@ -101,17 +109,14 @@ export default function Tweet({id, metadata}) {
             >
             {media.map((m) => (
                 m.type == 'animated_gif' ?
-                <div className="w-full">
-                    <Image
-                    key={m.media_key}
-                    alt={text}
-                    width={2048}
-                    height={1170}
-                    layout="responsive"
-                    src={m.preview_image_url}
-                    className="rounded-2xl"
-                    />
-                </div>
+                <Image
+                key={m.media_key}
+                alt={text}
+                width={2048}
+                height={m.height * (2048/m.width)}
+                src={m.preview_image_url}
+                className="rounded-2xl"
+                />
                 :
                 <Image
                 key={m.media_key}

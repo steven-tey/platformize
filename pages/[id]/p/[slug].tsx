@@ -55,7 +55,7 @@ export default function PostPage (props) {
             />
         </div>
 
-        <article className="prose lg:prose-xl m-auto mt-20 mb-48">
+        <article className="prose lg:prose-xl w-11/12 sm:w-full mx-auto mt-20 mb-48">
             <MDXRemote {...props.content} components={components} />
         </article>
 
