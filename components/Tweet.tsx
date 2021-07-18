@@ -1,19 +1,39 @@
 import Image from 'next/image';
 import { format } from 'date-fns';
 
-// url.split("/").pop().split('?')[0]
+function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+}
+
+function getRemainingTime(ISOString) {
+    const currentTime = new Date()
+    const endTime = new Date(ISOString)
+    const diff = endTime - currentTime
+    if (diff > 36e5*24) {
+        const days = Math.floor(diff / (36e5*24))
+        const hours = Math.floor((diff - days*36e5*24) / 36e5)
+        return `${days} day${days > 1 ? "s" : ""} ${hours} hours`
+    } else if (diff > 36e5) {
+        return `${Math.floor(diff / 36e5)} hours`
+    } else if (diff > 60e3) {
+        return `${Math.floor(diff / 60e3)} minutes`
+    } else {
+        return 'Less than a minute'
+    }
+}
 
 export default function Tweet({id, metadata}) {
     
     const parsedMetadata = JSON.parse(metadata.replace(/\n/g, "\\n"))
-
+    console.log(parsedMetadata)
     const text = parsedMetadata.text
     const author = parsedMetadata.author
     const media = parsedMetadata.media
+    const polls = parsedMetadata.polls
     const created_at = parsedMetadata.created_at
     const public_metrics = parsedMetadata.public_metrics
     const referenced_tweets = parsedMetadata.referenced_tweets
-        
+    
     const authorUrl = `https://twitter.com/${author.username}`;
     const likeUrl = `https://twitter.com/intent/like?tweet_id=${id}`;
     const retweetUrl = `https://twitter.com/intent/retweet?tweet_id=${id}`;
@@ -32,6 +52,9 @@ export default function Tweet({id, metadata}) {
     
     const quoteTweet =
         referenced_tweets && referenced_tweets.find((t) => t.type === 'quoted');
+    
+    const repliedTo = 
+    referenced_tweets && referenced_tweets.find((t) => t.type === 'replied_to');
 
     return (
         <div className="tweet rounded-lg border border-gray-300 dark:border-gray-800 px-8 py-6 my-4 w-full">
@@ -96,8 +119,13 @@ export default function Tweet({id, metadata}) {
             </svg>
             </a>
         </div>
+        {repliedTo && repliedTo.username &&
+            <div className="text-gray-500 text-base mt-5">
+                Replying to <a className="!no-underline !text-twitter-blue" href={`https://twitter.com/${repliedTo.author.username}`} target="_blank">@{repliedTo.author.username}</a>
+            </div>
+        }
         <div 
-            className="mt-4 mb-1 leading-normal whitespace-pre-wrap text-xl !text-gray-700 dark:!text-gray-300"
+            className="mt-4 mb-2 leading-normal whitespace-pre-wrap text-xl !text-gray-700 dark:!text-gray-300"
             dangerouslySetInnerHTML={{__html: formattedText}}
         />
         {media && media.length ? (
@@ -131,7 +159,53 @@ export default function Tweet({id, metadata}) {
             }
             </div>
         ) : null}
-        {quoteTweet ? <Tweet id={quoteTweet.id} metadata={JSON.stringify(quoteTweet)} /> : null}
+        {polls && 
+            <div className="mt-5">
+                {polls.map((poll) => {
+                    poll.total_votes = poll.options.reduce((sum, option) => sum + option.votes, 0)
+                    return poll.voting_status == 'open' ? 
+                    <div>
+                        {poll.options.map((option) => (
+                            <a href={tweetUrl} target="_blank" className="!no-underline">
+                                <div className="text-center font-bold text-twitter-blue border border-twitter-blue rounded-3xl my-2 hover:bg-twitter-blue hover:bg-opacity-10 transition-all ease-in-out duration-150">
+                                    {option.label}
+                                </div>
+                            </a>
+                        ))}
+                        <div className="text-gray-500 text-base">
+                            {poll.total_votes} votes · {getRemainingTime(poll.end_datetime)} left
+                        </div>
+                    </div>
+                    :
+                    <div>
+                        {poll.options.map((option) => (
+                            <>
+                                <div  
+                                    className={classNames(
+                                        option.position == 1 ? 'font-bold' : '',
+                                        'relative text-black my-2 cursor-pointer px-3 whitespace-nowrap flex justify-between',
+                                    )}
+                                >
+                                    <p className="!my-0 z-10">{option.label}</p>
+                                    <p className="!my-0 z-10">{`${(option.votes/poll.total_votes*100).toFixed(1).replace('.0', '')}%`}</p>
+                                    <div 
+                                        className={classNames(
+                                            option.position == 1 ? 'font-bold bg-twitter-blue' : 'bg-gray-300',
+                                            'absolute top-0 left-0 rounded-md w-full h-full',
+                                        )}
+                                        style={{width: `${Math.round(option.votes/poll.total_votes*100)}%`}}
+                                    /> 
+                                </div>
+                            </>
+                        ))}
+                        <div className="text-gray-500 text-base">
+                            {poll.total_votes} votes · Final results
+                        </div>
+                    </div>
+                })}
+            </div>
+        }
+        {quoteTweet && <Tweet id={quoteTweet.id} metadata={JSON.stringify(quoteTweet)} />}
         <a
             className="block mt-5 mb-4 !text-gray-500 text-sm hover:!text-gray-800 !no-underline"
             href={tweetUrl}
