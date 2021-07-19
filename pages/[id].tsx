@@ -42,6 +42,7 @@ export default function Index(props){
                       width={2048}
                       height={1170}
                       layout="responsive"
+                      objectFit="cover"
                       placeholder="blur"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2PYsGHDfwAHNAMQumvbogAAAABJRU5ErkJggg=="
                       src={pinnedPost.image}
