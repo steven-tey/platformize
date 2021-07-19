@@ -25,7 +25,7 @@ export const getTweets = async (id) => {
 
   const tweet = await response.json();
 
-  console.log(JSON.stringify(tweet, null, 4));
+  //console.log(JSON.stringify(tweet, null, 4));
 
   const getAuthorInfo = (author_id) => {
     return tweet.includes.users.find((user) => user.id === author_id);
@@ -47,6 +47,8 @@ export const getTweets = async (id) => {
     );
   };
 
+  // function to distinguish between external URLs and external t.co links and internal t.co links 
+  // (e.g. images, videos, gifs, quote tweets) and remove/replace them accordingly
   const getExternalUrls = (tweet) => {
     const externalURLs = tweet.entities?.urls
     const mappings = {}
@@ -61,9 +63,8 @@ export const getTweets = async (id) => {
     })
     return processedText
   }
-
-  tweet.data.text = getExternalUrls(tweet.data)
-  tweet?.includes?.tweets?.map((twt) => {
+  tweet.data.text = getExternalUrls(tweet.data) // removing/replacing t.co links for main tweet
+  tweet?.includes?.tweets?.map((twt) => { // removing/replacing t.co links for referenced tweets
     twt.text = getExternalUrls(twt)
   })
 
