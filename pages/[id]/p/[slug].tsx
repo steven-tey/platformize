@@ -11,18 +11,12 @@ import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 import Tweet from '../../../components/Tweet'
 import { getTweets } from '../../../lib/twitter';
-import { useRouter } from 'next/router'
 
 const components = {
     Tweet
 };
 
 export default function PostPage (props) {
-
-    const router = useRouter()
-    if (router.isFallback) {
-        return <div>Loading...</div>
-    }
 
     let post = JSON.parse(props.post)
     if (!post) {
@@ -93,7 +87,7 @@ export async function getStaticPaths() {
                 return  { params: { id: post.publicationUrl, slug: post.slug } }
             }
         }),
-        fallback: true
+        fallback: "blocking"
     }
 }
 
