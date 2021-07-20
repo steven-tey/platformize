@@ -26,6 +26,8 @@ function getRemainingTime(ISOString) {
 export default function Tweet({id, metadata}) {
     
     const parsedMetadata = JSON.parse(metadata.replace(/\n/g, "\\n"))
+
+    //console.log(JSON.stringify(parsedMetadata, null, 4));
     
     const text = parsedMetadata.text
     const author = parsedMetadata.author
@@ -208,7 +210,7 @@ export default function Tweet({id, metadata}) {
                     })}
                 </div>
             }
-            {quoteTweet && <Tweet id={quoteTweet.id} metadata={JSON.stringify(quoteTweet)} />}
+            {quoteTweet && quoteTweet.author && <Tweet id={quoteTweet.id} metadata={JSON.stringify(quoteTweet)} />}
             <a
                 className="block mt-3 mb-4 !text-gray-500 text-base hover:!underline !no-underline"
                 href={tweetUrl}
