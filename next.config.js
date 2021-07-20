@@ -1,7 +1,8 @@
 module.exports = {
     publicRuntimeConfig: {
       NODE_ENV: process.env.NODE_ENV, 
-      APP_SLUG: process.env.APP_SLUG
+      APP_SLUG: process.env.APP_SLUG,
+      ROOT_URL: process.env.ROOT_URL,
     },
     images: {
       domains: ['og-image.vercel.app', 'pbs.twimg.com']

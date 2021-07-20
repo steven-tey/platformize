@@ -13,7 +13,7 @@ function classNames(...classes) {
 const Header: React.FC = ({subdomain, name, logo}) => {
 
   const {publicRuntimeConfig} = getConfig()
-  const {NODE_ENV} = publicRuntimeConfig
+  const {NODE_ENV, APP_SLUG, ROOT_URL} = publicRuntimeConfig
   
   const [dropdown, setDropdown] = useState(false)
 
@@ -67,12 +67,12 @@ const Header: React.FC = ({subdomain, name, logo}) => {
               About
             </a>
           </Link>
-          <Link href={NODE_ENV === 'production' ? `/about` : `/${subdomain}/about`}>
+          <Link href={NODE_ENV === 'production' ? `/archive` : `/${subdomain}/archive`}>
             <a>
               Archive
             </a>
           </Link>
-          <Link href="#">
+          <Link href={`https://${APP_SLUG}.${ROOT_URL}`}>
             <a>
               My Account
             </a>
