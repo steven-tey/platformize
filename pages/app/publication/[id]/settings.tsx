@@ -4,6 +4,7 @@ import Image from 'next/image'
 import useSWR, {mutate} from 'swr'
 import Loader from '../../../../components/Loader'
 import getConfig from 'next/config'
+import { useState } from 'react'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
@@ -11,6 +12,7 @@ export default function Settings ({publicationId, rootUrl}) {
 
     const {publicRuntimeConfig} = getConfig()
     const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
+    const [subdomainError, setSubdomainError] = useState(false)
 
     const { data } = useSWR(`/api/get-publication-data?publicationId=${publicationId}`, fetcher)
 
@@ -143,11 +145,16 @@ export default function Settings ({publicationId, rootUrl}) {
 
                     <form 
                         onSubmit={async (e) => {
+                            setSubdomainError(false)
                             e.target.submit.innerHTML = 'Saving...'
                             e.persist()
                             e.preventDefault()
                             mutate(`/api/get-publication-data?publicationId=${publicationId}`, { ...data, url: e.target.subdomain.value }, false)
-                            await fetch(`/api/save-publication-subdomain?subdomain=${e.target.subdomain.value}&publicationId=${publicationId}`)
+                            await fetch(`/api/save-publication-subdomain?subdomain=${e.target.subdomain.value}&publicationId=${publicationId}`).then((res) => {
+                                if (!res.ok) {
+                                    setSubdomainError(true)
+                                }
+                            })
                             mutate(`/api/get-publication-data?publicationId=${publicationId}`)
                             e.target.submit.innerHTML = 'Save';
                         }}
@@ -173,7 +180,8 @@ export default function Settings ({publicationId, rootUrl}) {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full flex justify-end mt-3">
+                        <div className={`w-full flex ${subdomainError ? "justify-between" : "justify-end"} mt-3`}>
+                        {subdomainError && <p className="text-sm text-red-600 mt-5">This subdomain is taken. Please choose another one.</p>}
                             <button 
                                 type="submit"
                                 name="submit"

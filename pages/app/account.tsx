@@ -1,0 +1,108 @@
+import AppLayout from '../../components/AppLayout'
+import { useSession } from 'next-auth/client'
+import Loader from '../../components/Loader'
+
+export default function Account () {
+
+    const [session, loading] = useSession()
+
+    return (
+        <AppLayout>
+
+        {!session || loading ? 
+            <Loader/>
+        :
+        <>
+            <div className="w-11/12 sm:w-1/2 mx-auto gap-10 h-screen sm:divide-x">
+                <div className="pt-16 sm:pl-10">
+                    <div className="flex justify-between">
+                        <h1 className="font-bold text-2xl sm:text-3xl mb-10">
+                            Settings
+                        </h1>
+                    </div>
+
+                    <img
+                        className="w-1/6 mx-auto mb-10 rounded-full"
+                        src={session.user.image}
+                        alt=""
+                    />
+                    
+                    <form
+                        onSubmit={async (e) => {
+                            e.target.submit.innerHTML = 'Saving...'
+                            e.persist()
+                            e.preventDefault()
+                            await fetch(`/api/save-account-name?accountId=${session.user.id}&name=${e.target.name.value}`)
+                            e.target.submit.innerHTML = 'Save'
+                        }}
+                        className="sm:gap-4 sm:items-start sm:border-b sm:border-gray-200 py-5 mb-5"
+                    >
+                        <div className="sm:grid sm:grid-cols-4">
+                            <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                            Name
+                            </label>
+                            <div className="mt-1 sm:mt-0 sm:col-span-3">
+                                <input
+                                type="text"
+                                name="name"
+                                autoComplete="off"
+                                required
+                                defaultValue={session?.user?.name}
+                                className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full flex justify-end mt-3">
+                            <button 
+                                type="submit"
+                                name="submit"
+                                className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </form>
+
+                    
+                    <form
+                        onSubmit={async (e) => {
+                            e.target.submit.innerHTML = 'Saving...'
+                            e.persist()
+                            e.preventDefault()
+                            await fetch(`/api/save-account-email?accountId=${session.user.id}&email=${e.target.email.value}`)
+                            e.target.submit.innerHTML = 'Save'
+                        }}
+                        className="sm:gap-4 sm:items-start sm:border-b sm:border-gray-200 py-5 mb-5"
+                    >
+                        <div className="sm:grid sm:grid-cols-4">
+                            <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                            Email
+                            </label>
+                            <div className="mt-1 sm:mt-0 sm:col-span-3">
+                                <input
+                                type="email"
+                                name="email"
+                                autoComplete="off"
+                                required
+                                defaultValue={session?.user?.email}
+                                className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full flex justify-end mt-3">
+                            <button 
+                                type="submit"
+                                name="submit"
+                                className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </>
+        }
+        </AppLayout>
+    )
+}
