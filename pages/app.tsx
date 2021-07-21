@@ -32,6 +32,7 @@ export default function Index (props) {
 
     const [open, setOpen] = useState(false)
     const [creating, setCreating] = useState(false)
+    const [subdomainError, setSubdomainError] = useState(false)
 
     const [openDelete, setOpenDelete] = useState(false)  
     const [pubToDelete, setPubToDelete] = useState('')
@@ -40,6 +41,7 @@ export default function Index (props) {
     const router = useRouter()
     
     async function createPublication(e, userId) {
+        setSubdomainError(false)
         const res = await fetch(
             `/api/create-publication?name=${e.target.name.value}&url=${e.target.subdomain.value}&description=${e.target.description.value}&userId=${userId}`, 
             { method: 'POST' }
@@ -49,6 +51,9 @@ export default function Index (props) {
           setTimeout(() => {
               router.push(NODE_ENV === 'production' ? `/publication/${data.publicationId}` : `/${APP_SLUG}/publication/${data.publicationId}`)
           }, 800)
+        } else {
+          setCreating(false)
+          setSubdomainError(true)
         }
     }
     async function deletePublication(publicationId) {
@@ -141,6 +146,7 @@ export default function Index (props) {
                                         </div>
                                       </div>
                                     </div>
+                                    {subdomainError && <p className="text-sm text-red-600 mt-5">This subdomain is taken. Please choose another one.</p>}
 
                                     <div className="sm:grid sm:grid-cols-4 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                       <label htmlFor="about" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
