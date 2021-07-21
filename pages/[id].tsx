@@ -41,6 +41,7 @@ export default function Index(props){
                     <Image
                       width={2048}
                       height={1170}
+                      unoptimized={true}
                       layout="responsive"
                       objectFit="cover"
                       placeholder="blur"
