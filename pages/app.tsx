@@ -308,7 +308,7 @@ export default function Index (props) {
           </Transition.Root>
 
           <div className="w-11/12 sm:w-7/12 mx-auto mt-16">
-            <div className="flex justify-between">
+            <div className="flex justify-between px-4">
               <h1 className="font-bold text-2xl sm:text-3xl m-5 mb-10">
                 My Publications
               </h1>
@@ -329,7 +329,7 @@ export default function Index (props) {
               <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                 <a>
                 <div className="sm:px-5 sm:flex space-y-5 sm:space-y-0 sm:space-x-10 mb-10 py-5 rounded-lg cursor-pointer hover:bg-gray-100">
-                  <div className="w-10/12 mx-auto sm:w-5/12 overflow-hidden rounded-lg">
+                  <div className="w-10/12 mx-auto sm:w-1/3 overflow-hidden rounded-lg">
                     <Image
                       width={2048}
                       height={1170}
@@ -340,7 +340,7 @@ export default function Index (props) {
                       />
                   </div>
     
-                  <div className="relative w-10/12 mx-auto sm:w-7/12 space-y-2 sm:space-y-5">
+                  <div className="relative w-10/12 mx-auto sm:w-7/12 space-y-2 sm:space-y-3">
                   <Menu onClick={preventDefault} as="div" className="absolute right-0 top-0 mr-3 mt-3">
                     <div>
                       <a onClick={stopPropagation} href={`https://${publication.url}.${props.rootUrl}`} target="_blank" 
@@ -406,7 +406,7 @@ export default function Index (props) {
                     </Transition>
                   </Menu>
                     <p className="text-xl sm:text-3xl font-semibold text-gray-900">{publication.name}</p>
-                    <p className="mt-3 text-base sm:text-lg text-gray-600 truncate w-9/12 sm:w-10/12">{publication.description}</p>
+                    <p className="text-base sm:text-lg text-gray-600 truncate w-9/12 sm:w-10/12">{publication.description}</p>
                     <a onClick={stopPropagation} href={`https://${publication.url}.${props.rootUrl}`} target="_blank" 
                       className="absolute bg-gray-900 hidden sm:block py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700"
                     >
