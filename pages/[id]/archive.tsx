@@ -24,6 +24,7 @@ export default function Archive (props) {
             pageTitle={publication.name}
             description={publication.description}
             logo={publication.logo}
+            thumbnail={props.image}
         >
       
             <div className="relative w-full md:w-1/2 mt-6 mx-auto">

@@ -29,6 +29,7 @@ export default function Index(props){
         pageTitle={publication.name}
         description={publication.description}
         logo={publication.logo}
+        thumbnail={publication.image}
       >
         <main>
         <div className="bg-white pb-20 px-0 sm:px-6 lg:pb-28 lg:px-8">

@@ -17,16 +17,20 @@ module.exports = {
     async redirects() {
       return [
         {
-          source: '/publication',
+          source: '/post',
+          has: [{
+            type: 'host',
+            value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
+          }],
           destination: '/',
           permanent: true,
         },
-      ]
-    },
-    async redirects() {
-      return [
         {
-          source: '/post',
+          source: '/publication',
+          has: [{
+            type: 'host',
+            value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
+          }],
           destination: '/',
           permanent: true,
         },

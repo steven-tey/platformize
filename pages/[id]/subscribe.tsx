@@ -21,6 +21,7 @@ export default function Subscribe (props) {
             pageTitle={props.name}
             description={props.description}
             logo={props.logo}
+            thumbnail={props.image}
         >
         <div className="relative m-auto mt-48 sm:w-1/2 bg-white overflow-hidden">
             <h1 className="block text-2xl text-center leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">

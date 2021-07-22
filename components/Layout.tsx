@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Header from './Header'
 
-export default function Layout ({subdomain, publicationName, pageTitle, description, logo, children}) {
+export default function Layout ({subdomain, publicationName, pageTitle, description, logo, thumbnail, children}) {
   return (
     <>
     <div>  
@@ -17,11 +17,11 @@ export default function Layout ({subdomain, publicationName, pageTitle, descript
 
         <meta itemprop="name" content={pageTitle}/>
         <meta itemprop="description" content={description}/>
-        <meta itemprop="image" content={logo}/>
+        <meta itemprop="image" content={thumbnail}/>
         <meta name="description" content={description}/>
         <meta property="og:title" content={pageTitle}/>
         <meta property="og:description" content={description}/>
-        <meta property="og:image" content={logo}/>
+        <meta property="og:image" content={thumbnail}/>
         <meta property="og:type" content="website"/>
 
         <meta name="twitter:card" content="summary_large_image"/>
@@ -29,7 +29,7 @@ export default function Layout ({subdomain, publicationName, pageTitle, descript
         <meta name="twitter:creator" content="@StevenTey"/>
         <meta name="twitter:title" content={pageTitle}/>
         <meta name="twitter:description" content={description}/>
-        <meta name="twitter:image" content={logo}/>
+        <meta name="twitter:image" content={thumbnail}/>
       </Head>
       <Header 
         subdomain={subdomain}

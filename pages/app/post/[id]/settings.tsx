@@ -2,6 +2,7 @@ import AppLayout from '../../../../components/AppLayout'
 import Link from "next/link"
 import getConfig from 'next/config'
 import { useState } from 'react'
+import prisma from '../../../../lib/prisma'
 
 export default function PostSettings(props){
 
