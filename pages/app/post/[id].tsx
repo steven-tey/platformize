@@ -189,20 +189,31 @@ export default function Post ({post, rootUrl}) {
 export async function getServerSideProps(ctx) {
 
     const { id } = ctx.query;  
-    const session = await getSession(ctx)
-    const post = await prisma.post.findUnique({
-        where: {
-            id: id
-        },
-        include: {
-            Publication: true
+    const { req, res } = ctx
+    const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
+    if (subdomain == process.env.APP_SLUG) {
+        const session = await getSession(ctx)
+        const post = await prisma.post.findUnique({
+            where: {
+                id: id
+            },
+            include: {
+                Publication: true
+            }
+        })
+        return {
+            props: {
+                session: session,
+                post: JSON.stringify(post),
+                rootUrl: process.env.ROOT_URL
+            }
         }
-    })
-    return {
-        props: {
-            session: session,
-            post: JSON.stringify(post),
-            rootUrl: process.env.ROOT_URL
+    } else {
+        return {
+            redirect: {
+                destination: '/',
+                statusCode: 302
+            }
         }
     }
 }

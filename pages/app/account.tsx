@@ -1,6 +1,5 @@
 import AppLayout from '../../components/AppLayout'
 import { useSession } from 'next-auth/client'
-import Loader from '../../components/Loader'
 
 export default function Account () {
 
@@ -8,10 +7,6 @@ export default function Account () {
 
     return (
         <AppLayout>
-
-        {!session || loading ? 
-            <Loader/>
-        :
         <>
             <div className="w-11/12 sm:w-1/2 mx-auto gap-10 h-screen sm:divide-x">
                 <div className="pt-16 sm:pl-10">
@@ -21,11 +16,15 @@ export default function Account () {
                         </h1>
                     </div>
 
+                    {loading ? 
+                    <div className="w-1/6 h-28 mx-auto mb-10 rounded-full bg-gray-200 animate-pulse"/>
+                    : 
                     <img
                         className="w-1/6 mx-auto mb-10 rounded-full"
                         src={session.user.image}
                         alt=""
                     />
+                    }
                     
                     <form
                         onSubmit={async (e) => {
@@ -47,7 +46,7 @@ export default function Account () {
                                 name="name"
                                 autoComplete="off"
                                 required
-                                defaultValue={session?.user?.name}
+                                defaultValue={loading ? '' : session?.user?.name}
                                 className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
                                 />
                             </div>
@@ -84,7 +83,7 @@ export default function Account () {
                                 name="email"
                                 autoComplete="off"
                                 required
-                                defaultValue={session?.user?.email}
+                                defaultValue={loading ? '' : session?.user?.email}
                                 className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
                                 />
                             </div>

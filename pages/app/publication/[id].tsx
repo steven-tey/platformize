@@ -1,5 +1,5 @@
 import AppLayout from '../../../components/AppLayout'
-import prisma from '../../../lib/prisma'
+import useSWR from 'swr'
 import Image from 'next/image'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
@@ -34,21 +34,24 @@ const pin = async (publicationId, slug, postId, pinStatus) => {
     window.location.reload();
 }
 
-export default function Publication({publication, posts, rootUrl}){
+const fetcher = (...args) => fetch(...args).then(res => res.json())
+
+export default function Publication({publicationId, rootUrl}){
 
     const {publicRuntimeConfig} = getConfig()
     const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
-    const allPosts = JSON.parse(posts)
     const [creating, setCreating] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
     const [postToDelete, setPostToDelete] = useState('')
     const [deleting, setDeleting] = useState(false)
 
+    const { data  } = useSWR(`/api/get-posts?publicationId=${publicationId}`, fetcher)
+
     async function deletePost(postId) {
         setDeleting(true)
         const res = await fetch(
-            `/api/delete?postId=${postId}&publicationId=${publication.id}&slug=${publication.url}&draft=${false}`, 
+            `/api/delete?postId=${postId}&publicationId=${data ? data.publication.id : ''}&slug=${publication.url}&draft=${false}`, 
             { method: 'POST' }
         )
         if (res.ok) {
@@ -177,7 +180,7 @@ export default function Publication({publication, posts, rootUrl}){
                             ←
                         </a>
                     </Link>
-                    <a href={`https://${publication.url}.${rootUrl}`} target="_blank"
+                    <a href={`https://${data ? data.publication.url : 'app'}.${rootUrl}`} target="_blank"
                         className="flex align-middle"
                     >
                         <div className="inline-block mx-auto w-10 h-auto rounded-xl overflow-hidden">
@@ -187,21 +190,21 @@ export default function Publication({publication, posts, rootUrl}){
                                 src='/logo.svg'
                             />
                         </div>
-                        <p className="inline-block font-medium text-lg mt-2 mx-3">{publication.name}</p>
+                        <p className="inline-block font-medium text-lg mt-2 mx-3">{data ? data.publication.name : '...'}</p>
                     </a>
                 </div>
                 <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 space-x-2 text-center pb-5">
-                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${data ? data.publication.id : ''}` : `/${APP_SLUG}/publication/${data ? data.publication.id : ''}`}>
                         <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Posts
                         </a>
                     </Link>
-                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/drafts` : `/${APP_SLUG}/publication/${publication.id}/drafts`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${data ? data.publication.id : ''}/drafts` : `/${APP_SLUG}/publication/${data ? data.publication.id : ''}/drafts`}>
                         <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Drafts
                         </a>
                     </Link>
-                    <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/settings` : `/${APP_SLUG}/publication/${publication.id}/settings`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${data ? data.publication.id : ''}/settings` : `/${APP_SLUG}/publication/${data ? data.publication.id : ''}/settings`}>
                         <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                             Settings
                         </a>
@@ -217,7 +220,7 @@ export default function Publication({publication, posts, rootUrl}){
                                 ← All Publications 
                             </a>
                         </Link>
-                        <a href={`https://${publication.url}.${rootUrl}`} target="_blank">
+                        <a href={`https://${data ? data.publication.url : 'app'}.${rootUrl}`} target="_blank">
                             <div className="relative mx-auto mt-5 mb-3 w-16 h-auto rounded-xl overflow-hidden">
                                 <Image 
                                     width={80}
@@ -225,21 +228,21 @@ export default function Publication({publication, posts, rootUrl}){
                                     src='/logo.svg'
                                 />
                             </div>
-                            <p className="text-center font-medium">{publication.name}</p>
+                            <p className="text-center font-medium">{data ? data.publication.name : '...'}</p>
                         </a>
 
                         <div className="text-left grid grid-cols-1 gap-6 mt-10">
-                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${data ? data.publication.id : ''}` : `/${APP_SLUG}/publication/${data ? data.publication.id : ''}`}>
                                 <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Posts
                                 </a>
                             </Link>
-                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/drafts` : `/${APP_SLUG}/publication/${publication.id}/drafts`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${data ? data.publication.id : ''}/drafts` : `/${APP_SLUG}/publication/${data ? data.publication.id : ''}/drafts`}>
                                 <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Drafts
                                 </a>
                             </Link>
-                            <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}/settings` : `/${APP_SLUG}/publication/${publication.id}/settings`}>
+                            <Link href={NODE_ENV === 'production' ? `/publication/${data ? data.publication.id : ''}/settings` : `/${APP_SLUG}/publication/${data ? data.publication.id : ''}/settings`}>
                                 <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                     Settings
                                 </a>
@@ -288,13 +291,13 @@ export default function Publication({publication, posts, rootUrl}){
                             </>}
                         </button>
                         </div>
-                        {allPosts.length == 0 ?
+                        {data && data.posts.length == 0 ?
                         <>
                         <img className="mt-10 mb-20" src="/empty-state.webp" />
                         <p className="text-center mb-48 mt-10 text-gray-800 font-semibold text-xl">No posts yet. Click the button above to create one.</p>
                         </>
                         : null}
-                        {allPosts.map((post) => (
+                        {data ? data.posts.map((post) => (
                             <Link href={NODE_ENV === 'production' ? `/post/${post.id}` : `/${APP_SLUG}/post/${post.id}`}>
                                 <div className="p-8 mb-3 pr-20 flex justify-between bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer">                    
                                     <div className="relative space-y-5">
@@ -401,7 +404,12 @@ export default function Publication({publication, posts, rootUrl}){
                                     </div>
                                 </div>
                             </Link>
-                        ))}
+                        )) : 
+                            [...Array(4)].map((_) => (
+                                <div className="w-full h-36 mb-3 bg-gray-200 animate-pulse rounded-lg">
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
             </AppLayout>
@@ -411,31 +419,11 @@ export default function Publication({publication, posts, rootUrl}){
 
 export async function getServerSideProps(ctx) {
     
-    const { id } = ctx.query;  
+    const { id } = ctx.query; 
 
-    const posts = await prisma.post.findMany({
-        where: {
-            Publication: {
-                id: id
-            },
-            published: true
-        },
-        include: {
-            pinnedPost: true
-        },
-        orderBy: {
-            createdAt: 'desc'
-        }
-    })
-    const publication = await prisma.publication.findUnique({
-        where: {
-            id: id
-        }
-    }) 
     return {
         props: {
-            publication: publication,
-            posts: JSON.stringify(posts),
+            publicationId: id,
             rootUrl: process.env.ROOT_URL
         }
     }

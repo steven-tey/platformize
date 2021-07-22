@@ -2,7 +2,6 @@ import AppLayout from '../../../../components/AppLayout'
 import Link from 'next/link'
 import Image from 'next/image'
 import useSWR, {mutate} from 'swr'
-import Loader from '../../../../components/Loader'
 import getConfig from 'next/config'
 import { useState } from 'react'
 
@@ -14,14 +13,16 @@ export default function Settings ({publicationId, rootUrl}) {
     const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
     const [subdomainError, setSubdomainError] = useState(false)
 
-    const { data } = useSWR(`/api/get-publication-data?publicationId=${publicationId}`, fetcher)
+    const { data } = useSWR(`/api/get-publication-data?publicationId=${publicationId}`, fetcher, {initialData: {
+        name: '',
+        url: '',
+        customDomain: '',
+        description: ''
+    }, revalidateOnMount: true})
+    console.log(data)
 
     return (
         <AppLayout>
-
-        {!data ? 
-            <Loader/>
-        :
         <>
             {/* Mobile Navigation Menu */}
             <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 text-center">
@@ -118,7 +119,7 @@ export default function Settings ({publicationId, rootUrl}) {
                         className="sm:gap-4 sm:items-start sm:border-b sm:border-gray-200 py-5 mb-5"
                     >
                         <div className="sm:grid sm:grid-cols-4">
-                            <label htmlFor="username" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                             Name
                             </label>
                             <div className="mt-1 sm:mt-0 sm:col-span-3">
@@ -240,9 +241,7 @@ export default function Settings ({publicationId, rootUrl}) {
                             e.target.submit.innerHTML = 'Saving...'
                             e.persist()
                             e.preventDefault()
-                            mutate(`/api/get-publication-data?publicationId=${publicationId}`, { ...data, description: e.target.description.value }, false)
                             await fetch(`/api/save-publication-description?description=${e.target.description.value}&publicationId=${publicationId}`)
-                            mutate(`/api/get-publication-data?publicationId=${publicationId}`, { ...data, description: e.target.description.value }, false)
                             e.target.submit.innerHTML = 'Save'
                         }}
                         className="sm:gap-4 sm:items-start sm:border-gray-200 py-5 mb-5"
@@ -274,7 +273,6 @@ export default function Settings ({publicationId, rootUrl}) {
                 </div>
             </div>
         </>
-        }
         </AppLayout>
     )
 }

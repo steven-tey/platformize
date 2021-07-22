@@ -6,8 +6,8 @@ import { signOut } from 'next-auth/client'
 import Loader from './Loader'
 import useRequireAuth from '../lib/useRequireAuth'
 import { ChevronDownIcon } from '@heroicons/react/outline'
-import Router from "next/router";
-import LoadingBar from 'react-top-loading-bar'
+/* import Router from "next/router";
+import LoadingBar from 'react-top-loading-bar' */
 import getConfig from 'next/config'
 
 function classNames(...classes) {
@@ -19,7 +19,7 @@ export default function AppLayout ({children}) {
     const {publicRuntimeConfig} = getConfig()
     const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
-    const [progress, setProgress] = useState(0)
+    /* const [progress, setProgress] = useState(0)
 
     useEffect(() => {
       const start = () => {
@@ -36,7 +36,7 @@ export default function AppLayout ({children}) {
         Router.events.off("routeChangeComplete", end);
         Router.events.off("routeChangeError", end);
       };
-    }, []);
+    }, []); */
 
     const title = 'Platformize App'
     const description = 'Platformize is a NextJS framework that allows you to crate Substack-like user experiences out of the box.'
@@ -45,18 +45,17 @@ export default function AppLayout ({children}) {
     const [dropdown, setDropdown] = useState(false)
 
     const session = useRequireAuth()
-    if (!session) return <Loader/>
 
   return (
     <>
-    <LoadingBar
+    {/* <LoadingBar
       color='#5046e4'
       height={5}
       transitionTime={100}
       waitingTime={500}
       progress={progress}
       onLoaderFinished={() => setProgress(0)}
-    />
+    /> */}
     <div>  
       <Head>
         <title>{title}</title>
@@ -93,12 +92,15 @@ export default function AppLayout ({children}) {
             <div className="absolute mx-auto left-0 right-0 flex justify-between items-center bg-white z-10 w-10/12 lg:w-1/2 py-5 md:space-x-5">
               <div className="flex justify-start w-0 flex-1">
                 <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}><a>
-                  <img
+                  {session ? <img
                     className="h-8 w-auto sm:h-10 inline-block rounded-full"
                     src={session.user.image}
                     alt=""
                   />
-                  <span className="inline-block ml-3 text-lg text-gray-700 align-middle truncate">{session.user.name}</span>
+                  : 
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 inline-block rounded-full bg-gray-200 animate-pulse"/>
+                  }
+                  <span className="inline-block ml-3 text-lg text-gray-700 align-middle truncate">{session ? session.user.name : ''}</span>
                 </a></Link>
               </div>
               <div className="flex items-center justify-end space-x-3">
@@ -140,12 +142,15 @@ export default function AppLayout ({children}) {
             <div className="hidden sm:flex justify-between items-center mx-auto w-10/12 sm:w-1/2 py-5 sm:px-6 md:justify-start md:space-x-10">
               <div className="flex justify-start lg:w-0 lg:flex-1">
                 <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}><a>
-                  <img
+                  {session ? <img
                     className="h-8 w-auto sm:h-10 inline-block rounded-full"
                     src={session.user.image}
                     alt=""
                   />
-                  <span className="inline-block ml-3 text-lg text-gray-700 align-middle truncate">{session.user.name}</span>
+                  :
+                  <div className="h-8 w-8 sm:h-10 sm:w-10 inline-block rounded-full bg-gray-200 animate-pulse"/>
+                  }
+                  <span className="inline-block ml-3 text-lg text-gray-700 align-middle truncate">{session ? session.user.name : ''}</span>
                 </a></Link>
               </div>
               <div className="flex items-center space-x-10 justify-end flex-1 lg:w-0">

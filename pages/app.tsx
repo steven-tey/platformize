@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import {useRouter} from "next/router"
 import React, {Fragment, useState} from "react"
-import prisma from '../lib/prisma'
+import useSWR from 'swr'
 import { getSession } from 'next-auth/client'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import {
@@ -21,9 +21,7 @@ function preventDefault(e) {
   e.preventDefault();
 }
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function Index (props) {
 
@@ -37,6 +35,8 @@ export default function Index (props) {
     const [openDelete, setOpenDelete] = useState(false)  
     const [pubToDelete, setPubToDelete] = useState('')
     const [deleting, setDeleting] = useState(false)
+
+    const { data } = useSWR(`/api/get-publications?sessionId=${props.session.user.id}`, fetcher)
 
     const router = useRouter()
     
@@ -319,16 +319,16 @@ export default function Index (props) {
                 />
               </button>
             </div>
-            {props.publications.length == 0 ?
+            {data && data.publications.length == 0 ?
             <>
               <img src="/empty-state.webp" />
               <p className="text-center mb-48 mt-10 text-gray-800 font-semibold text-xl">No publications yet. Click the button above to create one.</p>
             </>
             : null}
-            {props.publications.map((publication) => (
+            {data ? data.publications.map((publication) => (
               <Link href={NODE_ENV === 'production' ? `/publication/${publication.id}` : `/${APP_SLUG}/publication/${publication.id}`}>
                 <a>
-                <div className="sm:px-5 sm:flex space-y-5 sm:space-y-0 sm:space-x-10 mb-10 py-5 rounded-lg cursor-pointer hover:bg-gray-100">
+                <div className="sm:px-5 sm:flex space-y-5 sm:space-y-0 sm:space-x-10 mb-10 py-8 rounded-lg cursor-pointer hover:bg-gray-100">
                   <div className="w-10/12 mx-auto sm:w-1/3 overflow-hidden rounded-lg">
                     <Image
                       width={2048}
@@ -419,7 +419,12 @@ export default function Index (props) {
                 </div>
                 </a>
               </Link>
-            ))}
+            )) : 
+              [...Array(4)].map((_) => (
+                  <div className="w-full h-48 mb-10 bg-gray-100 animate-pulse rounded-lg">
+                  </div>
+              ))
+            }
           </div>
         </AppLayout>
       </>
@@ -429,20 +434,10 @@ export default function Index (props) {
 export async function getServerSideProps(ctx) {
 
     const session = await getSession(ctx)
-    const publications = await prisma.publication.findMany({
-        where: {
-        users: {
-            some: {
-            userId: session?.user?.id
-            }
-        }
-        }
-    })
     return {
         props: {
-        session: session,
-        rootUrl: process.env.ROOT_URL,
-        publications: publications
+          session: session,
+          rootUrl: process.env.ROOT_URL,
         }
     }
 }
