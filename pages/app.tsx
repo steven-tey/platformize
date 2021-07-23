@@ -36,7 +36,7 @@ export default function Index (props) {
     const [pubToDelete, setPubToDelete] = useState('')
     const [deleting, setDeleting] = useState(false)
 
-    const { data } = useSWR(`/api/get-publications?sessionId=${props.session.user.id}`, fetcher)
+    const { data } = useSWR(`/api/get-publications?sessionId=${props.session?.user?.id}`, fetcher)
 
     const router = useRouter()
     

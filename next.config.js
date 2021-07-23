@@ -39,7 +39,6 @@ module.exports = {
     async rewrites() {
         if (process.env.NODE_ENV === 'production') { // production mode
           return [
-
               // rewrites for app
               {
                   source: '/',
@@ -71,7 +70,7 @@ module.exports = {
                   source: '/',
                   has: [{
                       type: 'host',
-                      value: '(?<url>.*)\\.platformize\\.co'
+                      value: `(?<url>.*).${process.env.ROOT_URL}`
                   }],
                   destination: '/:url',
               },
@@ -79,7 +78,7 @@ module.exports = {
                   source: '/:path*',
                   has: [{
                       type: 'host',
-                      value: '(?<url>.*)\\.platformize\\.co'
+                      value: `(?<url>.*).${process.env.ROOT_URL}`
                   }],
                   destination: '/:url/:path*',
               },

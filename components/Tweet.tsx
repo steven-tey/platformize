@@ -142,24 +142,27 @@ export default function Tweet({id, metadata}) {
                 }
                 >
                 {media.map((m) => (
-                    m.type == 'animated_gif' ?
-                    <Image
-                    key={m.media_key}
-                    alt={text}
-                    width={2048}
-                    height={m.height * (2048/m.width)}
-                    src={m.preview_image_url}
-                    className="rounded-2xl"
-                    />
-                    :
-                    <Image
-                    key={m.media_key}
-                    alt={text}
-                    height={m.height}
-                    width={m.width}
-                    src={m.type == 'video' || m.type == 'animated_gif' ? m.preview_image_url : m.url}
-                    className="rounded-2xl"
-                    />
+                    <a href={tweetUrl} target="_blank">
+                    {m.type == 'video' || m.type == 'animated_gif' ?
+                        <Image
+                        key={m.media_key}
+                        alt={text}
+                        width={2048}
+                        height={m.height * (2048/m.width)}
+                        src={m.preview_image_url}
+                        className="rounded-2xl hover:brightness-90 transition-all ease-in-out duration-150"
+                        />
+                        :
+                        <Image
+                        key={m.media_key}
+                        alt={text}
+                        width={m.width}
+                        height={m.height}
+                        src={m.url}
+                        className="rounded-2xl hover:brightness-90 transition-all ease-in-out duration-150"
+                        />
+                    }
+                    </a>
                 ))
                 }
                 </div>

@@ -1,6 +1,5 @@
 import AppLayout from '../../../components/AppLayout'
-import { getSession } from 'next-auth/client'
-import prisma from '../../../lib/prisma'
+import useSWR from 'swr'
 import Link from 'next/link'
 import { useState, useEffect, useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
@@ -8,16 +7,28 @@ import { AnnotationIcon, PaperClipIcon, PencilIcon, TrashIcon } from '@heroicons
 import {useRouter} from 'next/router'
 import getConfig from 'next/config'
 
-export default function Post ({post, rootUrl}) {
+const fetcher = (...args) => fetch(...args).then(res => res.json())
+
+export default function Post ({postId, rootUrl}) {
 
     const {publicRuntimeConfig} = getConfig()
     const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
-    const parsedPost = JSON.parse(post)
-    const [savedState, setSavedState] = useState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(parsedPost.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(parsedPost.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(parsedPost.updatedAt))}`)
-    const [title, setTitle] = useState(parsedPost.title)
-    const [description, setDescription] = useState(parsedPost.description)
-    const [content, setContent] = useState(parsedPost.content)
+    const { data } = useSWR(`/api/get-post-data?postId=${postId}`, fetcher, {initialData: { post: {
+        updatedAt: '2021-06-26T22:39:53.071Z',
+        title: '',
+        description: '',
+        content: '',
+        Publication: {
+            id: ''
+        }
+    }}, revalidateOnMount: true,
+    })
+
+    const [savedState, setSavedState] = useState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(data.post.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(data.post.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(data.post.updatedAt))}`)
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [content, setContent] = useState('')
     const [publishing, setPublishing] = useState(false)
     const firstRender = useRef(false);
 
@@ -51,10 +62,14 @@ export default function Post ({post, rootUrl}) {
         setSavedState("Saving changes...")
         const response = await fetch('/api/save', {
             method: 'POST', 
-            body: JSON.stringify({id: parsedPost.id, title: title, description: description, content: content})
+            body: JSON.stringify({id: postId, title: title, description: description, content: content})
         })
-        const data = await response.json()
-        setSavedState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(data.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(data.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(data.updatedAt))}`)
+        if (response.ok) {
+            const data = await response.json()
+            setSavedState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(data.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(data.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(data.updatedAt))}`)
+        } else {
+            setSavedState("Failed to save.")
+        }
     }
 
     const router = useRouter()
@@ -65,14 +80,14 @@ export default function Post ({post, rootUrl}) {
             method: 'POST',
         })
         const data = await response.json()
-        router.push(`https://${parsedPost.publicationUrl}.${rootUrl}/p/${data.slug}`)
+        router.push(`https://${data.post.publicationUrl}.${rootUrl}/p/${data.slug}`)
     }
 
     return (
         <>
             <AppLayout>
                 <div className="w-6/12 mx-auto mt-10 mb-16">
-                    <Link href={NODE_ENV === 'production' ? `/publication/${parsedPost.Publication.id}` : `/${APP_SLUG}/publication/${parsedPost.Publication.id}`}>
+                    <Link href={NODE_ENV === 'production' ? `/publication/${data ? data.post.Publication.id : ''}` : `/${APP_SLUG}/publication/${data ? data.post.Publication.id: ''}`}>
                         <a className="text-left text-gray-800 font-semibold text-lg">
                             ← Back to All Posts
                         </a>
@@ -83,14 +98,14 @@ export default function Post ({post, rootUrl}) {
                         onChange={(e) => setTitle(e.target.value)}
                         className="w-full px-2 py-4 border-none text-gray-800 mt-6 text-4xl font-bold resize-none focus:outline-none"
                         placeholder="Enter post title..."
-                        defaultValue={parsedPost.title}
+                        defaultValue={data.post.title}
                     />
                     <TextareaAutosize
                         name="description"
                         onChange={(e) => setDescription(e.target.value)}
                         className="w-full px-2 py-3 border-none text-gray-600 text-xl mb-3 resize-none focus:outline-none"
                         placeholder="Enter post description..."
-                        defaultValue={parsedPost.description}
+                        defaultValue={data.post.description}
                     />
                     
                     <div className="relative mb-6">
@@ -135,23 +150,23 @@ export default function Post ({post, rootUrl}) {
                         onChange={(e) => setContent(e.target.value)}
                         className="w-full px-2 py-3 border-none text-gray-800 text-lg mb-5 resize-none focus:outline-none"
                         placeholder="Write some content here..."
-                        defaultValue={parsedPost.content}
+                        defaultValue={data.post.content}
                     />
                 </div>
                 <footer className="h-20 z-10 fixed bottom-0 inset-x-0 border-solid border-t border-gray-500 bg-white">
                     <div className="w-6/12 mx-auto mt-3 flex justify-between">
                         <div className="text-sm mt-1">
-                            <strong><p>{parsedPost.published? "Published" : "Draft"}</p></strong>
+                            <strong><p>{data && data.post.published? "Published" : "Draft"}</p></strong>
                             <p>{savedState}</p>
                         </div>
                         <div>
-                            <Link href={NODE_ENV === 'production' ? `/post/${parsedPost.id}/settings` : `/${APP_SLUG}/post/${parsedPost.id}/settings`}>
+                            <Link href={NODE_ENV === 'production' ? `/post/${postId}/settings` : `/${APP_SLUG}/post/${postId}/settings`}>
                                 <a className="text-lg mx-2">
                                     Settings
                                 </a>
                             </Link>
                             <button 
-                                onClick={()=> {publish(parsedPost.Publication.id, parsedPost.id, rootUrl, title, description, content); setPublishing(true)}}
+                                onClick={()=> {publish(data.post.Publication.id, postId, rootUrl, title, description, content); setPublishing(true)}}
                                 className="mx-2 rounded-md py-3 px-6 bg-blue-500 hover:bg-blue-400 active:bg-blue-300 focus:outline-none text-lg text-white"
                             >
                                 Publish
@@ -189,31 +204,10 @@ export default function Post ({post, rootUrl}) {
 export async function getServerSideProps(ctx) {
 
     const { id } = ctx.query;  
-    const { req, res } = ctx
-    const subdomain = process.env.NODE_ENV === 'production'? req?.headers?.host?.split('.')[0] : process.env.CURR_SLUG
-    if (subdomain == process.env.APP_SLUG) {
-        const session = await getSession(ctx)
-        const post = await prisma.post.findUnique({
-            where: {
-                id: id
-            },
-            include: {
-                Publication: true
-            }
-        })
-        return {
-            props: {
-                session: session,
-                post: JSON.stringify(post),
-                rootUrl: process.env.ROOT_URL
-            }
-        }
-    } else {
-        return {
-            redirect: {
-                destination: '/',
-                statusCode: 302
-            }
+    return {
+        props: {
+            postId: id,
+            rootUrl: process.env.ROOT_URL
         }
     }
 }

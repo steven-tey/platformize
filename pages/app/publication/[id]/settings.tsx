@@ -19,7 +19,6 @@ export default function Settings ({publicationId, rootUrl}) {
         customDomain: '',
         description: ''
     }, revalidateOnMount: true})
-    console.log(data)
 
     return (
         <AppLayout>
