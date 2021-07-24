@@ -6,16 +6,12 @@ import { signOut } from 'next-auth/client'
 import Loader from './Loader'
 import useRequireAuth from '../lib/useRequireAuth'
 import { ChevronDownIcon } from '@heroicons/react/outline'
-import getConfig from 'next/config'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function AppLayout ({children}) {
-
-    const {publicRuntimeConfig} = getConfig()
-    const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
     const title = 'Platformize App'
     const description = 'Platformize is a NextJS framework that allows you to crate Substack-like user experiences out of the box.'
@@ -63,7 +59,7 @@ export default function AppLayout ({children}) {
           >
             <div className="absolute mx-auto left-0 right-0 flex justify-between items-center bg-white z-10 w-10/12 lg:w-1/2 py-5 md:space-x-5">
               <div className="flex justify-start w-0 flex-1">
-                <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}><a>
+                <Link href="/"><a>
                   {session ? <img
                     className="h-8 w-auto sm:h-10 inline-block rounded-full"
                     src={session.user.image}
@@ -95,12 +91,12 @@ export default function AppLayout ({children}) {
                 'flex flex-col items-end space-y-5 text-lg text-gray-800 absolute mx-auto left-0 right-0 top-24 w-10/12 sm:w-1/2 transform transition-all ease-in-out duration-300'
               )}
             >
-              <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}>
+              <Link href="/">
                 <a>
                   Publications
                 </a>
               </Link>
-              <Link href={NODE_ENV === 'production' ? `/account` : `/${APP_SLUG}/account`}>
+              <Link href={`/account`}>
                 <a>
                   Account
                 </a>
@@ -113,7 +109,7 @@ export default function AppLayout ({children}) {
             {/* Desktop Navigation */}
             <div className="hidden sm:flex justify-between items-center mx-auto w-10/12 sm:w-1/2 py-5 sm:px-6 md:justify-start md:space-x-10">
               <div className="flex justify-start lg:w-0 lg:flex-1">
-                <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}><a>
+                <Link href="/"><a>
                   {session ? <img
                     className="h-8 w-auto sm:h-10 inline-block rounded-full"
                     src={session.user.image}
@@ -126,7 +122,7 @@ export default function AppLayout ({children}) {
                 </a></Link>
               </div>
               <div className="flex items-center space-x-10 justify-end flex-1 lg:w-0">
-                <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}>
+                <Link href="/">
                     <a className={classNames(
                         router.pathname == '/' || router.pathname.split('/')[1] == 'publication' ? 'text-indigo-600' : '',
                         'text-base font-medium text-gray-700 hover:text-indigo-600'
@@ -134,7 +130,7 @@ export default function AppLayout ({children}) {
                         Publications
                     </a>
                 </Link>
-                <Link href={NODE_ENV === 'production' ? `/account` : `/${APP_SLUG}/account`}>
+                <Link href={`/account`}>
                     <a className={classNames(
                         router.pathname == '/account' ? 'text-indigo-600' : '',
                         'text-base font-medium text-gray-700 hover:text-indigo-600'

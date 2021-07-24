@@ -5,14 +5,10 @@ import { useState, useEffect, useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import { AnnotationIcon, PaperClipIcon, PencilIcon, TrashIcon } from '@heroicons/react/solid'
 import {useRouter} from 'next/router'
-import getConfig from 'next/config'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function Post ({postId, rootUrl}) {
-
-    const {publicRuntimeConfig} = getConfig()
-    const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
     const { data } = useSWR(`/api/get-post-data?postId=${postId}`, fetcher, {initialData: { post: {
         updatedAt: '2021-06-26T22:39:53.071Z',
@@ -87,7 +83,7 @@ export default function Post ({postId, rootUrl}) {
         <>
             <AppLayout>
                 <div className="w-6/12 mx-auto mt-10 mb-16">
-                    <Link href={NODE_ENV === 'production' ? `/publication/${data ? data.post.Publication.id : ''}` : `/${APP_SLUG}/publication/${data ? data.post.Publication.id: ''}`}>
+                    <Link href={`/publication/${data ? data.post.Publication.id: ''}`}>
                         <a className="text-left text-gray-800 font-semibold text-lg">
                             ← Back to All Posts
                         </a>
@@ -160,7 +156,7 @@ export default function Post ({postId, rootUrl}) {
                             <p>{savedState}</p>
                         </div>
                         <div>
-                            <Link href={NODE_ENV === 'production' ? `/post/${postId}/settings` : `/${APP_SLUG}/post/${postId}/settings`}>
+                            <Link href={`/post/${postId}/settings`}>
                                 <a className="text-lg mx-2">
                                     Settings
                                 </a>

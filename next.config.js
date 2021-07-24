@@ -1,6 +1,5 @@
 module.exports = {
     publicRuntimeConfig: {
-      NODE_ENV: process.env.NODE_ENV, 
       APP_SLUG: process.env.APP_SLUG,
       ROOT_URL: process.env.ROOT_URL,
     },
@@ -15,26 +14,119 @@ module.exports = {
       ignoreBuildErrors: true,
     },
     async redirects() {
-      return [
-        {
-          source: '/post',
-          has: [{
-            type: 'host',
-            value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
-          }],
-          destination: '/',
-          permanent: true,
-        },
-        {
-          source: '/publication',
-          has: [{
-            type: 'host',
-            value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
-          }],
-          destination: '/',
-          permanent: true,
-        },
-      ]
+      if (process.env.NODE_ENV === 'production') { // production mode
+        return [   
+          // redirects for app
+          {
+              source: '/publications/:path*',
+              has: [{
+                  type: 'host',
+                  value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
+              }],
+              destination: `/${process.env.APP_SLUG}`,
+              permanent: true
+          },
+          {
+              source: `/${process.env.APP_SLUG}`,
+              has: [{
+                  type: 'host',
+                  value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
+              }],
+              destination: `/${process.env.APP_SLUG}`,
+              permanent: true
+          },
+          {
+              source: `/${process.env.APP_SLUG}/:path*`,
+              has: [{
+                  type: 'host',
+                  value: `${process.env.APP_SLUG}.${process.env.ROOT_URL}`
+              }],
+              destination: `/${process.env.APP_SLUG}`,
+              permanent: true
+          },
+
+          // redirects for subdomains
+          {
+              source: '/publications/:path*',
+              has: [{
+                  type: 'host',
+                  value: `(?<url>.*).${process.env.ROOT_URL}`
+              }],
+              destination: '/publications/:url',
+              permanent: true
+          },
+          {
+              source: `/${process.env.APP_SLUG}`,
+              has: [{
+                  type: 'host',
+                  value: `(?<url>.*).${process.env.ROOT_URL}`
+              }],
+              destination: '/publications/:url',
+              permanent: true
+          },
+          {
+              source: `/${process.env.APP_SLUG}/:path*`,
+              has: [{
+                  type: 'host',
+                  value: `(?<url>.*).${process.env.ROOT_URL}`
+              }],
+              destination: '/publications/:url',
+              permanent: true
+          },
+
+          // redirects for custom domains
+          {
+              source: '/publications/:path*',
+              has: [{
+                  type: 'host',
+                  value: `(?<url>.*)`
+              }],
+              destination: '/publications/:url',
+              permanent: true
+          },
+          {
+              source: `/${process.env.APP_SLUG}`,
+              has: [{
+                  type: 'host',
+                  value: `(?<url>.*)`
+              }],
+              destination: '/publications/:url',
+              permanent: true
+          },
+          {
+              source: `/${process.env.APP_SLUG}/:path*`,
+              has: [{
+                  type: 'host',
+                  value: `(?<url>.*)`
+              }],
+              destination: '/publications/:url',
+              permanent: true
+          },
+        ]
+      } else { // development mode
+        return [
+          {
+              source: `/${process.env.APP_SLUG}`,
+              destination: `/`,
+              permanent: true
+          },
+          {
+              source: `/${process.env.APP_SLUG}/:path*`,
+              destination: `/`,
+              permanent: true
+          },
+          {
+              source: '/publications',
+              destination: `/`,
+              permanent: true
+          },
+          {
+              source: '/publications/:path*',
+              destination: `/`,
+              permanent: true
+          },
+        ]
+      }
     },
     async rewrites() {
         if (process.env.NODE_ENV === 'production') { // production mode
@@ -72,7 +164,7 @@ module.exports = {
                       type: 'host',
                       value: `(?<url>.*).${process.env.ROOT_URL}`
                   }],
-                  destination: '/:url',
+                  destination: '/publications/:url',
               },
               {
                   source: '/:path*',
@@ -80,7 +172,7 @@ module.exports = {
                       type: 'host',
                       value: `(?<url>.*).${process.env.ROOT_URL}`
                   }],
-                  destination: '/:url/:path*',
+                  destination: '/publications/:url/:path*',
               },
 
               // rewrites for custom domains
@@ -90,7 +182,7 @@ module.exports = {
                       type: 'host',
                       value: '(?<url>.*)'
                   }],
-                  destination: '/:url',
+                  destination: '/publications/:url',
               },
               {
                   source: '/:path*',
@@ -98,16 +190,37 @@ module.exports = {
                       type: 'host',
                       value: '(?<url>.*)'
                   }],
-                  destination: '/:url/:path*',
-              }
+                  destination: '/publications/:url/:path*',
+              },
           ]
         } else { // development mode
-        return [
+          if (process.env.CURR_SLUG === process.env.APP_SLUG) {
+            return [
+                  {
+                      source: '/',
+                      destination: `/${process.env.CURR_SLUG}`,
+                  },
+                  {
+                      source: '/api/:path*',
+                      destination: `/api/:path*`,
+                  },
+                  {
+                      source: '/:path*',
+                      destination: `/${process.env.CURR_SLUG}/:path*`,
+                  },
+              ]
+          } else {
+            return [
               {
                   source: '/',
-                  destination: `/${process.env.CURR_SLUG}`,
-              }
+                  destination: `/publications/${process.env.CURR_SLUG}`,
+              },
+              {
+                  source: '/:path*',
+                  destination: `/publications/${process.env.CURR_SLUG}/:path*`,
+              },
           ]
         }
+      }
     },
 }

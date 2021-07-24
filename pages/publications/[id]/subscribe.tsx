@@ -1,9 +1,9 @@
 // pages/drafts.tsx
 
 import React, {useState} from 'react'
-import Layout from '../../components/Layout'
-import Claim from "../../components/Claim"
-import prisma from '../../lib/prisma'
+import Layout from '../../../components/Layout'
+import Claim from "../../../components/Claim"
+import prisma from '../../../lib/prisma'
 import { MailIcon } from '@heroicons/react/solid'
 
 export default function Subscribe (props) {

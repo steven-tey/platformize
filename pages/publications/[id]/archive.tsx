@@ -1,16 +1,13 @@
 // pages/[id]/archive.tsx
 
-import Layout from '../../components/Layout'
-import Claim from "../../components/Claim"
-import prisma from '../../lib/prisma'
+import Layout from '../../../components/Layout'
+import Claim from "../../../components/Claim"
+import prisma from '../../../lib/prisma'
 import Link from 'next/link'
 import getConfig from 'next/config'
 import Image from 'next/image'
 
 export default function Archive (props) {
-
-    const {publicRuntimeConfig} = getConfig()
-    const {NODE_ENV} = publicRuntimeConfig
 
     const publication = JSON.parse(props.publication)
     if (!publication) {
@@ -35,7 +32,7 @@ export default function Archive (props) {
                 </div>
                 <div className="py-5 grid gap-5">
                     {publication.posts.map((post) => (
-                    <Link href={NODE_ENV === 'production' ? `/p/${post.slug}` : `/${props.subdomain}/p/${post.slug}`}><a>
+                    <Link href={`/p/${post.slug}`}><a>
                         <div key={post.title} className="grid grid-cols-1 md:grid-cols-7 sm:space-x-8 px-8 py-2 hover:bg-gray-100 transition-all ease-in-out duration-100">
                             <div className="w-full col-span-2 m-auto overflow-hidden rounded-lg">
                                 <Image

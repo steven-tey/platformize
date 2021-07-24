@@ -1,16 +1,16 @@
 // pages/p/[id].tsx
 
 import React from 'react'
-import Layout from '../../../components/Layout'
+import Layout from '../../../../components/Layout'
 import Image from 'next/image'
 import matter from 'gray-matter'
 import remark from 'remark'
 import html from 'remark-html'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../../lib/prisma'
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
-import Tweet from '../../../components/Tweet'
-import { getTweets } from '../../../lib/twitter';
+import Tweet from '../../../../components/Tweet'
+import { getTweets } from '../../../../lib/twitter';
 
 const components = {
     Tweet

@@ -2,15 +2,12 @@ import AppLayout from '../../../../components/AppLayout'
 import Link from 'next/link'
 import Image from 'next/image'
 import useSWR, {mutate} from 'swr'
-import getConfig from 'next/config'
 import { useState } from 'react'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function Settings ({publicationId, rootUrl}) {
 
-    const {publicRuntimeConfig} = getConfig()
-    const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
     const [subdomainError, setSubdomainError] = useState(false)
 
     const { data } = useSWR(`/api/get-publication-data?publicationId=${publicationId}`, fetcher, {initialData: {
@@ -25,7 +22,7 @@ export default function Settings ({publicationId, rootUrl}) {
         <>
             {/* Mobile Navigation Menu */}
             <div className="sm:hidden flex justfiy-between w-11/12 mx-auto mt-5 text-center">
-                <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}>
+                <Link href="/">
                     <a className="mx-8 font-semibold text-2xl">
                         ←
                     </a>
@@ -65,7 +62,7 @@ export default function Settings ({publicationId, rootUrl}) {
             {/* Desktop Navigation Menu */}
             <div className="w-11/12 sm:w-7/12 mx-auto grid grid-cols-4 gap-10 h-screen sm:divide-x">
                 <div className="pt-10 hidden sm:block sm:col-span-1">
-                    <Link href={NODE_ENV === 'production' ? `/` : `/${APP_SLUG}`}>
+                    <Link href="/">
                         <a className="text-left font-semibold text-lg">
                             ← All Publications 
                         </a>
@@ -82,17 +79,17 @@ export default function Settings ({publicationId, rootUrl}) {
                     </a>
 
                     <div className="text-left grid grid-cols-1 gap-6 mt-10">
-                        <Link href={NODE_ENV === 'production' ? `/publication/${publicationId}` : `/${APP_SLUG}/publication/${publicationId}`}>
+                        <Link href={`/publication/${publicationId}`}>
                             <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                 Posts
                             </a>
                         </Link>
-                        <Link href={NODE_ENV === 'production' ? `/publication/${publicationId}/drafts` : `/${APP_SLUG}/publication/${publicationId}/drafts`}>
+                        <Link href={`/publication/${publicationId}/drafts`}>
                             <a className="font-semibold text-gray-900 hover:bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                 Drafts
                             </a>
                         </Link>
-                        <Link href={NODE_ENV === 'production' ? `/publication/${publicationId}/settings` : `/${APP_SLUG}/publication/${publicationId}/settings`}>
+                        <Link href={`/publication/${publicationId}/settings`}>
                             <a className="font-semibold text-gray-900 bg-gray-300 rounded-md w-full px-2 py-2 text-lg">
                                 Settings
                             </a>

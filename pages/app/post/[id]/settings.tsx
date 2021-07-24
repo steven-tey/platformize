@@ -1,13 +1,9 @@
 import AppLayout from '../../../../components/AppLayout'
 import Link from "next/link"
-import getConfig from 'next/config'
 import { useState } from 'react'
 import prisma from '../../../../lib/prisma'
 
 export default function PostSettings(props){
-
-    const {publicRuntimeConfig} = getConfig()
-    const {NODE_ENV, APP_SLUG} = publicRuntimeConfig
 
     const [slugError, setSlugError] = useState(false)
     
@@ -15,7 +11,7 @@ export default function PostSettings(props){
         <>
             <AppLayout>
                 <div className="pt-10 w-10/12 sm:w-1/2 m-auto">
-                    <Link href={NODE_ENV === 'production' ? `/post/${props.postId}` : `/${APP_SLUG}/post/${props.postId}`}>
+                    <Link href={`/post/${props.postId}`}>
                         <a className="text-left text-gray-800 font-semibold text-lg">
                             ← Back to Post
                         </a>
