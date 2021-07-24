@@ -14,7 +14,9 @@ module.exports = {
       ignoreBuildErrors: true,
     },
     async redirects() {
+      // here we are defining a few redirects to prevent security breaches
       return [
+        // users shouldn't be able to access the /app route and its children canonically
         {
             source: `/${process.env.APP_SLUG}`,
             destination: `/`,
@@ -25,6 +27,7 @@ module.exports = {
             destination: `/`,
             permanent: true
         },
+        // users shouldn't be able to access the /publications route canonically
         {
             source: '/publications',
             destination: `/`,
@@ -35,6 +38,7 @@ module.exports = {
             destination: `/`,
             permanent: true
         },
+        // redirects for empty routes – /publication and /post (for app)
         {
             source: '/publication',
             destination: `/`,
@@ -48,6 +52,8 @@ module.exports = {
       ]
     },
     async rewrites() {
+        // we use async rewrites to control the behavior of subdomains & custom domains
+
         if (process.env.NODE_ENV === 'production') { // production mode
           return [
               // rewrites for app
