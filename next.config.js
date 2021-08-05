@@ -16,6 +16,18 @@ module.exports = {
     async redirects() {
       // here we are defining a few redirects to prevent security breaches
       return [
+        // redirect from login to home if session token is present
+        {
+            source: '/login',
+            has: [
+                {
+                    type: 'cookie',
+                    key: 'next-auth.session-token',
+                },
+            ],
+            permanent: false,
+            destination: '/',
+        },
         // users shouldn't be able to access the /app route and its children canonically
         {
             source: `/${process.env.APP_SLUG}`,
