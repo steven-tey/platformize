@@ -341,7 +341,7 @@ export default function Index (props) {
                   <div className="relative w-10/12 mx-auto sm:w-7/12 space-y-2 sm:space-y-3">
                   <Menu onClick={preventDefault} as="div" className="absolute right-0 top-0 mr-3 mt-3">
                     <div>
-                      <a onClick={stopPropagation} href={`https://${publication.url}.${props.rootUrl}`} target="_blank" 
+                      <a onClick={stopPropagation} href={`https://${publication?.url}.${props.rootUrl}`} target="_blank" 
                       >
                         <ExternalLinkIcon
                             className="h-6 w-6 inline-block sm:hidden"
@@ -405,10 +405,10 @@ export default function Index (props) {
                   </Menu>
                     <p className="text-xl sm:text-3xl font-semibold text-gray-900">{publication.name}</p>
                     <p className="text-base sm:text-lg text-gray-600 truncate w-9/12 sm:w-10/12">{publication.description}</p>
-                    <a onClick={stopPropagation} href={`https://${publication.url}.${props.rootUrl}`} target="_blank" 
+                    <a onClick={stopPropagation} href={`https://${publication?.url}.${props.rootUrl}`} target="_blank" 
                       className="absolute bg-gray-900 hidden sm:block py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700"
                     >
-                      {publication.url}.{props.rootUrl}
+                      {publication?.url}.{props.rootUrl}
                       <ExternalLinkIcon
                           className="h-5 w-5 inline-block ml-2"
                       />

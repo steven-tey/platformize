@@ -37,7 +37,6 @@ export default NextAuth({
         return Promise.resolve(session)
     },
     jwt: async (token, session) => {
-      // Add access_token to the token right after signin
       if (session) {
         token.id = session.id
       }
