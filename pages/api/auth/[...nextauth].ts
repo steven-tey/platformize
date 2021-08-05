@@ -36,5 +36,8 @@ export default NextAuth({
         session.user.id = user.id
         return Promise.resolve(session)
     }
+  },
+  session: {
+    jwt: true,
   }
 })
