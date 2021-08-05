@@ -18,7 +18,7 @@ module.exports = {
       return [
         // redirect from login to home if session token is present
         {
-            source: '/app/login',
+            source: '/login',
             has: [
                 {
                     type: 'cookie',
@@ -26,14 +26,14 @@ module.exports = {
                 },
             ],
             permanent: false,
-            destination: '/app',
+            destination: '/',
         },
         {
             source: '/login',
             has: [
                 {
                     type: 'cookie',
-                    key: 'next-auth.session-token',
+                    key: '__Secure-next-auth.session-token',
                 },
             ],
             permanent: false,
