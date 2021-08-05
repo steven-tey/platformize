@@ -1,5 +1,5 @@
 {
-  "name": "next-tailwind-typescript-starter",
+  "name": "platforms-on-vercel",
   "version": "1.0.0",
   "scripts": {
     "dev": "next",

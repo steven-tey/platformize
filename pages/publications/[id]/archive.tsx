@@ -4,7 +4,6 @@ import Layout from '../../../components/Layout'
 import Claim from "../../../components/Claim"
 import prisma from '../../../lib/prisma'
 import Link from 'next/link'
-import getConfig from 'next/config'
 import Image from 'next/image'
 
 export default function Archive (props) {

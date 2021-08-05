@@ -4,7 +4,7 @@ import Image from "next/image"
 import {useRouter} from "next/router"
 import React, {Fragment, useState} from "react"
 import useSWR from 'swr'
-import { getSession } from 'next-auth/client'
+import { useSession } from "next-auth/client"
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import {
   ExternalLinkIcon,
@@ -32,7 +32,8 @@ export default function Index (props) {
     const [pubToDelete, setPubToDelete] = useState('')
     const [deleting, setDeleting] = useState(false)
 
-    const { data } = useSWR(`/api/get-publications?sessionId=${props.session?.user?.id}`, fetcher)
+    const [session] = useSession()
+    const { data } = useSWR(`/api/get-publications?sessionId=${session?.user?.id}`, fetcher)
 
     const router = useRouter()
     
@@ -101,7 +102,7 @@ export default function Index (props) {
                       leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                       leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                   >
-                      <form onSubmit={(event) => {event.preventDefault(); setCreating(true); createPublication(event, props.session?.user?.id)}} className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                      <form onSubmit={(event) => {event.preventDefault(); setCreating(true); createPublication(event, session?.user?.id)}} className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                           <div className="bg-white px-4 pt-5 sm:p-6 sm:pb-4">
                               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                   <Dialog.Title as="h3" className="text-2xl text-center mt-3 leading-6 font-semibold text-gray-900">
@@ -427,12 +428,10 @@ export default function Index (props) {
     )
 }
 
-export async function getServerSideProps(ctx) {
+export async function getStaticProps() {
 
-    const session = await getSession(ctx)
     return {
         props: {
-          session: session,
           rootUrl: process.env.ROOT_URL,
         }
     }

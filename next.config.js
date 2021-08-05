@@ -1,5 +1,5 @@
 module.exports = {
-    publicRuntimeConfig: {
+    publicRuntimeConfig: { // only being used in /components/header.tsx, might wanna figure out how to remove
       APP_SLUG: process.env.APP_SLUG,
       ROOT_URL: process.env.ROOT_URL,
     },

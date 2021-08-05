@@ -8,45 +8,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// schema.prisma
-
-model Post {
-  id            String       @id @default(cuid())
-  title         String       @default("Untitled Post")
-  description   String?     
-  content       String?     @db.Text
-  slug          String      @default(cuid())
-  image         String?      @default("https://og-image.vercel.app/Untitled%20Post.png?theme=dark&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fvercel-triangle-white.svg")
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  published     Boolean      @default(false)
-  Publication   Publication? @relation(fields: [publicationUrl], references: [url])
-  publicationUrl String?
-  pinnedPost  PinnedPost[]
-  @@unique([slug, publicationUrl], name: "slug_publication_constraint")
-}
-
-model Publication {
-  id            String  @id @default(cuid())
-  name          String  @default("Untitled Publication")
-  description   String  @default("The hottest gossip about armadilos")
-  logo          String  @default("https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg")
-  image         String @default("/blog/pure-ui.webp")
-  url           String  @unique @default(cuid())
-  customDomain  String? @unique
-  users         PublicationUser[]
-  posts         Post[]
-  pinnedPost    PinnedPost[]
-}
-
-model PinnedPost {
-  id              String @id @default(cuid())
-  publication     Publication   @relation(fields: [publicationId], references: [id])
-  post            Post    @relation(fields: [postId], references: [id])
-  publicationId   String  @unique
-  postId          String
-}
-
 model User {
   id            String        @id @default(cuid())
   name          String?
@@ -58,16 +19,6 @@ model User {
   accounts      Account[]
   sessions      Session[]
   publications  PublicationUser[]
-}
-
-model PublicationUser {
-  id            String @id @default(cuid())
-  publication     Publication   @relation(fields: [publicationId], references: [id])
-  user            User    @relation(fields: [userId], references: [id])
-  publicationId   String
-  userId          String
-  role            String
-  @@unique([publicationId, userId], name: "publication_user_constraint")
 }
 
 model Account {
@@ -106,4 +57,51 @@ model VerificationRequest {
   updatedAt  DateTime @updatedAt
 
   @@unique([identifier, token])
+}
+
+model Post {
+  id            String       @id @default(cuid())
+  title         String       @default("Untitled Post")
+  description   String?     
+  content       String?     @db.Text
+  slug          String      @default(cuid())
+  image         String?      @default("https://og-image.vercel.app/Untitled%20Post.png?theme=dark&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fvercel-triangle-white.svg")
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  published     Boolean      @default(false)
+  Publication   Publication? @relation(fields: [publicationUrl], references: [url])
+  publicationUrl String?
+  pinnedPost  PinnedPost[]
+  @@unique([slug, publicationUrl], name: "slug_publication_constraint")
+}
+
+model Publication {
+  id            String  @id @default(cuid())
+  name          String  @default("Untitled Publication")
+  description   String  @default("The hottest gossip about armadilos")
+  logo          String  @default("https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg")
+  image         String @default("/blog/pure-ui.webp")
+  url           String  @unique @default(cuid())
+  customDomain  String? @unique
+  users         PublicationUser[]
+  posts         Post[]
+  pinnedPost    PinnedPost[]
+}
+
+model PinnedPost {
+  id              String @id @default(cuid())
+  publication     Publication   @relation(fields: [publicationId], references: [id])
+  post            Post    @relation(fields: [postId], references: [id])
+  publicationId   String  @unique
+  postId          String
+}
+
+model PublicationUser {
+  id            String @id @default(cuid())
+  publication     Publication   @relation(fields: [publicationId], references: [id])
+  user            User    @relation(fields: [userId], references: [id])
+  publicationId   String
+  userId          String
+  role            String
+  @@unique([publicationId, userId], name: "publication_user_constraint")
 }
