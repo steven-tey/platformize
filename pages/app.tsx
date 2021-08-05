@@ -33,7 +33,8 @@ export default function Index (props) {
     const [deleting, setDeleting] = useState(false)
 
     const [session] = useSession()
-    const { data } = useSWR(`/api/get-publications?sessionId=${session?.user?.id}`, fetcher)
+    const sessionId = session?.user?.id
+    const { data } = useSWR(sessionId && `/api/get-publications?sessionId=${sessionId}`, fetcher)
 
     const router = useRouter()
     
