@@ -36,7 +36,7 @@ export default function Drafts ({publicationId, rootUrl}) {
     async function deleteDraft(postId) {
         setDeleting(true)
         const res = await fetch(
-            `/api/delete?postId=${postId}&publicationId=${data ? data.publication.id : ''}&slug=${publication.url}&draft=${true}`, 
+            `/api/delete?postId=${postId}&publicationId=${data ? data.publication.id : ''}&slug=${publication?.url}&draft=${true}`, 
             { method: 'POST' }
         )
         if (res.ok) {
@@ -165,7 +165,7 @@ export default function Drafts ({publicationId, rootUrl}) {
                             ←
                         </a>
                     </Link>
-                    <a href={`https://${data ? data.publication.url : 'app'}.${rootUrl}`} target="_blank"
+                    <a href={`https://${data ? data.publication?.url : 'app'}.${rootUrl}`} target="_blank"
                         className="flex align-middle"
                     >
                         <div className="inline-block mx-auto w-10 h-auto rounded-xl overflow-hidden">
@@ -205,7 +205,7 @@ export default function Drafts ({publicationId, rootUrl}) {
                                 ← All Publications 
                             </a>
                         </Link>
-                        <a href={`https://${data ? data.publication.url : 'app'}.${rootUrl}`} target="_blank">
+                        <a href={`https://${data ? data.publication?.url : 'app'}.${rootUrl}`} target="_blank">
                             <div className="relative mx-auto mt-5 mb-3 w-16 h-auto rounded-xl overflow-hidden">
                                 <Image 
                                     width={80}
@@ -240,7 +240,7 @@ export default function Drafts ({publicationId, rootUrl}) {
                             My Drafts
                         </h1>
                         <button 
-                            onClick={() => {setCreating(true); ; createPost(publication.url)}}
+                            onClick={() => {setCreating(true); ; createPost(publication?.url)}}
                             className="inline-flex justify-center bg-gray-900 px-5 py-2 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700 focus:outline-none"
                         >
                             {creating ? 
