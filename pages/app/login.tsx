@@ -1,4 +1,6 @@
-import { signIn, getSession } from 'next-auth/client'
+import { signIn } from 'next-auth/client'
+import Loader from '../../components/Loader'
+import useRequireAuth from '../../lib/useRequireAuth'
 import Head from 'next/head'
 
 const pageTitle = 'Login'
@@ -6,6 +8,10 @@ const logo = 'https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg'
 const description = 'Platformize is a NextJS solution that allows you to build your own Substack/Webflow clone with built-in multi-tenancy and custom domains. '
 
 export default function Login() {
+
+    const session = useRequireAuth()
+    if (!session) return <Loader />
+
     return (
       <div className="min-h-screen bg-gray-200 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <Head>
@@ -141,18 +147,7 @@ export default function Login() {
 
 
 // If logged in, redirect to dashboard
-export async function getServerSideProps(ctx){
-
-    const session = await getSession(ctx)
-  
-    if (session) {
-      return {
-        redirect: {
-            destination: process.env.NODE_ENV === 'production' ? `/` : `/${process.env.APP_SLUG}`,
-            statusCode: 302
-        }
-      }
-    }
+export async function getStaticProps(){
     return {
       props: {}
     }
