@@ -24,7 +24,11 @@ const publish = async (publicationId, postId) => {
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export default function Drafts ({publicationId, rootUrl}) {
+export default function Drafts ({rootUrl}) {
+    
+    const router = useRouter()
+    const { id } = router.query
+    const publicationId = id
 
     const [creating, setCreating] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
@@ -44,8 +48,6 @@ export default function Drafts ({publicationId, rootUrl}) {
         }
     }
 
-    const router = useRouter()
-    
     async function createPost(publicationUrl) {
         const res = await fetch(
             `/api/create?publicationUrl=${publicationUrl}`, 
@@ -368,12 +370,16 @@ export default function Drafts ({publicationId, rootUrl}) {
     )
 }
 
-export async function getServerSideProps(ctx) {
-
-    const { id } = ctx.query;  
+export async function getStaticPaths() {
+    return {
+      paths: [],
+      fallback: "blocking"
+    };
+}
+  
+export async function getStaticProps() {
     return {
         props: {
-            publicationId: id,
             rootUrl: process.env.ROOT_URL
         }
     }

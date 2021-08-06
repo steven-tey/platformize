@@ -35,7 +35,11 @@ const pin = async (publicationId, slug, postId, pinStatus) => {
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export default function Publication({publicationId, rootUrl}){
+export default function Publication({rootUrl}){
+    
+    const router = useRouter()
+    const { id } = router.query
+    const publicationId = id
 
     const [creating, setCreating] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
@@ -54,9 +58,7 @@ export default function Publication({publicationId, rootUrl}){
             window.location.reload()
         }
     }
-
-    const router = useRouter()
-    
+        
     async function createPost(publicationUrl) {
         const res = await fetch(
             `/api/create?publicationUrl=${publicationUrl}`, 
@@ -413,13 +415,16 @@ export default function Publication({publicationId, rootUrl}){
     )
 }
 
-export async function getServerSideProps(ctx) {
-    
-    const { id } = ctx.query; 
-
+export async function getStaticPaths() {
+    return {
+      paths: [],
+      fallback: "blocking"
+    };
+}
+  
+export async function getStaticProps() {
     return {
         props: {
-            publicationId: id,
             rootUrl: process.env.ROOT_URL
         }
     }

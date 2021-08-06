@@ -3,10 +3,15 @@ import Link from 'next/link'
 import Image from 'next/image'
 import useSWR, {mutate} from 'swr'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export default function Settings ({publicationId, rootUrl}) {
+export default function Settings ({rootUrl}) {
+    
+    const router = useRouter()
+    const { id } = router.query
+    const publicationId = id
 
     const [subdomainError, setSubdomainError] = useState(false)
 
@@ -273,12 +278,16 @@ export default function Settings ({publicationId, rootUrl}) {
     )
 }
 
-export async function getServerSideProps(ctx) {
-
-    const { id } = ctx.query;  
+export async function getStaticPaths() {
+    return {
+      paths: [],
+      fallback: "blocking"
+    };
+}
+  
+export async function getStaticProps() {
     return {
         props: {
-            publicationId: id,
             rootUrl: process.env.ROOT_URL
         }
     }

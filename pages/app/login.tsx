@@ -1,4 +1,4 @@
-import { signIn, useSession } from 'next-auth/client'
+import { signIn } from 'next-auth/client'
 import Head from 'next/head'
 
 const pageTitle = 'Login'
