@@ -32,11 +32,11 @@ export default NextAuth({
   },
   adapter: PrismaAdapter(prisma),
   callbacks: {
-    session: async (session, user) => {
+    session: (session, user) => {
         session.user.id = user.id
-        return Promise.resolve(session)
+        return session
     },
-    jwt: async (token, session) => {
+    jwt: (token, session) => {
       if (session) {
         token.id = session.id
       }

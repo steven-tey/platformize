@@ -27,7 +27,7 @@ export default function Settings ({publicationId, rootUrl}) {
                         ←
                     </a>
                 </Link>
-                <a href={`https://${data?.url}.${rootUrl}`} target="_blank"
+                <a href={`https://${data.url}.${rootUrl}`} target="_blank"
                     className="flex align-middle"
                 >
                     <div className="inline-block mx-auto w-10 h-auto rounded-xl overflow-hidden">
@@ -67,7 +67,7 @@ export default function Settings ({publicationId, rootUrl}) {
                             ← All Publications 
                         </a>
                     </Link>
-                    <a href={`https://${data?.url}.${rootUrl}`} target="_blank">
+                    <a href={`https://${data.url}.${rootUrl}`} target="_blank">
                         <div className="relative mx-auto mt-5 mb-3 w-16 h-auto rounded-xl overflow-hidden">
                             <Image 
                                 width={80}
@@ -168,7 +168,7 @@ export default function Settings ({publicationId, rootUrl}) {
                                     name="subdomain"
                                     autoComplete="off"
                                     required
-                                    defaultValue={data?.url}
+                                    defaultValue={data.url}
                                     className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none border rounded-l-md sm:text-sm border-gray-300"
                                     />
                                     <span className="inline-flex items-center px-3 w-1/2 rounded-r-md border-t-0 border-r-0 border-b-0 border border-l-1 border-gray-300 bg-gray-100 text-gray-600 sm:text-sm">
