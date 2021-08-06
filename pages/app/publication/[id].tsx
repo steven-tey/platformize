@@ -51,7 +51,7 @@ export default function Publication({rootUrl}){
     async function deletePost(postId) {
         setDeleting(true)
         const res = await fetch(
-            `/api/delete?postId=${postId}&publicationId=${data ? data.publication.id : ''}&slug=${publication.url}&draft=${false}`, 
+            `/api/delete?postId=${postId}&publicationId=${data ? data.publication.id : ''}&slug=${data.publication.url}&draft=${false}`, 
             { method: 'POST' }
         )
         if (res.ok) {
@@ -253,7 +253,7 @@ export default function Publication({rootUrl}){
                             My Posts
                         </h1>
                         <button 
-                            onClick={() => {setCreating(true); createPost(publication.url)}}
+                            onClick={() => {setCreating(true); createPost(data.publication.url)}}
                             className="inline-flex justify-center bg-gray-900 px-5 py-2 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700 focus:outline-none"
                         >
                             {creating ? 
@@ -349,9 +349,9 @@ export default function Publication({rootUrl}){
                                                                 onClick={(e)=> {
                                                                     e.stopPropagation();
                                                                     if (post.pinnedPost.length > 0) {
-                                                                        pin(publication.id, publication.url, post.id, false)
+                                                                        pin(data.publication.id, data.publication.url, post.id, false)
                                                                     } else {
-                                                                        pin(publication.id, publication.url, post.id, true)
+                                                                        pin(data.publication.id, data.publication.url, post.id, true)
                                                                     }
                                                                 }}
                                                                 className={`${
@@ -365,7 +365,7 @@ export default function Publication({rootUrl}){
                                                     <Menu.Item>
                                                         {({ active }) => (
                                                             <button
-                                                                onClick={(e)=> {e.stopPropagation(); unpublish(publication.id, post.id, publication.url,false)}}
+                                                                onClick={(e)=> {e.stopPropagation(); unpublish(data.publication.id, post.id, data.publication.url,false)}}
                                                                 className={`${
                                                                 active ? 'bg-gray-300' : null
                                                                 } group flex text-gray-900 focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}

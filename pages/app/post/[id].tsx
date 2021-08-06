@@ -75,8 +75,9 @@ export default function Post ({postId, rootUrl}) {
         const response = await fetch(`/api/publish?publicationId=${publicationId}&postId=${postId}`, {
             method: 'POST',
         })
-        const data = await response.json()
-        router.push(`https://${data.post.publicationUrl}.${rootUrl}/p/${data.slug}`)
+        const responseData = await response.json()
+        console.log(responseData.publicationUrl, responseData.slug)
+        router.push(`https://${responseData.publicationUrl}.${rootUrl}/p/${responseData.slug}`)
     }
 
     return (
