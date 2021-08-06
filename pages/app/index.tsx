@@ -165,7 +165,8 @@ export default function Index (props) {
                           <div className="bg-gray-50 mt-10 px-4 pb-6 sm:px-6 sm:flex sm:flex-row-reverse">
                               <button
                               type="submit"
-                              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm"
+                              disabled={creating ? true : false}
+                              className={`w-full inline-flex ${creating && "cursor-not-allowed bg-purple-700"} justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm`}
                               >
                                   {creating ? 
                                       <>

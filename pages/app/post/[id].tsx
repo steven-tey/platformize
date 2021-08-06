@@ -7,7 +7,7 @@ import { AnnotationIcon, PaperClipIcon, PencilIcon, TrashIcon } from '@heroicons
 import {useRouter} from 'next/router'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
-
+  
 export default function Post ({postId, rootUrl}) {
 
     const { data } = useSWR(`/api/get-post-data?postId=${postId}`, fetcher, {initialData: { post: {
@@ -22,23 +22,23 @@ export default function Post ({postId, rootUrl}) {
     })
 
     const [savedState, setSavedState] = useState(`Last save ${Intl.DateTimeFormat('en', { month: 'short' }).format(new Date(data.post.updatedAt))} ${Intl.DateTimeFormat('en', { day: '2-digit' }).format(new Date(data.post.updatedAt))} at ${Intl.DateTimeFormat('en', { hour: 'numeric', minute: 'numeric' }).format(new Date(data.post.updatedAt))}`)
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [content, setContent] = useState('')
+    const [title, setTitle] = useState(data.title)
+    const [description, setDescription] = useState(data.description)
+    const [content, setContent] = useState(data.content)
     const [publishing, setPublishing] = useState(false)
     const firstRender = useRef(false);
 
     useEffect(() => {
         window.addEventListener("keydown", function(e) {
-            if (e.keyCode >= 65 && e.keyCode <= 90) {
-                var char = (e.metaKey ? '⌘-' : '') + String.fromCharCode(e.keyCode)
-                if (char == '⌘-S') {
-                    e.preventDefault()
-                    saveChanges(title, description, content)
-                }
+            let charCode = String.fromCharCode(e.which).toLowerCase();
+            if ((e.ctrlKey || e.metaKey) && charCode === 's') {
+                e.preventDefault()
+                saveChanges(title, description, content)
+                return false;
             }
+            return true;
         });
-    }, [title, description, content])
+    }, [])
 
     useEffect(() => {
         if (firstRender.current) {

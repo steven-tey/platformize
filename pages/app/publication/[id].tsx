@@ -254,7 +254,8 @@ export default function Publication({rootUrl}){
                         </h1>
                         <button 
                             onClick={() => {setCreating(true); createPost(data.publication.url)}}
-                            className="inline-flex justify-center bg-gray-900 px-5 py-2 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700 focus:outline-none"
+                            disabled={creating ? true : false}
+                            className={`inline-flex ${creating && "cursor-not-allowed bg-gray-700"} justify-center bg-gray-900 px-5 py-2 h-12 mt-5 rounded-3xl text-lg text-white hover:bg-gray-700 focus:outline-none`}
                         >
                             {creating ? 
                                 <>
