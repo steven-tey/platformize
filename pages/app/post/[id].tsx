@@ -29,16 +29,18 @@ export default function Post ({postId, rootUrl}) {
     const firstRender = useRef(false);
 
     useEffect(() => {
-        window.addEventListener("keydown", function(e) {
+        const clickedSave = (e) => {
             let charCode = String.fromCharCode(e.which).toLowerCase();
             if ((e.ctrlKey || e.metaKey) && charCode === 's') {
                 e.preventDefault()
                 saveChanges(title, description, content)
-                return false;
             }
-            return true;
-        });
-    }, [])
+        }
+        window.addEventListener("keydown", clickedSave)
+        return () => {
+            window.removeEventListener('keydown', clickedSave)
+        }
+    }, [title, description, content])
 
     useEffect(() => {
         if (firstRender.current) {
