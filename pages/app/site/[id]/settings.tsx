@@ -1,7 +1,5 @@
 import Layout from '../../../../components/app/Layout'
 import InnerLayout from '../../../../components/app/InnerLayout'
-import Link from 'next/link'
-import Image from 'next/image'
 import useSWR, {mutate} from 'swr'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
@@ -130,6 +128,8 @@ export default function Settings ({rootUrl}) {
 
                     <form
                         onSubmit={async (e) => {
+                            setCustomDomainConflict(false)
+                            setDomainDelegated(false)
                             e.target.submit.innerHTML = 'Saving...'
                             e.persist()
                             e.preventDefault()
@@ -175,7 +175,7 @@ export default function Settings ({rootUrl}) {
                             </div>
                         </div>
                         <div className={`w-full flex ${customDomainConflict ? "justify-between" : "justify-end"} mt-3`}>
-                            {customDomainConflict && <p className="text-sm text-red-600 mt-2">This custom domain cannot be added because it is currently being used by another Vercel project.</p>}
+                            {customDomainConflict && !domainDelegated && <p className="text-sm text-red-600 mt-2">This custom domain cannot be added because it is currently being used by another Vercel project.</p>}
                             {customDomainConflict && domainDelegated && <p className="text-sm text-red-600 mt-2">This domain is being used by another Vercel project. An email has been sent to the owner of that project to confirm the sharing of domains between both projects. Once the email is received, you can try adding the domain again.</p>}
                             <button 
                                 type="submit"
