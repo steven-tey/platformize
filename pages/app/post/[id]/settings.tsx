@@ -1,4 +1,4 @@
-import AppLayout from '../../../../components/AppLayout'
+import Layout from '../../../../components/app/Layout'
 import Link from "next/link"
 import { useState } from 'react'
 import prisma from '../../../../lib/prisma'
@@ -9,7 +9,7 @@ export default function PostSettings(props){
     
     return (
         <>
-            <AppLayout>
+            <Layout>
                 <div className="pt-10 w-10/12 sm:w-1/2 m-auto">
                     <Link href={`/post/${props.postId}`}>
                         <a className="text-left text-gray-800 font-semibold text-lg">
@@ -49,7 +49,7 @@ export default function PostSettings(props){
                                 autoComplete="off"
                                 required
                                 defaultValue={props.postData[0].slug}
-                                className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
+                                className="rounded-md border border-solid border-gray-300 p-2 w-full focus:outline-none min-w-0 sm:text-sm"
                                 />
                             </div>
                         </div>
@@ -58,7 +58,7 @@ export default function PostSettings(props){
                             <button 
                                 type="submit"
                                 name="submit"
-                                className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                                className="my-2 py-2 px-8 text-md bg-black text-white border-solid border border-black rounded-lg hover:text-black hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
                             >
                                 Save
                             </button>
@@ -66,7 +66,7 @@ export default function PostSettings(props){
                     </form>
 
                 </div>
-            </AppLayout>
+            </Layout>
         </>
     )
 }
@@ -85,7 +85,7 @@ export async function getServerSideProps(ctx) {
     })
     return {
         props: {
-            postData, postData,
+            postData: postData,
             postId: id,
             rootUrl: process.env.ROOT_URL
         }

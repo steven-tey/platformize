@@ -1,12 +1,12 @@
 import prisma from '../../lib/prisma'
 
 export default async function getDrafts(req, res) {
-    const { publicationId } = req.query
+    const { siteId } = req.query
 
     const drafts = await prisma.post.findMany({
         where: {
-            Publication: {
-                id: publicationId
+            Site: {
+                id: siteId
             },
             published: false
         },
@@ -17,10 +17,10 @@ export default async function getDrafts(req, res) {
             createdAt: 'desc'
         }
     })
-    const publication = await prisma.publication.findUnique({
+    const site = await prisma.site.findUnique({
         where: {
-            id: publicationId
+            id: siteId
         }
     }) 
-    res.status(200).json({drafts, publication})
+    res.status(200).json({drafts, site})
 }

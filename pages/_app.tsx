@@ -2,7 +2,7 @@ import { AppProps } from 'next/app'
 import '../styles/global.css';
 import { Provider } from 'next-auth/client'
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <>
@@ -19,4 +19,4 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   )
 }
 
-export default MyApp
+export default App

@@ -7,7 +7,7 @@ export default async function getPostData(req, res) {
             id: postId
         },
         include: {
-            Publication: true
+            Site: true
         }
     })
     res.status(200).json({post})

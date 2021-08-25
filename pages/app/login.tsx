@@ -1,70 +1,89 @@
 import { signIn } from 'next-auth/client'
 import Head from 'next/head'
+import { useState, useEffect } from 'react'
 
 const pageTitle = 'Login'
-const logo = 'https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg'
+const logo = '/favicon.ico'
 const description = 'Platformize is a NextJS solution that allows you to build your own Substack/Webflow clone with built-in multi-tenancy and custom domains. '
 
 export default function Login() {
+  
+    const [submitting, setSubmitting] = useState(false)
+    const [submitted, setSubmitted] = useState(false)
+
+    useEffect(() => {
+      if(submitting) {
+        setTimeout(() => {
+          setSubmitted(true)
+          setSubmitting(false)
+        }, 2500)
+      }
+    }, [submitting])
 
     return (
-      <div className="min-h-screen bg-gray-200 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <Head>
-        <title>{pageTitle}</title>
-        <link rel="icon" href={logo} />
-        <link rel="shortcut icon" type="image/x-icon" href={logo}/>
-        <link rel="apple-touch-icon" sizes="180x180" href={logo}/>
-        <meta name="theme-color" content="#7b46f6"/>
+          <title>{pageTitle}</title>
+          <link rel="icon" href={logo} />
+          <link rel="shortcut icon" type="image/x-icon" href={logo}/>
+          <link rel="apple-touch-icon" sizes="180x180" href={logo}/>
+          <meta name="theme-color" content="#7b46f6"/>
 
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+          <meta charSet="utf-8"/>
+          <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-        <meta itemprop="name" content={pageTitle}/>
-        <meta itemprop="description" content={description}/>
-        <meta itemprop="image" content={logo}/>
-        <meta name="description" content={description}/>
-        <meta property="og:title" content={pageTitle}/>
-        <meta property="og:description" content={description}/>
-        <meta property="og:image" content={logo}/>
-        <meta property="og:type" content="website"/>
+          <meta itemProp="name" content={pageTitle}/>
+          <meta itemProp="description" content={description}/>
+          <meta itemProp="image" content={logo}/>
+          <meta name="description" content={description}/>
+          <meta property="og:title" content={pageTitle}/>
+          <meta property="og:description" content={description}/>
+          <meta property="og:image" content={logo}/>
+          <meta property="og:type" content="website"/>
 
-        <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:site" content="@Elegance" />
-        <meta name="twitter:creator" content="@StevenTey"/>
-        <meta name="twitter:title" content={pageTitle}/>
-        <meta name="twitter:description" content={description}/>
-        <meta name="twitter:image" content={logo}/>
+          <meta name="twitter:card" content="summary_large_image"/>
+          <meta name="twitter:site" content="@Elegance" />
+          <meta name="twitter:creator" content="@StevenTey"/>
+          <meta name="twitter:title" content={pageTitle}/>
+          <meta name="twitter:description" content={description}/>
+          <meta name="twitter:image" content={logo}/>
       </Head>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img
             className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt="Workflow"
+            src="/logo.png"
+            alt="Platformize"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Password-less signup powered by{' '}
-            <a href="https://next-auth.js.org/" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <a href="https://next-auth.js.org/" target="_blank" className="font-medium text-black hover:text-gray-800">
                 next-auth
             </a>
           </p>
         </div>
   
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" action="#" method="POST">
+          <div className="bg-white py-8 px-4 shadow-md sm:rounded-lg sm:px-10">
+            <form 
+              onSubmit={(event) => {
+                event.preventDefault();
+                setSubmitting(true); 
+                signIn('email', { redirect: false, email: event.target.email.value })
+              }}
+              className="space-y-6"
+            >
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email address
                 </label>
                 <div className="mt-1">
                   <input
-                    id="email"
                     name="email"
                     type="email"
+                    required
                     autoComplete="email"
-                    disabled
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black sm:text-sm"
                   />
                 </div>
               </div>
@@ -72,10 +91,40 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
-                  disabled
-                  className="cursor-not-allowed w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className={`transition duration-250 ease-in-out w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${ submitted ? "bg-green-600 hover:bg-green-700 focus:ring-green-500" : "bg-black hover:bg-gray-800 focus:ring-black" } focus:outline-none focus:ring-2 focus:ring-offset-2`}
                 >
-                  Sign in
+                  {submitting ? 
+                      <>
+                        Sending email with magic link...
+                        <svg
+                          className="animate-spin ml-3 mr-3 mt-0.5 h-4 w-4 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
+                        </svg>
+                      </>
+                       : submitted ? 
+                       <>
+                        Email sent – check your inbox!
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-3 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                       </> :
+                        'Sign In with Email' }
                 </button>
               </div>
             </form>
@@ -90,25 +139,12 @@ export default function Login() {
                 </div>
               </div>
   
-              <div className="mt-6 grid grid-cols-3 gap-3">
-                <div>
-                  <button
-                    className="cursor-not-allowed w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    <span className="sr-only">Sign in with Facebook</span>
-                    <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
+              <div className="mt-6 grid grid-cols-2 gap-3">
   
                 <div>
                   <button
-                    className="cursor-not-allowed w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    onClick={() => signIn('twitter')} 
+                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-black hover:bg-gray-50 hover:text-gray-800"
                   >
                     <span className="sr-only">Sign in with Twitter</span>
                     <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -120,7 +156,7 @@ export default function Login() {
                 <div>
                   <button
                     onClick={() => signIn('github')} 
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-black hover:bg-gray-50 hover:text-gray-800"
                   >
                     <span className="sr-only">Sign in with GitHub</span>
                     <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -140,8 +176,6 @@ export default function Login() {
     )
 }
 
-
-// If logged in, redirect to dashboard
 export async function getStaticProps(){
     return {
       props: {}

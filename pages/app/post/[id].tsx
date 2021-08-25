@@ -1,4 +1,4 @@
-import AppLayout from '../../../components/AppLayout'
+import Layout from '../../../components/app/Layout'
 import useSWR from 'swr'
 import Link from 'next/link'
 import { useState, useEffect, useRef} from 'react'
@@ -15,7 +15,7 @@ export default function Post ({postId, rootUrl}) {
         title: '',
         description: '',
         content: '',
-        Publication: {
+        Site: {
             id: ''
         }
     }}, revalidateOnMount: true,
@@ -58,7 +58,7 @@ export default function Post ({postId, rootUrl}) {
 
     async function saveChanges(title, description, content) {
         setSavedState("Saving changes...")
-        const response = await fetch('/api/save', {
+        const response = await fetch('/api/save-post', {
             method: 'POST', 
             body: JSON.stringify({id: postId, title: title, description: description, content: content})
         })
@@ -72,21 +72,20 @@ export default function Post ({postId, rootUrl}) {
 
     const router = useRouter()
 
-    const publish = async (publicationId, postId, rootUrl, title, description, content) => {
+    const publish = async (siteId, postId, rootUrl, title, description, content) => {
         await saveChanges(title, description, content)
-        const response = await fetch(`/api/publish?publicationId=${publicationId}&postId=${postId}`, {
+        const response = await fetch(`/api/publish-post?siteId=${siteId}&postId=${postId}`, {
             method: 'POST',
         })
         const responseData = await response.json()
-        console.log(responseData.publicationUrl, responseData.slug)
-        router.push(`https://${responseData.publicationUrl}.${rootUrl}/p/${responseData.slug}`)
+        router.push(`https://${responseData.siteUrl}.${rootUrl}/p/${responseData.slug}`)
     }
 
     return (
         <>
-            <AppLayout>
+            <Layout>
                 <div className="w-6/12 mx-auto mt-10 mb-16">
-                    <Link href={`/publication/${data ? data.post.Publication.id: ''}`}>
+                    <Link href={`/site/${data ? data.post.Site.id: ''}`}>
                         <a className="text-left text-gray-800 font-semibold text-lg">
                             ← Back to All Posts
                         </a>
@@ -152,7 +151,7 @@ export default function Post ({postId, rootUrl}) {
                         defaultValue={data.post.content}
                     />
                 </div>
-                <footer className="h-20 z-10 fixed bottom-0 inset-x-0 border-solid border-t border-gray-500 bg-white">
+                <footer className="h-20 z-5 fixed bottom-0 inset-x-0 border-solid border-t border-gray-500 bg-white">
                     <div className="w-6/12 mx-auto mt-3 flex justify-between">
                         <div className="text-sm mt-1">
                             <strong><p>{data && data.post.published? "Published" : "Draft"}</p></strong>
@@ -165,7 +164,7 @@ export default function Post ({postId, rootUrl}) {
                                 </a>
                             </Link>
                             <button 
-                                onClick={()=> {publish(data.post.Publication.id, postId, rootUrl, title, description, content); setPublishing(true)}}
+                                onClick={()=> {publish(data.post.Site.id, postId, rootUrl, title, description, content); setPublishing(true)}}
                                 className="mx-2 rounded-md py-3 px-6 bg-blue-500 hover:bg-blue-400 active:bg-blue-300 focus:outline-none text-lg text-white"
                             >
                                 Publish
@@ -195,7 +194,7 @@ export default function Post ({postId, rootUrl}) {
                         </div>
                     </div>
                 </footer>
-            </AppLayout>
+            </Layout>
         </>
     )
 }

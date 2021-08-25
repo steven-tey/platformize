@@ -1,4 +1,4 @@
-import AppLayout from '../../components/AppLayout'
+import Layout from "../../components/app/Layout"
 import { useSession } from 'next-auth/client'
 
 export default function Account () {
@@ -6,7 +6,7 @@ export default function Account () {
     const [session, loading] = useSession()
 
     return (
-        <AppLayout>
+        <Layout>
         <>
             <div className="w-11/12 sm:w-1/2 mx-auto gap-10 h-screen sm:divide-x">
                 <div className="pt-16 sm:pl-10">
@@ -16,7 +16,7 @@ export default function Account () {
                         </h1>
                     </div>
 
-                    {loading ? 
+                    {loading || !session ? 
                     <div className="w-1/6 h-28 mx-auto mb-10 rounded-full bg-gray-200 animate-pulse"/>
                     : 
                     <img
@@ -47,7 +47,7 @@ export default function Account () {
                                 autoComplete="off"
                                 required
                                 defaultValue={loading ? '' : session?.user?.name}
-                                className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
+                                className="rounded-md border border-solid border-gray-300 p-2 w-full focus:outline-none min-w-0 sm:text-sm"
                                 />
                             </div>
                         </div>
@@ -55,7 +55,7 @@ export default function Account () {
                             <button 
                                 type="submit"
                                 name="submit"
-                                className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                                className="my-2 py-2 px-8 text-md bg-black text-white border-solid border border-black rounded-lg hover:text-black hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
                             >
                                 Save
                             </button>
@@ -84,7 +84,7 @@ export default function Account () {
                                 autoComplete="off"
                                 required
                                 defaultValue={loading ? '' : session?.user?.email}
-                                className="rounded-md border border-solid border-gray-300  w-full focus:outline-none min-w-0 sm:text-sm"
+                                className="rounded-md border border-solid border-gray-300 p-2 w-full focus:outline-none min-w-0 sm:text-sm"
                                 />
                             </div>
                         </div>
@@ -92,7 +92,7 @@ export default function Account () {
                             <button 
                                 type="submit"
                                 name="submit"
-                                className="my-2 py-2 px-8 text-md bg-indigo-600 text-white border-solid border border-indigo-600 rounded-lg hover:text-indigo-600 hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
+                                className="my-2 py-2 px-8 text-md bg-black text-white border-solid border border-black rounded-lg hover:text-black hover:bg-white focus:outline-none transition-all ease-in-out duration-150"
                             >
                                 Save
                             </button>
@@ -101,6 +101,6 @@ export default function Account () {
                 </div>
             </div>
         </>
-        </AppLayout>
+        </Layout>
     )
 }
