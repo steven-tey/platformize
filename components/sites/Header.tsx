@@ -36,7 +36,7 @@ const Header: React.FC = ({name, logo}) => {
                   src="/logo.png"
                   width={40}
                   height={40}
-                  alt="Publication Picture"
+                  alt="Site Picture"
                 />
               </div>
               <span className="inline-block ml-3 text-md overflow-wrap w-7/12 lg:w-auto lg:text-lg text-gray-700 align-middle">{name}</span>

@@ -100,7 +100,7 @@ export default function Layout ({children}) {
             >
               <Link href="/">
                 <a>
-                  Publications
+                  Sites
                 </a>
               </Link>
               <Link href={`/account`}>
