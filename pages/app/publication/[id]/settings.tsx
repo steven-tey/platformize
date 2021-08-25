@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import useSWR, {mutate} from 'swr'
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 

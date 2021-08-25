@@ -5,17 +5,15 @@ import { Provider } from 'next-auth/client'
 const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
-    <>
-      <Provider 
-        options={{
-          clientMaxAge: 3600*24*7,
-          keepAlive: 3600*24*7
-        }}
-        session={pageProps.session}
-      >
-        <Component {...pageProps} />
-      </Provider>
-    </>
+    <Provider 
+      options={{
+        clientMaxAge: 3600*24*7,
+        keepAlive: 3600*24*7
+      }}
+      session={pageProps.session}
+    >
+      <Component {...pageProps} />
+    </Provider>
   )
 }
 
