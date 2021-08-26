@@ -19,7 +19,7 @@ export async function middleware(req: EdgeRequest, res: EdgeResponse, next) {
                 return res.redirect('/');
             }
             return res.rewrite(`/app${req.url.pathname}`)        
-        } else if (currentHost == 'home' || currentHost == 'platformize.co') {
+        } else if (currentHost == 'home' || currentHost == 'www' || currentHost == process.env.ROOT_URL) {
             return res.rewrite(`/home${req.url.pathname}`)        
         }
 
