@@ -18,8 +18,9 @@ export async function middleware(req: EdgeRequest, res: EdgeResponse, next) {
             if (req.url.pathname === '/login' && (req.cookies['next-auth.session-token'] ||  req.cookies['__Secure-next-auth.session-token'])){
                 return res.redirect('/');
             }
-
             return res.rewrite(`/app${req.url.pathname}`)        
+        } else if (currentHost == 'home' || currentHost == '') {
+            return res.rewrite(`/home${req.url.pathname}`)        
         }
 
         return res.rewrite(`/sites/${currentHost}${req.url.pathname}`)
