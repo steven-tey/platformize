@@ -11,9 +11,10 @@ function classNames(...classes) {
   
 export default function Index(props){
 
+
     const site = JSON.parse(props.site)
     if (!site) {
-      return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
+      return <Claim subdomain={props.subdomain}/>
     }
     const pinnedPost = JSON.parse(props.pinPost)
     const [sort, setSort] = useState("date")
@@ -180,7 +181,6 @@ export async function getStaticProps({ params: {site} }) {
     return { 
         props: {
             subdomain: site,
-            rootUrl: process.env.ROOT_URL,
             site: JSON.stringify(data),
             pinPost: JSON.stringify(pinPost)
         },

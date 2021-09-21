@@ -4,7 +4,7 @@ import useSWR from 'swr'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export default function InnerLayout ({children, siteId, rootUrl, tab}) {
+export default function InnerLayout ({children, siteId, tab}) {
 
     const { data } = useSWR(`/api/get-posts?siteId=${siteId}`, fetcher)
 
@@ -17,7 +17,7 @@ export default function InnerLayout ({children, siteId, rootUrl, tab}) {
                     ←
                 </a>
             </Link>
-            <a href={`https://${data ? data.site.url : 'app'}.${rootUrl}`} target="_blank"
+            <a href={`https://${data ? data.site.url : 'app'}.${process.env.NEXT_PUBLIC_ROOT_URL}`} target="_blank"
                 className="flex align-middle"
             >
                 {!data 
@@ -67,7 +67,7 @@ export default function InnerLayout ({children, siteId, rootUrl, tab}) {
                         ← All Sites 
                     </a>
                 </Link>
-                <a href={`https://${data ? data.site.url : 'app'}.${rootUrl}`} target="_blank">
+                <a href={`https://${data ? data.site.url : 'app'}.${process.env.NEXT_PUBLIC_ROOT_URL}`} target="_blank">
                     {!data 
                     ? 
                     <>

@@ -87,7 +87,6 @@ export async function getServerSideProps(ctx) {
         props: {
             postData: postData,
             postId: id,
-            rootUrl: process.env.ROOT_URL
         }
     }
 }

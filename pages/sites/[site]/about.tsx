@@ -13,7 +13,7 @@ function classNames(...classes) {
 export default function About (props) {
 
   if (!props.name) {
-    return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
+    return <Claim subdomain={props.subdomain}/>
   }
   const [tab, setTab] = useState("about")
 
@@ -152,7 +152,6 @@ export async function getStaticProps({params: { site }}) {
     return {
         props: {
             subdomain: site,
-            rootUrl: process.env.ROOT_URL,
             ...data
         },
         revalidate: 10

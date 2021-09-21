@@ -7,7 +7,7 @@ import { QuestionMarkCircleIcon } from '@heroicons/react/solid'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export default function Settings ({rootUrl}) {
+export default function Settings () {
     
     const router = useRouter()
     const { id } = router.query
@@ -26,7 +26,7 @@ export default function Settings ({rootUrl}) {
 
     return (
         <Layout>
-            <InnerLayout siteId={siteId} rootUrl={rootUrl} tab="settings">
+            <InnerLayout siteId={siteId} tab="settings">
                 <div className="pt-16 sm:pl-10 col-span-4 sm:col-span-3 sm:m-5">
                     <div className="flex justify-between">
                         <h1 className="font-bold text-2xl sm:text-3xl mb-10">
@@ -109,7 +109,7 @@ export default function Settings ({rootUrl}) {
                                     className="flex-1 block p-2 w-full min-w-0 rounded-none rounded-l-md sm:text-sm focus:outline-none border border-solid border-gray-300 focus:border-black"
                                     />
                                     <span className="inline-flex items-center px-3 w-1/3 rounded-r-md border border-l-0 border-r-1 border-t-1 border-b-1 border-gray-300 bg-gray-100 text-gray-600 sm:text-sm">
-                                    .{rootUrl}
+                                    .{process.env.NEXT_PUBLIC_ROOT_URL}
                                     </span>
                                 </div>
                             </div>
@@ -229,19 +229,4 @@ export default function Settings ({rootUrl}) {
             </InnerLayout>
         </Layout>
     )
-}
-
-export async function getStaticPaths() {
-    return {
-      paths: [],
-      fallback: "blocking"
-    };
-}
-  
-export async function getStaticProps() {
-    return {
-        props: {
-            rootUrl: process.env.ROOT_URL
-        }
-    }
 }

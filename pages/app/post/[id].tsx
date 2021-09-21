@@ -8,7 +8,7 @@ import {useRouter} from 'next/router'
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
   
-export default function Post ({postId, rootUrl}) {
+export default function Post ({postId}) {
 
     const { data } = useSWR(`/api/get-post-data?postId=${postId}`, fetcher, {initialData: { post: {
         updatedAt: '2021-06-26T22:39:53.071Z',
@@ -164,7 +164,7 @@ export default function Post ({postId, rootUrl}) {
                                 </a>
                             </Link>
                             <button 
-                                onClick={()=> {publish(data.post.Site.id, postId, rootUrl, title, description, content); setPublishing(true)}}
+                                onClick={()=> {publish(data.post.Site.id, postId, process.env.NEXT_PUBLIC_ROOT_URL, title, description, content); setPublishing(true)}}
                                 className="mx-2 rounded-md py-3 px-6 bg-blue-500 hover:bg-blue-400 active:bg-blue-300 focus:outline-none text-lg text-white"
                             >
                                 Publish
@@ -205,7 +205,6 @@ export async function getServerSideProps(ctx) {
     return {
         props: {
             postId: id,
-            rootUrl: process.env.ROOT_URL
         }
     }
 }

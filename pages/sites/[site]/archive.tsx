@@ -10,7 +10,7 @@ export default function Archive (props) {
 
     const site = JSON.parse(props.site)
     if (!site) {
-        return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
+        return <Claim subdomain={props.subdomain}/>
     }
 
     return (
@@ -132,7 +132,6 @@ export async function getStaticProps({ params: {site} }) {
     return { 
         props: {
             subdomain: site,
-            rootUrl: process.env.ROOT_URL,
             site: JSON.stringify(data),
         },
         revalidate: 10

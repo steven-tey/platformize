@@ -40,7 +40,7 @@ export default function Index (props) {
             session={session}
             open={open}
             setOpen={setOpen}
-            rootUrl={props.rootUrl}
+            rootUrl={process.env.NEXT_PUBLIC_ROOT_URL}
           />
 
           <DeleteSiteOverlay
@@ -85,7 +85,7 @@ export default function Index (props) {
                   <div className="relative w-10/12 mx-auto sm:w-7/12 space-y-2 sm:space-y-3">
                   <Menu onClick={preventDefault} as="div" className="absolute right-0 top-0 mr-3 mt-3">
                     <div>
-                      <a onClick={stopPropagation} href={`https://${site.url}.${props.rootUrl}`} target="_blank" 
+                      <a onClick={stopPropagation} href={`https://${site.url}.${process.env.NEXT_PUBLIC_ROOT_URL}`} target="_blank" 
                       >
                         <ExternalLinkIcon
                             className="h-6 w-6 inline-block sm:hidden"
@@ -149,10 +149,10 @@ export default function Index (props) {
                   </Menu>
                     <p className="text-xl sm:text-3xl font-semibold text-gray-900">{site.name}</p>
                     <p className="text-base sm:text-lg text-gray-600 truncate w-9/12 sm:w-10/12">{site.description}</p>
-                    <a onClick={stopPropagation} href={`https://${site.url}.${props.rootUrl}`} target="_blank" 
+                    <a onClick={stopPropagation} href={`https://${site.url}.${process.env.NEXT_PUBLIC_ROOT_URL}`} target="_blank" 
                       className="absolute bg-gray-900 hidden sm:block py-3 px-8 rounded-3xl text-lg text-white hover:bg-gray-700"
                     >
-                      {site.url}.{props.rootUrl}
+                      {site.url}.{process.env.NEXT_PUBLIC_ROOT_URL}
                       <ExternalLinkIcon
                           className="h-5 w-5 inline-block ml-2"
                       />
@@ -171,13 +171,4 @@ export default function Index (props) {
         </Layout>
       </>
     )
-}
-
-export async function getStaticProps() {
-
-    return {
-        props: {
-          rootUrl: process.env.ROOT_URL,
-        }
-    }
 }

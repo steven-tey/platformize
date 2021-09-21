@@ -9,7 +9,7 @@ import { MailIcon } from '@heroicons/react/solid'
 export default function Subscribe (props) {
 
     if (!props.name) {
-      return <Claim subdomain={props.subdomain} rootUrl={props.rootUrl}/>
+      return <Claim subdomain={props.subdomain}/>
     }
 
     const [subscribing, setSubscribing] = useState(false)
@@ -53,13 +53,13 @@ export default function Subscribe (props) {
                         {subscribing?
                         <>
                             <svg
-                            class="animate-spin mx-auto h-6 w-6 text-white"
+                            className="animate-spin mx-auto h-6 w-6 text-white"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
                             >
                             <circle
-                                class="opacity-25"
+                                className="opacity-25"
                                 cx="12"
                                 cy="12"
                                 r="10"
@@ -67,7 +67,7 @@ export default function Subscribe (props) {
                                 stroke-width="4"
                             />
                             <path
-                                class="opacity-75"
+                                className="opacity-75"
                                 fill="currentColor"
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             />
@@ -129,7 +129,6 @@ export async function getStaticProps({params: { site }}) {
     return {
         props: {
             subdomain: site,
-            rootUrl: process.env.ROOT_URL,
             ...data
         },
         revalidate: 10

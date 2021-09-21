@@ -25,7 +25,7 @@ const publish = async (siteId, postId) => {
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export default function Drafts ({rootUrl}) {
+export default function Drafts () {
     
     const router = useRouter()
     const { id } = router.query
@@ -59,7 +59,7 @@ export default function Drafts ({rootUrl}) {
                     draft={true}
                 />
                 
-                <InnerLayout siteId={siteId} rootUrl={rootUrl} tab="drafts">
+                <InnerLayout siteId={siteId} tab="drafts">
                     <div className="pt-16 sm:pl-10 col-span-4 sm:col-span-3">
                         <div className="flex justify-between">
                         <h1 className="font-bold text-2xl sm:text-3xl m-5 mb-10">
@@ -197,19 +197,4 @@ export default function Drafts ({rootUrl}) {
             </Layout>
         </>
     )
-}
-
-export async function getStaticPaths() {
-    return {
-      paths: [],
-      fallback: "blocking"
-    };
-}
-  
-export async function getStaticProps() {
-    return {
-        props: {
-            rootUrl: process.env.ROOT_URL
-        }
-    }
 }

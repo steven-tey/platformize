@@ -35,7 +35,7 @@ const pin = async (siteId, slug, postId, pinStatus) => {
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export default function Site({rootUrl}){
+export default function Site(){
     
     const router = useRouter()
     const { id } = router.query
@@ -69,7 +69,7 @@ export default function Site({rootUrl}){
                     draft={false}
                 />
 
-                <InnerLayout siteId={siteId} rootUrl={rootUrl} tab="posts">
+                <InnerLayout siteId={siteId} tab="posts">
                     <div className="pt-16 sm:pl-10 col-span-4 sm:col-span-3">
                         <div className="flex justify-between">
                         <h1 className="font-bold text-2xl sm:text-3xl m-5 mb-10">
@@ -136,7 +136,7 @@ export default function Site({rootUrl}){
                                         </p>
                                     </div>
                                     <div>
-                                        <a onClick={stopPropagation} href={`https://${post.siteUrl}.${rootUrl}/p/${post.slug}`} target="_blank">
+                                        <a onClick={stopPropagation} href={`https://${post.siteUrl}.${process.env.NEXT_PUBLIC_ROOT_URL}/p/${post.slug}`} target="_blank">
                                             <ExternalLinkIcon
                                                 className="h-10 w-10 inline-block mr-6 my-6 p-2"
                                             />
@@ -237,19 +237,4 @@ export default function Site({rootUrl}){
             </Layout>
         </>
     )
-}
-
-export async function getStaticPaths() {
-    return {
-      paths: [],
-      fallback: "blocking"
-    };
-}
-  
-export async function getStaticProps() {
-    return {
-        props: {
-            rootUrl: process.env.ROOT_URL
-        }
-    }
 }
