@@ -5,16 +5,11 @@ import React, { useState } from 'react'
 import {
   ChevronDownIcon
 } from '@heroicons/react/outline'
-import getConfig from 'next/config'
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Header: React.FC = ({name, logo}) => {
-
-  const {publicRuntimeConfig} = getConfig()
-  const {ROOT_URL} = publicRuntimeConfig
+const Header: React.FC = ({name}) => {
   
   const [dropdown, setDropdown] = useState(false)
 
@@ -78,7 +73,7 @@ const Header: React.FC = ({name, logo}) => {
               Archive
             </a>
           </Link>
-          <Link href={`https://app.${ROOT_URL}`}>
+          <Link href={`https://app.${process.env.NEXT_PUBLIC_ROOT_URL}`}>
             <a>
               My Account
             </a>
