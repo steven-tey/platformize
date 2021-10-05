@@ -2,9 +2,10 @@ import type { EdgeRequest, EdgeResponse } from "next";
 
 export async function middleware(req: EdgeRequest, res: EdgeResponse, next) {
     const hostname = req.headers.get('host')
-    const currentHost = process.env.NODE_ENV == 'production'
-        ? hostname.replace(`.${process.env.NEXT_PUBLIC_ROOT_URL}`, '')
-        : process.env.CURR_HOST
+
+    const currentHost = process.env.NODE_ENV === 'production' && process.env.VERCEL === '1'
+                        ? hostname.replace(`.${process.env.NEXT_PUBLIC_ROOT_URL}`, '')
+                        : hostname.replace(`.localhost:3000`, '')
 
     if (req.url.pathname.startsWith(`/sites`) || req.url.pathname.startsWith(`/app`)) {
         return res.redirect(`/`)
@@ -19,7 +20,7 @@ export async function middleware(req: EdgeRequest, res: EdgeResponse, next) {
                 return res.redirect('/');
             }
             return res.rewrite(`/app${req.url.pathname}`)        
-        } else if (currentHost == 'home' || currentHost == process.env.NEXT_PUBLIC_ROOT_URL) {
+        } else if (currentHost == 'localhost:3000' || currentHost == process.env.NEXT_PUBLIC_ROOT_URL) {
             return res.rewrite(`/home${req.url.pathname}`)        
         }
 
