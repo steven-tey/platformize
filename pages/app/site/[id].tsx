@@ -210,7 +210,7 @@ export default function Site(){
                                                 <Menu.Item>
                                                     {({ active }) => (
                                                     <button
-                                                        onClick={()=>{setOpenDelete(true); setPostToDelete(post.id)}}
+                                                        onClick={()=>{setOpenDelete(true); setToDelete(post.id)}}
                                                         className={`${
                                                         active ? 'bg-red-300 text-red-700' : 'text-red-700'
                                                         } group flex focus:outline-none rounded-md items-center w-full px-2 py-2 text-sm`}
