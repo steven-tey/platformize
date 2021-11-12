@@ -37,6 +37,7 @@ export default function Index(props){
                 <div className="grid grid-cols-1 sm:grid-cols-2 space-y-5 sm:space-x-3 py-16 hover:bg-gray-100 transition-all ease-in-out duration-100">
                   <div className="w-10/12 m-auto overflow-hidden rounded-lg">
                     <Image
+                      alt={pinnedPost.title}
                       width={2048}
                       height={1170}
                       layout="responsive"
