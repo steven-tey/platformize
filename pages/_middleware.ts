@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(req: NextRequest) {
+export default function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
     const hostname = req.headers.get('host')
 
