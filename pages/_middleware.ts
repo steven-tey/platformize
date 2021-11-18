@@ -8,6 +8,8 @@ export default function middleware(req: NextRequest) {
 
     const currentHost = process.env.VERCEL === '1' ? hostname.replace(regex, '') : hostname.replace(`.localhost:3000`, '')
 
+    console.log(currentHost)
+
     if (pathname.startsWith(`/sites`)) {
         return new Response(null, { status: 404 })
     }
