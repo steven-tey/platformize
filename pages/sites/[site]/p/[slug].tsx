@@ -86,7 +86,7 @@ export async function getStaticPaths() {
                 return  { params: { site: post.siteUrl, slug: post.slug } }
             }
         }),
-        fallback: "blocking"
+        fallback: true
     }
 }
 

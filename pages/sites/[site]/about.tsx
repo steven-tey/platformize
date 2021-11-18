@@ -117,7 +117,7 @@ export async function getStaticPaths() {
         paths: allPaths.map((path) => {
             return  { params: { site: path } }
         }),
-        fallback: "blocking"
+        fallback: true
     }
 }
 
