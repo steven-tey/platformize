@@ -11,8 +11,7 @@ function classNames(...classes) {
   
 export default function Index(props){
 
-
-    const site = JSON.parse(props.site)
+    const site = props.site ? JSON.parse(props.site) : null
     if (!site) {
       return <Claim subdomain={props.subdomain}/>
     }

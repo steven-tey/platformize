@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 export default function Archive (props) {
 
-    const site = JSON.parse(props.site)
+    const site = props.site ? JSON.parse(props.site) : null
     if (!site) {
         return <Claim subdomain={props.subdomain}/>
     }
@@ -100,7 +100,6 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: {site} }) {
-
     let filter = {
       url: site
     }
@@ -128,7 +127,7 @@ export async function getStaticProps({ params: {site} }) {
             },
         }
     })
-
+    
     return { 
         props: {
             subdomain: site,

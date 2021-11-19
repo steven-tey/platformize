@@ -11,13 +11,13 @@ generator client {
 }
 
 model User {
-  id            String        @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?       @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   accounts      Account[]
   sessions      Session[]
   sites         SiteUser[]
@@ -62,48 +62,50 @@ model VerificationRequest {
 }
 
 model Post {
-  id            String       @id @default(cuid())
-  title         String       @default("Untitled Post")
-  description   String?     
-  content       String?     @db.Text
-  slug          String      @default(cuid())
-  image         String?      @default("https://og-image.vercel.app/Untitled%20Post.png?theme=dark&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fvercel-triangle-white.svg")
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  published     Boolean      @default(false)
-  Site   Site? @relation(fields: [siteUrl], references: [url])
-  siteUrl String?
+  id          String       @id @default(cuid())
+  title       String       @default("Untitled Post")
+  description String?
+  content     String?      @db.Text
+  slug        String       @default(cuid())
+  image       String?      @default("https://og-image.vercel.app/Untitled%20Post.png?theme=dark&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fvercel-triangle-white.svg")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  published   Boolean      @default(false)
+  Site        Site?        @relation(fields: [siteUrl], references: [url])
+  siteUrl     String?
   pinnedPost  PinnedPost[]
+
   @@unique([slug, siteUrl], name: "slug_site_constraint")
 }
 
 model Site {
-  id            String  @id @default(cuid())
-  name          String  @default("Untitled Site")
-  description   String  @default("The hottest gossip about armadilos")
-  logo          String  @default("/logo.png")
-  image         String @default("/vercel.png")
-  url           String  @unique @default(cuid())
-  customDomain  String? @unique
-  users         SiteUser[]
-  posts         Post[]
-  pinnedPost    PinnedPost[]
+  id           String       @id @default(cuid())
+  name         String       @default("Untitled Site")
+  description  String       @default("The hottest gossip about armadilos")
+  logo         String       @default("/logo.png")
+  image        String       @default("/vercel.png")
+  url          String       @unique @default(cuid())
+  customDomain String?      @unique
+  users        SiteUser[]
+  posts        Post[]
+  pinnedPost   PinnedPost[]
 }
 
 model PinnedPost {
-  id              String @id @default(cuid())
-  site            Site   @relation(fields: [siteId], references: [id])
-  post            Post    @relation(fields: [postId], references: [id])
-  siteId          String  @unique
-  postId          String
+  id     String @id @default(cuid())
+  site   Site   @relation(fields: [siteId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id])
+  siteId String @unique
+  postId String
 }
 
 model SiteUser {
-  id            String @id @default(cuid())
-  site          Site   @relation(fields: [siteId], references: [id])
-  user          User    @relation(fields: [userId], references: [id])
-  siteId        String
-  userId        String
-  role          String
+  id     String @id @default(cuid())
+  site   Site   @relation(fields: [siteId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  siteId String
+  userId String
+  role   String
+
   @@unique([siteId, userId], name: "site_user_constraint")
 }
