@@ -4,9 +4,11 @@ export default function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
     const hostname = req.headers.get('host')
 
-    const currentHost = process.env.NODE_ENV === 'production' && process.env.VERCEL === '1'
-                        ? hostname.replace(`.${process.env.NEXT_PUBLIC_ROOT_URL}`, '')
-                        : hostname.replace(`.localhost:3000`, '')
+    const regex = /((\.)?\w+.vercel.app|(\.)?platformize.co)/
+
+    const currentHost = process.env.VERCEL === '1' ? hostname.replace(regex, '') : hostname.replace(`.localhost:3000`, '')
+
+    console.log(currentHost)
 
     if (pathname.startsWith(`/sites`)) {
         return new Response(null, { status: 404 })
