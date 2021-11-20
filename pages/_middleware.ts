@@ -4,7 +4,7 @@ export default function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
     const hostname = req.headers.get('host')
 
-    const regex = /((\.)?([\w-]+).vercel.app|(\.)?platformize.co)/
+    const regex = /((\.)?([\w-]+).vercel.app|(\.)?platformize.co|(\.)?staging.platformize.co)/
 
     const currentHost = process.env.VERCEL === '1' ? hostname.replace(regex, '') : hostname.replace(`.localhost:3000`, '')
 
