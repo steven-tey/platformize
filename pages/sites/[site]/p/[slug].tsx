@@ -45,9 +45,9 @@ export default function PostPage (props) {
             />
         </div>
 
-        <article className="prose lg:prose-xl w-10/12 sm:w-full mx-auto mt-20 mb-48">
+        {props.post && <article className="prose lg:prose-xl w-10/12 sm:w-full mx-auto mt-20 mb-48">
             <MDXRemote {...props.content} components={components} />
-        </article>
+        </article>}
 
         </Layout>
     )
@@ -150,10 +150,10 @@ export async function getStaticProps({params: {site, slug}}) {
     const contentHtml = processedContent.toString()
     
     // Replace all Twitter URLs with their MDX counterparts
-    const finalContentHtml = await replaceAsync(content, /(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)([^\?]+)(\?.*)?)/g, getTweetMetadata)
-    
+    const finalContentHtml = await replaceAsync(contentHtml, /<p>(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)([^\?]+)(\?.*)?)<\/p>/g, getTweetMetadata)
+
     // serialize the content string into MDX
-    const mdxSource = await serialize(content);
+    const mdxSource = await serialize(finalContentHtml);
 
     return {
         props: {
