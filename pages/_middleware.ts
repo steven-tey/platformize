@@ -4,7 +4,7 @@ export default function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
     const hostname = req.headers.get('host')
 
-    const reg = /((\.)?([\w-]+).vercel.app|(\.)?platformize.co)/
+    const regex = /((\.)?([\w-]+).vercel.app|(\.)?platformize.co)/
 
     const currentHost = process.env.VERCEL === '1' ? hostname.replace(regex, '') : hostname.replace(`.localhost:3000`, '')
 
@@ -23,7 +23,7 @@ export default function middleware(req: NextRequest) {
                 return NextResponse.redirect('/');
             }
             return NextResponse.rewrite(`/app${pathname}`)        
-        } else if (currentHost == 'localhost:3000' || currentHost == process.env.NEXT_PUBLIC_ROOT_URL) {
+        } else if (currentHost == 'localhost:3000' || currentHost == '') {
             return NextResponse.rewrite(`/home${pathname}`)        
         }
 
