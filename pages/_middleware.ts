@@ -2,15 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export default function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
-    const hostname = req.headers.get('host')
+    const hostname = req.headers.get('host') // retreat.staging.platformize.co
 
     const regex = /((\.)?([\w-]+).vercel.app|(\.)?platformize.co|(\.)?staging.platformize.co)/
 
     const currentHost = process.env.VERCEL === '1' ? hostname.replace(regex, '') : hostname.replace(`.localhost:3000`, '')
 
-    console.log(currentHost)
-
-    if (pathname.startsWith(`/sites`)) {
+    if (pathname.startsWith(`/sites`) && !hostname.endsWith('.vercel.app')) {
         return new Response(null, { status: 404 })
     }
     
