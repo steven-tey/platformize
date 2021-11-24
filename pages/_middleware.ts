@@ -21,7 +21,7 @@ export default function middleware(req: NextRequest) {
                 return NextResponse.redirect('/');
             }
             return NextResponse.rewrite(`/app${pathname}`)        
-        } else if (currentHost == 'localhost:3000' || currentHost == '') {
+        } else if (currentHost == 'localhost:3000' || currentHost == '' && !hostname.endsWith('.vercel.app')){
             return NextResponse.rewrite(`/home${pathname}`)        
         }
 
