@@ -4,11 +4,12 @@ export default function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl
     const hostname = req.headers.get('host') // retreat.staging.platformize.co
 
-    const regex = /((\.)?([\w-]+).vercel.app|(\.)?platformize.co|(\.)?staging.platformize.co)/
+    // regex for vercel.app wildcards: (\.)?([\w-]+).vercel.app
+    const regex = /((\.)?platformize.co|(\.)?staging.platformize.co)/
 
     const currentHost = process.env.VERCEL === '1' ? hostname.replace(regex, '') : hostname.replace(`.localhost:3000`, '')
 
-    if (pathname.startsWith(`/sites`) && !hostname.endsWith('.vercel.app')) {
+    if (pathname.startsWith(`/sites`) && !hostname.endsWith('.vercel.app')) { // prevent canonical link access on subdomains & custom domains
         return new Response(null, { status: 404 })
     }
     
@@ -21,7 +22,9 @@ export default function middleware(req: NextRequest) {
                 return NextResponse.redirect('/');
             }
             return NextResponse.rewrite(`/app${pathname}`)        
-        } else if (currentHost == 'localhost:3000' || currentHost == '' && pathname === '/') {
+        } else if (
+            currentHost === 'localhost:3000' || currentHost === ''
+        ) {
             return NextResponse.rewrite(`/home${pathname}`)        
         }
 
