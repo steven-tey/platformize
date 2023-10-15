@@ -10,29 +10,19 @@ import { MDXRemote } from 'next-mdx-remote';
 import Tweet from '@/components/sites/Tweet'
 import { getTweets } from '@/lib/twitter';
 
-const components = {
-    Tweet
-};
+const components = { Tweet };
 
 export default function PostPage (props) {
     
-    let post = JSON.parse(props.post)
-    if (!post) {
-        post = {}
-        post.title = "Post Not Found"
-        post.description = "Check the URL, there's something fishy going on there..."
-        post.logo = "/logo.png"
-        post.content = ''
-        post.image = '/empty-state.webp'
-    }
+    const post = props.post ? JSON.parse(props.post) : {title: "Post Not Found", description: "Check the URL, there's something fishy going on there...", logo: "/logo.png", content: "", image: "/empty-state.webp"}
 
     return (
         <Layout
             subdomain={props.subdomain}
-            siteName={props.site.name}
+            siteName={props.site?.name}
             pageTitle={post.title}
             description={post.description}
-            logo={props.site.logo}
+            logo={props.site?.logo}
             thumbnail={post.image}
         >
         <div className="relative m-auto mt-20 sm:w-1/2 text-center bg-white overflow-hidden">
@@ -55,9 +45,9 @@ export default function PostPage (props) {
             />
         </div>
 
-        <article className="prose lg:prose-xl w-10/12 sm:w-full mx-auto mt-20 mb-48">
+        {props.post && <article className="prose lg:prose-xl w-10/12 sm:w-full mx-auto mt-20 mb-48">
             <MDXRemote {...props.content} components={components} />
-        </article>
+        </article>}
 
         </Layout>
     )
@@ -149,19 +139,19 @@ export async function getStaticProps({params: {site, slug}}) {
             slug_site_constraint: constraint
         }
     })
-    const matterResult = post ? matter(post?.content) : ''
+    const { content } = matter(post?.content)
 
     // Use remark to convert markdown into HTML string
     const processedContent = await remark()
         .use(html)
-        .process(matterResult.content)
+        .process(content)
 
     // Convert converted html to string format
     const contentHtml = processedContent.toString()
     
     // Replace all Twitter URLs with their MDX counterparts
-    const finalContentHtml = await replaceAsync(contentHtml, /<p>(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)([^\?]+)(\?.*)?<\/p>)/g, getTweetMetadata)
-    
+    const finalContentHtml = await replaceAsync(contentHtml, /<p>(https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)([^\?]+)(\?.*)?)<\/p>/g, getTweetMetadata)
+
     // serialize the content string into MDX
     const mdxSource = await serialize(finalContentHtml);
 

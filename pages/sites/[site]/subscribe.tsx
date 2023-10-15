@@ -32,7 +32,6 @@ export default function Subscribe (props) {
                     onSubmit={(e) => {
                         e.preventDefault()
                         setSubscribing(true)
-                        console.log(e.target.email.value)
                     }}
                     className="mt-1 relative rounded-md shadow-sm"
                 >
